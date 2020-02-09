@@ -5,4 +5,8 @@
     <OutputType>Library</OutputType>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ACME.Protocol.Model\ACME.Protocol.Model.csproj" />
+  </ItemGroup>
+
 </Project>
