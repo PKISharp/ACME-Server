@@ -2,7 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>ACME.Protocol</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ACME.Protocol.Model\ACME.Protocol.Model.csproj" />
+  </ItemGroup>
 
 </Project>
