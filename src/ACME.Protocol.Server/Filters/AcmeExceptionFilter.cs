@@ -1,12 +1,6 @@
 ﻿using ACME.Protocol.Model.Exceptions;
-using ACME.Protocol.Model.ProtocolServices;
-using ACME.Protocol.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ACME.Protocol.Server.Filters
 {
@@ -20,7 +14,7 @@ namespace ACME.Protocol.Server.Filters
         {
             if (!(context.Exception is AcmeException acmeException))
             {
-                //TODO Create generic exception
+                context.Result = new BadRequestResult();
             }
             else
             {

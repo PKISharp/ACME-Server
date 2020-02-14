@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ACME.Protocol.Server.Controllers
 {
+    [ApiController]
+    [AddNextNonce]
     public class NonceController : ControllerBase
     {
-        [HttpGet, HttpHead]
         [Route("/new-nonce", Name = "NewNonce")]
-        [AddNextNonce]
+        [HttpGet, HttpHead]
         public ActionResult GetNewNonce()
         {
             if (HttpMethods.IsGet(HttpContext.Request.Method))

@@ -5,13 +5,15 @@ using System.Threading.Tasks;
 
 namespace ACME.Protocol.Server.Controllers
 {
-    public class AccountController
+    [ApiController]
+    [AddNextNonce]
+    public class AccountController : ControllerBase
     {
         [Route("/new-account", Name = "NewAccount")]
-        [AddNextNonce]
-        public Task<ActionResult> CreateOrGetAccount(CreateOrGetAccount request)
+        [HttpPost]
+        public async Task<ActionResult> CreateOrGetAccount(AcmeHttpRequest<CreateOrGetAccount> request)
         {
-            return null;
+            return Ok();
         }
     }
 }

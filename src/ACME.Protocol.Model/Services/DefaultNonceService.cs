@@ -1,10 +1,7 @@
 ﻿using ACME.Protocol.Model;
 using ACME.Protocol.Model.Exceptions;
-using ACME.Protocol.Model.Model;
 using ACME.Protocol.Storage;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

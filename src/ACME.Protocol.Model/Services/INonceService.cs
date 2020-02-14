@@ -1,5 +1,4 @@
 ﻿using ACME.Protocol.Model;
-using ACME.Protocol.Model.Model;
 using System.Threading;
 using System.Threading.Tasks;
 

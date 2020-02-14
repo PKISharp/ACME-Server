@@ -6,5 +6,7 @@ namespace ACME.Protocol.HttpModel.Requests
 {
     public class CreateOrGetAccount
     {
+        public List<string> EmailAddress { get; set; }
+        public bool AcceptTOS { get; set; }
     }
 }
