@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ACME.Protocol.Server\ACME.Protocol.Server.csproj" />
+    <ProjectReference Include="..\ACME.Protocol.Store.Filebased\ACME.Protocol.Store.Filebased.csproj" />
   </ItemGroup>
 
 </Project>

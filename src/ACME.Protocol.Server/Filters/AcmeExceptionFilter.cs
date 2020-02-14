@@ -1,5 +1,6 @@
 ﻿using ACME.Protocol.Model.Exceptions;
 using ACME.Protocol.Model.ProtocolServices;
+using ACME.Protocol.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
@@ -11,11 +12,8 @@ namespace ACME.Protocol.Server.Filters
 {
     public class AcmeExceptionFilter : IExceptionFilter
     {
-        private readonly INonceService _nonceService;
-
-        public AcmeExceptionFilter(INonceService nonceService)
+        public AcmeExceptionFilter()
         {
-            _nonceService = nonceService;
         }
 
         public void OnException(ExceptionContext context)

@@ -12,5 +12,7 @@ namespace ACME.Protocol.Model.Model
         }
 
         public IServiceProvider Services { get; }
+        
+        public AcmeNonce Nonce { get; internal set; }
     }
 }

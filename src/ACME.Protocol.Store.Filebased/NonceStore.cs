@@ -17,13 +17,13 @@ namespace ACME.Protocol.Store.Filebased
             _options = options;
         }
 
-        public async Task SaveNonce(AcmeNonce nonce, CancellationToken cancellationToken)
+        public async Task SaveNonceAsync(AcmeNonce nonce, CancellationToken cancellationToken)
         {
             var noncePath = System.IO.Path.Combine(_options.Value.NoncePath, nonce.Token);
             await System.IO.File.WriteAllTextAsync(noncePath, DateTime.Now.ToString("o"), cancellationToken);
         }
 
-        public Task<bool> TryRemoveNonce(AcmeNonce nonce, CancellationToken cancellationToken)
+        public Task<bool> TryRemoveNonceAsync(AcmeNonce nonce, CancellationToken cancellationToken)
         {
             var noncePath = System.IO.Path.Combine(_options.Value.NoncePath, nonce.Token);
             if (!System.IO.File.Exists(noncePath))

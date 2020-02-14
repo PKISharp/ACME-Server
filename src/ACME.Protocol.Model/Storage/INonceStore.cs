@@ -9,7 +9,7 @@ namespace ACME.Protocol.Storage
 {
     public interface INonceStore
     {
-        Task SaveNonce(AcmeNonce nonce, CancellationToken cancellationToken);
-        Task<bool> TryRemoveNonce(AcmeNonce nonce, CancellationToken cancellationToken);
+        Task SaveNonceAsync(AcmeNonce nonce, CancellationToken cancellationToken);
+        Task<bool> TryRemoveNonceAsync(AcmeNonce nonce, CancellationToken cancellationToken);
     }
 }
