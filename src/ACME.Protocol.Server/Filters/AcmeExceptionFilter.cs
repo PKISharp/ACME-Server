@@ -12,11 +12,7 @@ namespace ACME.Protocol.Server.Filters
 
         public void OnException(ExceptionContext context)
         {
-            if (!(context.Exception is AcmeException acmeException))
-            {
-                context.Result = new BadRequestResult();
-            }
-            else
+            if (context.Exception is AcmeException acmeException)
             {
                 context.Result = new BadRequestObjectResult(acmeException.GetHttpError());
             }

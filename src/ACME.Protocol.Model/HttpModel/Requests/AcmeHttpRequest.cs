@@ -8,7 +8,7 @@ namespace ACME.Protocol.HttpModel.Requests
     [JsonConverter(typeof(AcmeJsonConverterFactory))]
     public class AcmeHttpRequest
     {
-        public AcmeHttpRequest(Base64EncodedRequest request)
+        public AcmeHttpRequest(Base64EncodedRequest request, AcmeRequestHeader header)
         {
             if (string.IsNullOrWhiteSpace(request.Header))
                 throw new ArgumentException("message", nameof(request.Header));
@@ -19,8 +19,7 @@ namespace ACME.Protocol.HttpModel.Requests
             EncodedHeader = request.Header;
             Signature = request.Signature;
 
-            var headerJson = Base64UrlConverter.ToUtf8String(EncodedHeader);
-            Header = JsonSerializer.Deserialize<AcmeRequestHeader>(headerJson);
+            Header = header;
         }
 
 
@@ -34,16 +33,11 @@ namespace ACME.Protocol.HttpModel.Requests
     public class AcmeHttpRequest<TPayload> : AcmeHttpRequest
         where TPayload : class
     {
-        public AcmeHttpRequest(Base64EncodedRequest request)
-            : base(request)
+        public AcmeHttpRequest(Base64EncodedRequest request, AcmeRequestHeader header, TPayload? payload)
+            : base(request, header)
         {
             EncodedPayload = request.Payload;
-
-            if (string.IsNullOrWhiteSpace(EncodedPayload))
-                return;
-
-            var payloadJson = Base64UrlConverter.ToUtf8String(EncodedPayload);
-            Payload = JsonSerializer.Deserialize<TPayload>(payloadJson);
+            Payload = payload;
         }
 
         public TPayload? Payload { get; private set; }

@@ -1,5 +1,5 @@
 ﻿using ACME.Protocol.Extensions;
-using ACME.Protocol.HttpModel.Requests;
+using ACME.Protocol.Model;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text.Json;

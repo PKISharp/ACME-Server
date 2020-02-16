@@ -13,6 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddACMEFileStore(this IServiceCollection services)
         {
             services.AddScoped<INonceStore, NonceStore>();
+            services.AddScoped<IAccountStore, AccountStore>();
 
             return services;
         }

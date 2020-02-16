@@ -11,7 +11,11 @@ namespace ACME.Protocol.HttpModel.Converters
         public override AcmeHttpRequest Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var encodedRequest = ReadEncodedRequest(ref reader, options);
-            var result = new AcmeHttpRequest(encodedRequest);
+
+            var headerJson = Base64UrlConverter.ToUtf8String(encodedRequest.Header);
+            var header = JsonSerializer.Deserialize<AcmeRequestHeader>(headerJson, options);
+
+            var result = new AcmeHttpRequest(encodedRequest, header);
 
             return result;
         }
@@ -27,15 +31,23 @@ namespace ACME.Protocol.HttpModel.Converters
         }
     }
 
-    public class AcmeJsonConverter<TModel> : AcmeJsonConverter
-        where TModel : class
+    public class AcmeJsonConverter<TPayload> : AcmeJsonConverter
+        where TPayload : class
     {
         public override AcmeHttpRequest Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var encodedRequest = ReadEncodedRequest(ref reader, options);
-            var result = new AcmeHttpRequest<TModel>(encodedRequest);
 
-            return result;
+            var headerJson = Base64UrlConverter.ToUtf8String(encodedRequest.Header);
+            var header = JsonSerializer.Deserialize<AcmeRequestHeader>(headerJson, options);
+
+            if (string.IsNullOrWhiteSpace(encodedRequest.Payload))
+                return new AcmeHttpRequest<TPayload>(encodedRequest, header, null);
+
+            var payloadJson = Base64UrlConverter.ToUtf8String(encodedRequest.Payload);
+            var payload = JsonSerializer.Deserialize<TPayload>(payloadJson);
+
+            return new AcmeHttpRequest<TPayload>(encodedRequest, header, payload);
         }
 
         public override void Write(Utf8JsonWriter writer, AcmeHttpRequest value, JsonSerializerOptions options)
