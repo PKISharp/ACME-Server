@@ -5,4 +5,8 @@
     <RootNamespace>ACME.Protocol</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.6.0" />
+  </ItemGroup>
+
 </Project>

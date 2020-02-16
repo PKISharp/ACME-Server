@@ -11,6 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<INonceService, DefaultNonceService>();
 
             services.AddScoped<AddNextNonceFilter>();
+            services.AddScoped<ValidateNonceFilter>();
 
             services.Configure<MvcOptions>(opt =>
             {

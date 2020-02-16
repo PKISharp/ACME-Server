@@ -16,7 +16,7 @@ namespace ACME.Protocol.Services
             _nonceStore = nonceStore;
         }
 
-        public  async Task<AcmeNonce> CreateNonceAsync(AcmeRequestContext context, CancellationToken cancellationToken)
+        public  async Task<AcmeNonce> CreateNonceAsync(CancellationToken cancellationToken)
         {
             var nonce = new AcmeNonce
             {
@@ -27,9 +27,12 @@ namespace ACME.Protocol.Services
             return nonce;
         }
 
-        public async Task ValidateNonceAsync(AcmeRequestContext context, CancellationToken cancellationToken)
+        public async Task ValidateNonceAsync(string? nonce, CancellationToken cancellationToken)
         {
-            if (!await _nonceStore.TryRemoveNonceAsync(context.Nonce, cancellationToken))
+            if (string.IsNullOrWhiteSpace(nonce))
+                throw new BadNonceException();
+
+            if (!await _nonceStore.TryRemoveNonceAsync(new AcmeNonce { Token = nonce }, cancellationToken))
                 throw new BadNonceException();
         }
     }

@@ -27,7 +27,7 @@ namespace ACME.Protocol.Server.Filters
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var newNonce = await _nonceService.CreateNonceAsync(null, context.HttpContext.RequestAborted);
+            var newNonce = await _nonceService.CreateNonceAsync(context.HttpContext.RequestAborted);
             context.HttpContext.Response.Headers.Add("Replay-Nonce", newNonce.Token);
 
             await next.Invoke();
