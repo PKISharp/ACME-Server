@@ -1,6 +1,4 @@
-﻿using ACME.Protocol.Extensions;
-using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using Microsoft.IdentityModel.Tokens;
 
 namespace ACME.Protocol.Model
 {
