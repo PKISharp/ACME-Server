@@ -16,20 +16,28 @@ namespace ACME.Protocol.Services
             _accountStore = accountStore;
         }
 
-        public async Task<AcmeAccount> CreateAccountAsync(KeyWrapper? keys, List<string>? contact,
+        public async Task<AcmeAccount> CreateAccountAsync(Jwk jwk, List<string> contact,
             bool termsOfServiceAgreed, CancellationToken cancellationToken)
         {
             var newAccount = new AcmeAccount
             {
-                AccountId = Guid.NewGuid(),
-
-                Keys = keys,
+                Jwk = jwk,
                 Contact = contact,
                 TOSAccepted = termsOfServiceAgreed ? DateTimeOffset.Now : (DateTimeOffset?)null
             };
 
             await _accountStore.SaveAccountAsync(newAccount, cancellationToken);
             return newAccount;
+        }
+
+        public Task<AcmeAccount> FindAccountAsync(Jwk jwk, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<AcmeAccount> LoadAcountAsync(string accountId, CancellationToken cancellationToken)
+        {
+            return await _accountStore.LoadAccountAsync(accountId, cancellationToken);
         }
     }
 }

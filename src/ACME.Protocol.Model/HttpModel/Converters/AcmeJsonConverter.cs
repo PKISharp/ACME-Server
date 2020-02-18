@@ -1,4 +1,5 @@
 ﻿using ACME.Protocol.HttpModel.Requests;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
 using System.Text.Json;
@@ -12,7 +13,7 @@ namespace ACME.Protocol.HttpModel.Converters
         {
             var encodedRequest = ReadEncodedRequest(ref reader, options);
 
-            var headerJson = Base64UrlConverter.ToUtf8String(encodedRequest.Header);
+            var headerJson = Base64UrlEncoder.Decode(encodedRequest.Header);
             var header = JsonSerializer.Deserialize<AcmeRequestHeader>(headerJson, options);
 
             var result = new AcmeHttpRequest(encodedRequest, header);
@@ -38,13 +39,13 @@ namespace ACME.Protocol.HttpModel.Converters
         {
             var encodedRequest = ReadEncodedRequest(ref reader, options);
 
-            var headerJson = Base64UrlConverter.ToUtf8String(encodedRequest.Header);
+            var headerJson = Base64UrlEncoder.Decode(encodedRequest.Header);
             var header = JsonSerializer.Deserialize<AcmeRequestHeader>(headerJson, options);
 
             if (string.IsNullOrWhiteSpace(encodedRequest.Payload))
                 return new AcmeHttpRequest<TPayload>(encodedRequest, header, null);
 
-            var payloadJson = Base64UrlConverter.ToUtf8String(encodedRequest.Payload);
+            var payloadJson = Base64UrlEncoder.Decode(encodedRequest.Payload);
             var payload = JsonSerializer.Deserialize<TPayload>(payloadJson);
 
             return new AcmeHttpRequest<TPayload>(encodedRequest, header, payload);

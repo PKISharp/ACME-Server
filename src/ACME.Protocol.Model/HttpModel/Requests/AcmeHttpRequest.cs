@@ -1,6 +1,5 @@
 ﻿using ACME.Protocol.HttpModel.Converters;
 using System;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ACME.Protocol.HttpModel.Requests
@@ -26,6 +25,8 @@ namespace ACME.Protocol.HttpModel.Requests
         public AcmeRequestHeader Header { get; private set; }
         public string EncodedHeader { get; private set; }
 
+        public string? EncodedPayload { get; protected set; }
+
         public string Signature { get; private set; }
     }
 
@@ -41,6 +42,5 @@ namespace ACME.Protocol.HttpModel.Requests
         }
 
         public TPayload? Payload { get; private set; }
-        public string? EncodedPayload { get; private set; }
     }
 }

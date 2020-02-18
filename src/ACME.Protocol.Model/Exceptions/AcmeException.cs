@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ACME.Protocol.Model.Exceptions
 {
@@ -20,16 +18,5 @@ namespace ACME.Protocol.Model.Exceptions
                 Detail = Message
             };
         }
-    }
-
-    public class BadNonceException : AcmeException
-    {
-        private const string Detail = "The nonce could not be accepted";
-
-        public BadNonceException()
-            : base(Detail)
-        { }
-
-        public override string ErrorType => "badNonce";
     }
 }

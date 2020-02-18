@@ -14,7 +14,10 @@ namespace ACME.Protocol.Server.Filters
         {
             if (context.Exception is AcmeException acmeException)
             {
-                context.Result = new BadRequestObjectResult(acmeException.GetHttpError());
+                var badRequestResult = new BadRequestObjectResult(acmeException.GetHttpError());
+                badRequestResult.ContentTypes.Add("application/problem+json");
+
+                context.Result = badRequestResult;
             }
         }
     }

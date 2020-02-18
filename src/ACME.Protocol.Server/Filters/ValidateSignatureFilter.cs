@@ -1,24 +1,23 @@
-﻿using ACME.Protocol.HttpModel.Requests;
-using ACME.Protocol.Server.Extensions;
+﻿using ACME.Protocol.Server.Extensions;
 using ACME.Protocol.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ACME.Protocol.Server.Filters
 {
-    public class ValidateNonceFilter : IAsyncActionFilter
+    public class ValidateSignatureFilter : IAsyncActionFilter
     {
-        private readonly INonceService _nonceService;
-        private readonly ILogger<ValidateNonceFilter> _logger;
+        private readonly IAcmeSignatureService _signatureService;
+        private readonly ILogger<ValidateSignatureFilter> _logger;
 
-        public ValidateNonceFilter(INonceService nonceService, ILogger<ValidateNonceFilter> logger)
+        public ValidateSignatureFilter(IAcmeSignatureService signatureService, ILogger<ValidateSignatureFilter> logger)
         {
-            _nonceService = nonceService;
+            _signatureService = signatureService;
             _logger = logger;
         }
 
@@ -28,7 +27,8 @@ namespace ACME.Protocol.Server.Filters
             {
                 _logger.LogInformation("Attempting to validate Nonce");
                 var acmeRequest = context.GetAcmeRequest();
-                await _nonceService.ValidateNonceAsync(acmeRequest.Header.Nonce, context.HttpContext.RequestAborted);
+
+                await _signatureService.ValidateAcmeRequestAsync(acmeRequest, context.HttpContext.RequestAborted);
             }
 
             await next();

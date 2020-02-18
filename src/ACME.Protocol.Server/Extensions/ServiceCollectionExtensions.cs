@@ -10,13 +10,17 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<INonceService, DefaultNonceService>();
             services.AddScoped<IAccountService, DefaultAccountService>();
+            services.AddScoped<IAcmeSignatureService, DefaultSignatureService>();
 
             services.AddScoped<AddNextNonceFilter>();
-            services.AddScoped<ValidateNonceFilter>();
+            //services.AddScoped<ValidateNonceFilter>();
 
             services.Configure<MvcOptions>(opt =>
             {
                 opt.Filters.Add(typeof(AcmeExceptionFilter));
+                opt.Filters.Add(typeof(ValidateAcmeHeaderFilter));
+                opt.Filters.Add(typeof(ValidateNonceFilter));
+                opt.Filters.Add(typeof(ValidateSignatureFilter));
                 opt.Filters.Add(typeof(AcmeIndexLinkFilter));
             });
 
