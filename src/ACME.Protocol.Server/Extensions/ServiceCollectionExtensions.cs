@@ -8,9 +8,10 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddACMEServer(this IServiceCollection services)
         {
+            services.AddScoped<IRequestValidationService, DefaultRequestValidationService>();
             services.AddScoped<INonceService, DefaultNonceService>();
             services.AddScoped<IAccountService, DefaultAccountService>();
-            services.AddScoped<IRequestValidationService, DefaultRequestValidationService>();
+            services.AddScoped<IOrderService, DefaultOrderService>();
 
             services.AddScoped<AddNextNonceFilter>();
 

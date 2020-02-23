@@ -7,6 +7,8 @@ namespace ACME.Protocol.Model
         private JsonWebKey? _jsonWebKey;
         private string? _jsonKeyHash;
 
+        private Jwk() { }
+
         public Jwk(string? json)
         {
             if (string.IsNullOrWhiteSpace(json))
@@ -15,7 +17,7 @@ namespace ACME.Protocol.Model
             Json = json;
         }
 
-        public string Json { get; private set; }
+        public string Json { get; set; }
 
 
         public JsonWebKey GetJwkSecurityKey()

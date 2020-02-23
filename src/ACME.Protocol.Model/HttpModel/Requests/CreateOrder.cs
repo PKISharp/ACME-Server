@@ -6,7 +6,7 @@ namespace ACME.Protocol.HttpModel.Requests
 {
     public class CreateOrder
     {
-        public List<Identifier> Identifiers { get; } = new List<Identifier>();
+        public List<Identifier> Identifiers { get; set; }
 
         public DateTimeOffset? NotBefore { get; set; }
         public DateTimeOffset? NotAfter { get; set; }

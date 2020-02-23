@@ -6,7 +6,7 @@ namespace ACME.Protocol.HttpModel
     {
         public string Status { get; set; }
         public string? Expires { get; set; }
-        public List<string> Identifiers { get; set; }
+        public List<Identifier> Identifiers { get; set; }
         public string? NotBefore { get; set; }
         public string? NotAfter { get; set; }
         public object? Error { get; set; }

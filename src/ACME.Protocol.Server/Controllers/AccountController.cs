@@ -46,7 +46,7 @@ namespace ACME.Protocol.Server.Controllers
                 TermsOfServiceAgreed = account.TOSAccepted.HasValue,
 
                 ExternalAccountBinding = null,
-                Orders = Url.RouteUrl("Orders", new { accountId = account.AccountId }, "https")
+                Orders = Url.RouteUrl("OrderList", new { accountId = account.AccountId }, "https")
             };
 
             var accountUrl = Url.RouteUrl("Account", new { accountId = account.AccountId }, "https");
@@ -63,6 +63,13 @@ namespace ACME.Protocol.Server.Controllers
         public async Task<ActionResult<HttpModel.Account>> SetAccount(string accountId)
         {
             return Ok();
+        }
+
+        [Route("/account/{accountId}/orders", Name = "OrderList")]
+        [HttpPost]
+        public async Task<ActionResult<HttpModel.OrdersList>> GetOrdersList(string accountId, AcmeHttpRequest request)
+        {
+            throw new NotImplementedException();
         }
     }
 }

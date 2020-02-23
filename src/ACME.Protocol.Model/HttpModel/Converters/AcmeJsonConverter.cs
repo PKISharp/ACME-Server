@@ -46,7 +46,7 @@ namespace ACME.Protocol.HttpModel.Converters
                 return new AcmeHttpRequest<TPayload>(encodedRequest, header, null);
 
             var payloadJson = Base64UrlEncoder.Decode(encodedRequest.Payload);
-            var payload = JsonSerializer.Deserialize<TPayload>(payloadJson);
+            var payload = JsonSerializer.Deserialize<TPayload>(payloadJson, options);
 
             return new AcmeHttpRequest<TPayload>(encodedRequest, header, payload);
         }
