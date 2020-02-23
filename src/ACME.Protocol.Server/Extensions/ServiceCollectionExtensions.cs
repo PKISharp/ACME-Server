@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<INonceService, DefaultNonceService>();
             services.AddScoped<IAccountService, DefaultAccountService>();
-            services.AddScoped<IAcmeSignatureService, DefaultSignatureService>();
+            services.AddScoped<IRequestValidationService, DefaultRequestValidationService>();
 
             services.AddScoped<AddNextNonceFilter>();
             //services.AddScoped<ValidateNonceFilter>();

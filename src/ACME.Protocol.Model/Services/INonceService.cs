@@ -8,6 +8,5 @@ namespace ACME.Protocol.Services
     {
         Task<Nonce> CreateNonceAsync(CancellationToken cancellationToken);
 
-        Task ValidateNonceAsync(string? nonce, CancellationToken cancellationToken);
     }
 }

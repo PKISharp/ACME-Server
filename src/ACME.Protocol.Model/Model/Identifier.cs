@@ -5,11 +5,17 @@ namespace ACME.Protocol.Model
 {
     public struct Identifier : IEquatable<Identifier>
     {
-        private string _type;
-        private string _value;
+        private string? _type;
+        private string? _value;
 
-        public string Type { get => _type; set => _type = value?.Trim().ToLowerInvariant(); }
-        public string Value { get => _value; set => _value = value?.Trim().ToLowerInvariant(); }
+        public string Type { 
+            get => _type; 
+            set => _type = value?.Trim().ToLowerInvariant();
+        }
+        public string Value { 
+            get => _value; 
+            set => _value = value?.Trim().ToLowerInvariant(); 
+        }
 
         public override bool Equals(object? obj)
         {

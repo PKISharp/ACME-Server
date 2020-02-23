@@ -34,17 +34,7 @@ namespace ACME.Protocol.Services
 
         public async Task ValidateNonceAsync(string? nonce, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(nonce))
-            {
-                _logger.LogInformation($"Nonce was empty.");
-                throw new BadNonceException();
-            }
-
-            if (!await _nonceStore.TryRemoveNonceAsync(new Nonce { Token = nonce }, cancellationToken))
-            {
-                _logger.LogInformation($"Nonce could not be located.");
-                throw new BadNonceException();
-            }
+            
         }
     }
 }

@@ -4,8 +4,8 @@ namespace ACME.Protocol.Model
 {
     public class Jwk
     {
-        private JsonWebKey _jsonWebKey;
-        private string _jsonKeyHash;
+        private JsonWebKey? _jsonWebKey;
+        private string? _jsonKeyHash;
 
         public Jwk(string? json)
         {

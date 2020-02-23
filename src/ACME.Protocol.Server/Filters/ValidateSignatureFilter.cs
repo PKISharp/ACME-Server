@@ -12,12 +12,12 @@ namespace ACME.Protocol.Server.Filters
 {
     public class ValidateSignatureFilter : IAsyncActionFilter
     {
-        private readonly IAcmeSignatureService _signatureService;
+        private readonly IRequestValidationService _validationService;
         private readonly ILogger<ValidateSignatureFilter> _logger;
 
-        public ValidateSignatureFilter(IAcmeSignatureService signatureService, ILogger<ValidateSignatureFilter> logger)
+        public ValidateSignatureFilter(IRequestValidationService signatureService, ILogger<ValidateSignatureFilter> logger)
         {
-            _signatureService = signatureService;
+            _validationService = signatureService;
             _logger = logger;
         }
 
@@ -28,7 +28,7 @@ namespace ACME.Protocol.Server.Filters
                 _logger.LogInformation("Attempting to validate Nonce");
                 var acmeRequest = context.GetAcmeRequest();
 
-                await _signatureService.ValidateAcmeRequestAsync(acmeRequest, context.HttpContext.RequestAborted);
+                await _validationService.ValidateSignatureAsync(acmeRequest, context.HttpContext.RequestAborted);
             }
 
             await next();
