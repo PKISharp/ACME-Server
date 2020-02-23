@@ -13,7 +13,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IRequestValidationService, DefaultRequestValidationService>();
 
             services.AddScoped<AddNextNonceFilter>();
-            //services.AddScoped<ValidateNonceFilter>();
 
             services.Configure<MvcOptions>(opt =>
             {

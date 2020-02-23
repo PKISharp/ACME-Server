@@ -1,12 +1,8 @@
-﻿using ACME.Protocol.HttpModel.Requests;
-using ACME.Protocol.Server.Extensions;
+﻿using ACME.Protocol.Server.Extensions;
 using ACME.Protocol.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ACME.Protocol.Server.Filters

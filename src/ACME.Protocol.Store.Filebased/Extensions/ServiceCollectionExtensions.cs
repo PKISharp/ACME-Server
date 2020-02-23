@@ -14,6 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<INonceStore, NonceStore>();
             services.AddScoped<IAccountStore, AccountStore>();
+            services.AddScoped<IOrderStore, AccountStore>();
 
             return services;
         }
