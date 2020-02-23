@@ -22,7 +22,7 @@ namespace ACME.Protocol.Store.Filebased
             _accountIdRegex = new Regex("[\\w\\d_-]+", RegexOptions.Compiled);
         }
 
-        public async Task<AcmeAccount> LoadAccountAsync(string accountId, CancellationToken cancellationToken)
+        public async Task<Account> LoadAccountAsync(string accountId, CancellationToken cancellationToken)
         {
             if (!_accountIdRegex.IsMatch(accountId))
                 throw new InvalidOperationException("AccountId seems invalid!");
@@ -31,12 +31,12 @@ namespace ACME.Protocol.Store.Filebased
                 accountId, "account.json");
 
             var utf8Bytes = await System.IO.File.ReadAllBytesAsync(accountPath, cancellationToken);
-            var result = JsonSerializer.Deserialize<AcmeAccount>(utf8Bytes);
+            var result = JsonSerializer.Deserialize<Account>(utf8Bytes);
 
             return result;
         }
 
-        public async Task SaveAccountAsync(AcmeAccount newAccount, CancellationToken cancellationToken)
+        public async Task SaveAccountAsync(Account newAccount, CancellationToken cancellationToken)
         {
             var accountPath = System.IO.Path.Combine(_options.Value.AccountPath,
                 newAccount.AccountId, "account.json");

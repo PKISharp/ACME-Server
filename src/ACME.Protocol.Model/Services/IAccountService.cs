@@ -7,11 +7,11 @@ namespace ACME.Protocol.Services
 {
     public interface IAccountService
     {
-        Task<AcmeAccount> CreateAccountAsync(Jwk jwk, List<string> contact,
+        Task<Account> CreateAccountAsync(Jwk jwk, List<string> contact,
             bool termsOfServiceAgreed, CancellationToken cancellationToken);
 
-        Task<AcmeAccount> FindAccountAsync(Jwk jwk, CancellationToken cancellationToken);
+        Task<Account> FindAccountAsync(Jwk jwk, CancellationToken cancellationToken);
 
-        Task<AcmeAccount> LoadAcountAsync(string accountId, CancellationToken cancellationToken);
+        Task<Account> LoadAcountAsync(string accountId, CancellationToken cancellationToken);
     }
 }

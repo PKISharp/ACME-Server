@@ -16,10 +16,10 @@ namespace ACME.Protocol.Services
             _accountStore = accountStore;
         }
 
-        public async Task<AcmeAccount> CreateAccountAsync(Jwk jwk, List<string> contact,
+        public async Task<Account> CreateAccountAsync(Jwk jwk, List<string> contact,
             bool termsOfServiceAgreed, CancellationToken cancellationToken)
         {
-            var newAccount = new AcmeAccount
+            var newAccount = new Account
             {
                 Jwk = jwk,
                 Contact = contact,
@@ -30,12 +30,12 @@ namespace ACME.Protocol.Services
             return newAccount;
         }
 
-        public Task<AcmeAccount> FindAccountAsync(Jwk jwk, CancellationToken cancellationToken)
+        public Task<Account> FindAccountAsync(Jwk jwk, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<AcmeAccount> LoadAcountAsync(string accountId, CancellationToken cancellationToken)
+        public async Task<Account> LoadAcountAsync(string accountId, CancellationToken cancellationToken)
         {
             return await _accountStore.LoadAccountAsync(accountId, cancellationToken);
         }

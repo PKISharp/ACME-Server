@@ -9,7 +9,7 @@ namespace ACME.Protocol.Storage
 {
     public interface IAccountStore
     {
-        Task SaveAccountAsync(AcmeAccount account, CancellationToken cancellationToken);
-        Task<AcmeAccount> LoadAccountAsync(string accountId, CancellationToken cancellationToken);
+        Task SaveAccountAsync(Account account, CancellationToken cancellationToken);
+        Task<Account> LoadAccountAsync(string accountId, CancellationToken cancellationToken);
     }
 }

@@ -6,7 +6,7 @@ namespace ACME.Protocol.Storage
 {
     public interface IOrderStore
     {
-        Task SaveOrderAsync(AcmeOrder order, CancellationToken cancellationToken);
-        Task<AcmeOrder> LoadOrderAsync(string orderId, CancellationToken cancellationToken);
+        Task SaveOrderAsync(Order order, CancellationToken cancellationToken);
+        Task<Order> LoadOrderAsync(string orderId, CancellationToken cancellationToken);
     }
 }

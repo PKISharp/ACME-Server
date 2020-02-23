@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace ACME.Protocol.Model
 {
-    public class AcmeAccount
+    public class Account
     {
-        public AcmeAccount()
+        public Account()
         {
             AccountId = Base64UrlEncoder.Encode(Guid.NewGuid().ToByteArray());
         }

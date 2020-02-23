@@ -19,9 +19,9 @@ namespace ACME.Protocol.Services
             _logger = logger;
         }
 
-        public  async Task<AcmeNonce> CreateNonceAsync(CancellationToken cancellationToken)
+        public  async Task<Nonce> CreateNonceAsync(CancellationToken cancellationToken)
         {
-            var nonce = new AcmeNonce
+            var nonce = new Nonce
             {
                 Token = Guid.NewGuid().ToString()
             };
@@ -40,7 +40,7 @@ namespace ACME.Protocol.Services
                 throw new BadNonceException();
             }
 
-            if (!await _nonceStore.TryRemoveNonceAsync(new AcmeNonce { Token = nonce }, cancellationToken))
+            if (!await _nonceStore.TryRemoveNonceAsync(new Nonce { Token = nonce }, cancellationToken))
             {
                 _logger.LogInformation($"Nonce could not be located.");
                 throw new BadNonceException();

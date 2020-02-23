@@ -2,10 +2,10 @@
 {
     public enum OrderStatus
     {
+        Invalid,
         Pending,
         Ready,
         Processing,
-        Valid,
-        Invalid
+        Valid
     }
 }

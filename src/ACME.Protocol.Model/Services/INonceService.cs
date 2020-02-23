@@ -6,7 +6,7 @@ namespace ACME.Protocol.Services
 {
     public interface INonceService
     {
-        Task<AcmeNonce> CreateNonceAsync(CancellationToken cancellationToken);
+        Task<Nonce> CreateNonceAsync(CancellationToken cancellationToken);
 
         Task ValidateNonceAsync(string? nonce, CancellationToken cancellationToken);
     }
