@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ACME.Protocol.Server\ACME.Protocol.Server.csproj" />
-    <ProjectReference Include="..\ACME.Protocol.Store.Filebased\ACME.Protocol.Store.Filebased.csproj" />
   </ItemGroup>
 
 </Project>

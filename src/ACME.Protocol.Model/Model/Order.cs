@@ -21,6 +21,7 @@ namespace ACME.Protocol.Model
             _orderId = Base64UrlEncoder.Encode(Guid.NewGuid().ToByteArray());
             Status = OrderStatus.Pending;
 
+            AccountId = account.AccountId;
             Account = account;
 
             Identifiers = new List<Identifier>(identifiers);
@@ -34,13 +35,13 @@ namespace ACME.Protocol.Model
 
         [JsonIgnore]
         public Account Account { get; set; }
+        public string AccountId { get; set; }
 
 
         public OrderStatus Status { get; set; }
+        public List<Identifier> Identifiers { get; set; }
 
-        public List<Identifier> Identifiers { get; }
-
-        public List<Authorization> Authorizations { get; }
+        public List<Authorization> Authorizations { get; set; }
         public DateTimeOffset? NotBefore { get; internal set; }
         public DateTimeOffset? NotAfter { get; internal set; }
     }
