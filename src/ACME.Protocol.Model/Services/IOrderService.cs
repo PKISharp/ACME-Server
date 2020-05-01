@@ -12,5 +12,7 @@ namespace TG_IT.ACME.Protocol.Services
             IEnumerable<Identifier> identifiers, 
             DateTimeOffset? notBefore, DateTimeOffset? notAfter, 
             CancellationToken cancellationToken);
+        
+        Task<Order> GetOrderAsync(Account account, string orderId, CancellationToken cancellationToken);
     }
 }

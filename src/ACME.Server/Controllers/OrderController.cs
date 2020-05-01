@@ -65,23 +65,53 @@ namespace TG_IT.ACME.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Protocol.HttpModel.Order>> GetOrder(string orderId, AcmeHttpRequest request)
         {
-            throw new NotImplementedException();
+            var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
+            var order = await _orderService.GetOrderAsync(account, orderId, HttpContext.RequestAborted);
+
+            var orderResponse = new Protocol.HttpModel.Order
+            {
+                Status = order.Status.ToString().ToLowerInvariant(),
+
+
+                Identifiers = order.Identifiers
+                    .Select(x => new Protocol.HttpModel.Identifier { Type = x.Type, Value = x.Value })
+                    .ToList(),
+                Authorizations = order.Authorizations
+                    .Select(x => Url.RouteUrl("GetAuthorization", new { orderId = order.OrderId, authId = x.AuthorizationId }, "https"))
+                    .ToList(),
+
+                Finalize = Url.RouteUrl("FinalizeOrder", new { orderId = order.OrderId }, "https")
+                //TODO: Copy all neccessary data
+            };
+
+            return orderResponse;
         }
 
         [Route("/order/{orderId}/auth/{authId}", Name = "GetAuthorization")]
         [HttpPost]
-        public async Task<ActionResult<Protocol.HttpModel.Order>> GetAuthorizations(string orderId, string authId, AcmeHttpRequest request)
+        public async Task<ActionResult<Protocol.HttpModel.Authorization>> GetAuthorization(string orderId, string authId, AcmeHttpRequest request)
         {
-            throw new NotImplementedException();
+            var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
+            var order = await _orderService.GetOrderAsync(account, orderId, HttpContext.RequestAborted);
 
+            var authZ = order.Authorizations.FirstOrDefault(x => x.AuthorizationId == authId);
+            if (authZ == null)
+                return NotFound();
+
+            var authZResponse = new Protocol.HttpModel.Authorization
+            {
+                //TODO: Copy all neccessary data
+            };
+
+            return authZResponse;
         }
 
         [Route("/order/{orderId}/finalize", Name = "FinalizeOrder")]
         [HttpPost]
         public async Task<ActionResult<Protocol.HttpModel.Order>> FinalizeOrder(string orderId, AcmeHttpRequest<object> request)
         {
+            //TODO: What will be submitted here?
             throw new NotImplementedException();
-
         }
 
         [Route("/order/{orderId}/certificate", Name = "GetCertificate")]
