@@ -6,4 +6,8 @@
     <AssemblyName>TG_IT.ACME.Server</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ACME.Protocol.Model\ACME.Protocol.csproj" />
+  </ItemGroup>
+
 </Project>

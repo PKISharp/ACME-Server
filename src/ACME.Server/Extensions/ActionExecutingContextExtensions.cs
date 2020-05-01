@@ -1,7 +1,7 @@
-﻿using ACME.Server.HttpModel.Requests;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Linq;
+using TG_IT.ACME.Protocol.HttpModel.Requests;
 
 namespace TG_IT.ACME.Server.Extensions
 {

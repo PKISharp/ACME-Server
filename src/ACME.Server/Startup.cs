@@ -1,10 +1,9 @@
-using ACME.Server.Filters;
-using ACME.Server.Store.Filebased.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TG_IT.ACME.Protocol.Storage.FileStore.Configuration;
 
 namespace TG_IT.ACME.Server
 {

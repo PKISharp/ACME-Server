@@ -1,6 +1,6 @@
-﻿using ACME.Server.Model.Exceptions;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using TG_IT.ACME.Protocol.Model.Exceptions;
 
 namespace TG_IT.ACME.Server.Filters
 {

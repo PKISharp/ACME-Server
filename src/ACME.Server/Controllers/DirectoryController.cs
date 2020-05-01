@@ -1,6 +1,6 @@
-﻿using ACME.Server.Configuration;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using TG_IT.ACME.Server.Configuration;
 
 namespace TG_IT.ACME.Server.Controllers
 {
@@ -14,11 +14,11 @@ namespace TG_IT.ACME.Server.Controllers
         }
 
         [Route("/", Name = "Directory")]
-        public ActionResult<HttpModel.Directory> GetDirectory()
+        public ActionResult<Protocol.HttpModel.Directory> GetDirectory()
         {
             var options = _options.Value;
 
-            return new HttpModel.Directory
+            return new Protocol.HttpModel.Directory
             {
                 NewNonce = Url.RouteUrl("NewNonce", null, "https"),
                 NewAccount = Url.RouteUrl("NewAccount", null, "https"),
@@ -27,7 +27,7 @@ namespace TG_IT.ACME.Server.Controllers
                 RevokeCert = null,
                 KeyChange = Url.RouteUrl("KeyChange", null, "https"),
 
-                Meta = new HttpModel.DirectoryMetadata
+                Meta = new Protocol.HttpModel.DirectoryMetadata
                 {
                     ExternalAccountRequired = false,
                     CAAIdentities = null,

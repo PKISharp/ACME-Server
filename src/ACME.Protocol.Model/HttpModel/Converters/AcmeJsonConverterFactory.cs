@@ -1,8 +1,8 @@
-﻿using ACME.Server.HttpModel.Requests;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using TG_IT.ACME.Protocol.HttpModel.Requests;
 
 namespace TG_IT.ACME.Protocol.HttpModel.Converters
 {

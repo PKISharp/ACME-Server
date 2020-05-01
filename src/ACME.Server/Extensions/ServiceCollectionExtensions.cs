@@ -1,8 +1,8 @@
-﻿using ACME.Server.Filters;
-using ACME.Server.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using TG_IT.ACME.Protocol.Services;
+using TG_IT.ACME.Server.Filters;
 
-namespace TG_IT.Microsoft.Extensions.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {

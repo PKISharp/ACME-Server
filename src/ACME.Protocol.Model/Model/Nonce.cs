@@ -1,4 +1,4 @@
-﻿using ACME.Server.Exceptions;
+﻿using TG_IT.ACME.Protocol.Model.Exceptions;
 
 namespace TG_IT.ACME.Protocol.Model
 {

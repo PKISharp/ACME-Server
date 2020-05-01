@@ -1,8 +1,8 @@
-﻿using ACME.Server.HttpModel.Requests;
-using ACME.Server.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using TG_IT.ACME.Protocol.HttpModel.Requests;
+using TG_IT.ACME.Protocol.Model;
 
 namespace TG_IT.ACME.Protocol.Services
 {

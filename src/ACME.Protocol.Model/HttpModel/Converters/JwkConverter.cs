@@ -1,7 +1,7 @@
-﻿using ACME.Server.Model;
-using System;
+﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using TG_IT.ACME.Protocol.Model;
 
 namespace TG_IT.ACME.Protocol.HttpModel.Converters
 {

@@ -1,13 +1,12 @@
-﻿using ACME.Server.Model;
-using ACME.Server.Storage;
-using ACME.Server.Store.Filebased.Configuration;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using System;
 using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using TG_IT.ACME.Protocol.Model;
+using TG_IT.ACME.Protocol.Storage.FileStore.Configuration;
 
 namespace TG_IT.ACME.Protocol.Storage.FileStore
 {

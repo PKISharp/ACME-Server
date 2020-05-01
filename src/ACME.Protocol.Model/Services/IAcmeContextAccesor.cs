@@ -1,4 +1,4 @@
-﻿using ACME.Server.Model;
+﻿using TG_IT.ACME.Server.Model;
 
 namespace TG_IT.ACME.Protocol.Services
 {

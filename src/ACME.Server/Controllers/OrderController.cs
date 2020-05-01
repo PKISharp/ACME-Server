@@ -1,10 +1,10 @@
-﻿using ACME.Server.HttpModel.Requests;
-using ACME.Server.Filters;
-using ACME.Server.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using TG_IT.ACME.Protocol.HttpModel.Requests;
+using TG_IT.ACME.Protocol.Services;
+using TG_IT.ACME.Server.Filters;
 
 namespace TG_IT.ACME.Server.Controllers
 {
@@ -23,14 +23,14 @@ namespace TG_IT.ACME.Server.Controllers
 
         [Route("/new-order", Name = "NewOrder")]
         [HttpPost]
-        public async Task<ActionResult<HttpModel.Order>> CreateOrder(AcmeHttpRequest<CreateOrder> request)
+        public async Task<ActionResult<Protocol.HttpModel.Order>> CreateOrder(AcmeHttpRequest<CreateOrder> request)
         {
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
 
             var orderRequest = request.Payload!;
 
             var identifiers = orderRequest.Identifiers.Select(x =>
-                new Model.Identifier
+                new Protocol.Model.Identifier
                 {
                     Type = x.Type,
                     Value = x.Value
@@ -41,13 +41,13 @@ namespace TG_IT.ACME.Server.Controllers
                 orderRequest.NotBefore, orderRequest.NotAfter,
                 HttpContext.RequestAborted);
 
-            var orderResponse = new HttpModel.Order
+            var orderResponse = new Protocol.HttpModel.Order
             {
                 Status = order.Status.ToString().ToLowerInvariant(),
                 
 
                 Identifiers = order.Identifiers
-                    .Select(x => new HttpModel.Identifier { Type = x.Type, Value = x.Value })
+                    .Select(x => new Protocol.HttpModel.Identifier { Type = x.Type, Value = x.Value })
                     .ToList(),
                 Authorizations = order.Authorizations
                     .Select(x => Url.RouteUrl("GetAuthorization", new { orderId = order.OrderId, authId = x.AuthorizationId }, "https"))
@@ -63,14 +63,14 @@ namespace TG_IT.ACME.Server.Controllers
 
         [Route("/order/{orderId}", Name = "GetOrder")]
         [HttpPost]
-        public async Task<ActionResult<HttpModel.Order>> GetOrder(string orderId, AcmeHttpRequest request)
+        public async Task<ActionResult<Protocol.HttpModel.Order>> GetOrder(string orderId, AcmeHttpRequest request)
         {
             throw new NotImplementedException();
         }
 
         [Route("/order/{orderId}/auth/{authId}", Name = "GetAuthorization")]
         [HttpPost]
-        public async Task<ActionResult<HttpModel.Order>> GetAuthorizations(string orderId, string authId, AcmeHttpRequest request)
+        public async Task<ActionResult<Protocol.HttpModel.Order>> GetAuthorizations(string orderId, string authId, AcmeHttpRequest request)
         {
             throw new NotImplementedException();
 
@@ -78,7 +78,7 @@ namespace TG_IT.ACME.Server.Controllers
 
         [Route("/order/{orderId}/finalize", Name = "FinalizeOrder")]
         [HttpPost]
-        public async Task<ActionResult<HttpModel.Order>> FinalizeOrder(string orderId, AcmeHttpRequest<object> request)
+        public async Task<ActionResult<Protocol.HttpModel.Order>> FinalizeOrder(string orderId, AcmeHttpRequest<object> request)
         {
             throw new NotImplementedException();
 

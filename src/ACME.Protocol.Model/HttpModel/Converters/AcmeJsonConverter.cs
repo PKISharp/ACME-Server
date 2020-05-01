@@ -1,9 +1,8 @@
-﻿using ACME.Server.HttpModel.Requests;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using TG_IT.ACME.Protocol.HttpModel.Requests;
 
 namespace TG_IT.ACME.Protocol.HttpModel.Converters
 {

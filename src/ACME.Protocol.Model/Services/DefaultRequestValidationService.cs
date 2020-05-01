@@ -1,13 +1,13 @@
-﻿using ACME.Server.HttpModel.Requests;
-using ACME.Server.Model;
-using ACME.Server.Model.Exceptions;
-using ACME.Server.Storage;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TG_IT.ACME.Protocol.HttpModel.Requests;
+using TG_IT.ACME.Protocol.Model;
+using TG_IT.ACME.Protocol.Model.Exceptions;
+using TG_IT.ACME.Protocol.Storage;
 
 namespace TG_IT.ACME.Protocol.Services
 {

@@ -1,9 +1,9 @@
-﻿using ACME.Server.HttpModel.Requests;
-using TG_IT.ACME.Server.Filters;
-using ACME.Server.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using TG_IT.ACME.Protocol.HttpModel.Requests;
+using TG_IT.ACME.Protocol.Services;
+using TG_IT.ACME.Server.Filters;
 
 namespace TG_IT.ACME.Server.Controllers
 {
@@ -20,7 +20,7 @@ namespace TG_IT.ACME.Server.Controllers
 
         [Route("/new-account", Name = "NewAccount")]
         [HttpPost]
-        public async Task<ActionResult<HttpModel.Account>> CreateOrGetAccount(AcmeHttpRequest<CreateOrGetAccount> request)
+        public async Task<ActionResult<Protocol.HttpModel.Account>> CreateOrGetAccount(AcmeHttpRequest<CreateOrGetAccount> request)
         {
             if(request.Payload!.OnlyReturnExisting)
             {
@@ -30,7 +30,7 @@ namespace TG_IT.ACME.Server.Controllers
             return await CreateAccountAsync(request);
         }
 
-        private async Task<ActionResult<HttpModel.Account>> CreateAccountAsync(AcmeHttpRequest<CreateOrGetAccount> request)
+        private async Task<ActionResult<Protocol.HttpModel.Account>> CreateAccountAsync(AcmeHttpRequest<CreateOrGetAccount> request)
         {
             var account = await _accountService.CreateAccountAsync(
                 request.Header!.Jwk,
@@ -38,7 +38,7 @@ namespace TG_IT.ACME.Server.Controllers
                 request.Payload!.TermsOfServiceAgreed,
                 HttpContext.RequestAborted);
 
-            var accountResponse = new HttpModel.Account
+            var accountResponse = new Protocol.HttpModel.Account
             {
                 Status = account.Status.ToString(),
 
@@ -53,21 +53,21 @@ namespace TG_IT.ACME.Server.Controllers
             return new CreatedResult(accountUrl, accountResponse);
         }
 
-        private Task<ActionResult<HttpModel.Account>> FindAccountAsync(AcmeHttpRequest<CreateOrGetAccount> request)
+        private Task<ActionResult<Protocol.HttpModel.Account>> FindAccountAsync(AcmeHttpRequest<CreateOrGetAccount> request)
         {
             throw new NotImplementedException();
         }
 
         [Route("/account/{accountId}", Name = "Account")]
         [HttpPost, HttpPut]
-        public async Task<ActionResult<HttpModel.Account>> SetAccount(string accountId)
+        public async Task<ActionResult<Protocol.HttpModel.Account>> SetAccount(string accountId)
         {
             return Ok();
         }
 
         [Route("/account/{accountId}/orders", Name = "OrderList")]
         [HttpPost]
-        public async Task<ActionResult<HttpModel.OrdersList>> GetOrdersList(string accountId, AcmeHttpRequest request)
+        public async Task<ActionResult<Protocol.HttpModel.OrdersList>> GetOrdersList(string accountId, AcmeHttpRequest request)
         {
             throw new NotImplementedException();
         }

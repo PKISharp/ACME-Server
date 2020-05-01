@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using TG_IT.ACME.Protocol.Model;
 
 namespace TG_IT.ACME.Server.Model
 {

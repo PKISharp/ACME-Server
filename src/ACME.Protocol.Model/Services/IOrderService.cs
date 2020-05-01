@@ -1,9 +1,9 @@
-﻿using ACME.Server.Model;
-using ACME.Server.Storage;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using TG_IT.ACME.Protocol.Model;
+using TG_IT.ACME.Protocol.Storage;
 
 namespace TG_IT.ACME.Protocol.Services
 {

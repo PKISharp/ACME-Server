@@ -1,14 +1,9 @@
-﻿using ACME.Server.Services;
-using ACME.Server.Storage;
-using ACME.Server.Store.Filebased;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using TG_IT.ACME.Protocol.Storage;
+using TG_IT.ACME.Protocol.Storage.FileStore;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class ServiceCollectionExtensions
+    public static class FileStoreServiceCollectionExtensions
     {
         public static IServiceCollection AddACMEFileStore(this IServiceCollection services)
         {

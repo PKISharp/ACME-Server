@@ -1,12 +1,9 @@
-﻿using ACME.Server.Extensions;
-using ACME.Server.Services;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using TG_IT.ACME.Protocol.Services;
+using TG_IT.ACME.Server.Extensions;
 
 namespace TG_IT.ACME.Server.Filters
 {
