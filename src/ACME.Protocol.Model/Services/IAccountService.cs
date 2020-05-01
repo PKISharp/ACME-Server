@@ -1,10 +1,10 @@
-﻿using ACME.Protocol.HttpModel.Requests;
-using ACME.Protocol.Model;
+﻿using ACME.Server.HttpModel.Requests;
+using ACME.Server.Model;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ACME.Protocol.Services
+namespace TG_IT.ACME.Protocol.Services
 {
     public interface IAccountService
     {

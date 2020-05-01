@@ -1,6 +1,6 @@
-﻿using ACME.Protocol.Model;
-using ACME.Protocol.Storage;
-using ACME.Protocol.Store.Filebased.Configuration;
+﻿using ACME.Server.Model;
+using ACME.Server.Storage;
+using ACME.Server.Store.Filebased.Configuration;
 using Microsoft.Extensions.Options;
 using System;
 using System.IO;
@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ACME.Protocol.Store.Filebased
+namespace TG_IT.ACME.Protocol.Storage.FileStore
 {
     public class AccountStore : IAccountStore, IOrderStore
     {

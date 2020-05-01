@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ACME.Protocol.Store.Filebased.Configuration
+namespace TG_IT.ACME.Protocol.Storage.FileStore.Configuration
 {
     public class FileStoreOptions
     {

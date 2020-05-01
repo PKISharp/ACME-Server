@@ -1,8 +1,8 @@
-﻿using ACME.Protocol.Server.Configuration;
+﻿using ACME.Server.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace ACME.Protocol.Server.Controllers
+namespace TG_IT.ACME.Server.Controllers
 {
     public class DirectoryController : ControllerBase
     {

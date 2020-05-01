@@ -1,11 +1,11 @@
-﻿using ACME.Protocol.Services;
+﻿using ACME.Server.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
-namespace ACME.Protocol.Server.Filters
+namespace TG_IT.ACME.Server.Filters
 {
     public class AddNextNonceAttribute : ServiceFilterAttribute
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ACME.Protocol.Model
+namespace TG_IT.ACME.Protocol.Model
 {
     public struct Identifier : IEquatable<Identifier>
     {

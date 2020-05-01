@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace ACME.Protocol.Model
+namespace TG_IT.ACME.Protocol.Model
 {
     public class Jwk
     {

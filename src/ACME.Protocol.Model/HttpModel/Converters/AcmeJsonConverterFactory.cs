@@ -1,10 +1,10 @@
-﻿using ACME.Protocol.HttpModel.Requests;
+﻿using ACME.Server.HttpModel.Requests;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ACME.Protocol.HttpModel.Converters
+namespace TG_IT.ACME.Protocol.HttpModel.Converters
 {
     public class AcmeJsonConverterFactory : JsonConverterFactory
     {

@@ -1,7 +1,7 @@
-﻿using ACME.Protocol.HttpModel.Requests;
-using ACME.Protocol.Model;
-using ACME.Protocol.Model.Exceptions;
-using ACME.Protocol.Storage;
+﻿using ACME.Server.HttpModel.Requests;
+using ACME.Server.Model;
+using ACME.Server.Model.Exceptions;
+using ACME.Server.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ACME.Protocol.Services
+namespace TG_IT.ACME.Protocol.Services
 {
     public class DefaultRequestValidationService : IRequestValidationService
     {

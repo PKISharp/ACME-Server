@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ACME.Protocol.Model
+namespace TG_IT.ACME.Protocol.Model
 {
     public class Account
     {

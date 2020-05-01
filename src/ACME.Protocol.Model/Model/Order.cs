@@ -1,11 +1,11 @@
-﻿using ACME.Protocol.Exceptions;
+﻿using ACME.Server.Exceptions;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace ACME.Protocol.Model
+namespace TG_IT.ACME.Protocol.Model
 {
     public class Order
     {

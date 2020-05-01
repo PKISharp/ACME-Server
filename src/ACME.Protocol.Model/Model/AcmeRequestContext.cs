@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ACME.Protocol.Model
+namespace TG_IT.ACME.Server.Model
 {
     public class AcmeRequestContext
     {

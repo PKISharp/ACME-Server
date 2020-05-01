@@ -1,4 +1,4 @@
-﻿namespace ACME.Protocol.Model.Exceptions
+﻿namespace TG_IT.ACME.Protocol.Model.Exceptions
 {
     public class BadNonceException : AcmeException
     {

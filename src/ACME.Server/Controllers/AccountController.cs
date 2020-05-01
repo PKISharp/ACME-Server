@@ -1,11 +1,11 @@
-﻿using ACME.Protocol.HttpModel.Requests;
-using ACME.Protocol.Server.Filters;
-using ACME.Protocol.Services;
+﻿using ACME.Server.HttpModel.Requests;
+using TG_IT.ACME.Server.Filters;
+using ACME.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace ACME.Protocol.Server.Controllers
+namespace TG_IT.ACME.Server.Controllers
 {
     [ApiController]
     [AddNextNonce]

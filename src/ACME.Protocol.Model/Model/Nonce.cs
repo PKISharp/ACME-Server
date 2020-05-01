@@ -1,6 +1,6 @@
-﻿using ACME.Protocol.Exceptions;
+﻿using ACME.Server.Exceptions;
 
-namespace ACME.Protocol.Model
+namespace TG_IT.ACME.Protocol.Model
 {
     public class Nonce
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Provider.ACDS
+namespace TG_IT.Provider.ACDS
 {
     public class Class1
     {

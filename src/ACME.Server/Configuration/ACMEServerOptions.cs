@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ACME.Protocol.Server.Configuration
+namespace TG_IT.ACME.Server.Configuration
 {
     public class ACMEServerOptions
     {

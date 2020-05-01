@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ACME.Protocol.HttpModel.Requests
+namespace TG_IT.ACME.Protocol.HttpModel.Requests
 {
     public class Base64EncodedRequest
     {

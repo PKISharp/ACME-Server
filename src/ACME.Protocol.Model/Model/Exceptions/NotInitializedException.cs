@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace ACME.Protocol.Exceptions
+namespace TG_IT.ACME.Protocol.Model.Exceptions
 {
     internal class NotInitializedException : InvalidOperationException
     {

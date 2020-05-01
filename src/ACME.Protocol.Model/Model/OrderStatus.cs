@@ -1,4 +1,4 @@
-﻿namespace ACME.Protocol.Model
+﻿namespace TG_IT.ACME.Protocol.Model
 {
     public enum OrderStatus
     {

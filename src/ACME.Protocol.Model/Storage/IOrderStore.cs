@@ -1,8 +1,8 @@
-﻿using ACME.Protocol.Model;
+﻿using ACME.Server.Model;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ACME.Protocol.Storage
+namespace TG_IT.ACME.Protocol.Storage
 {
     public interface IOrderStore
     {

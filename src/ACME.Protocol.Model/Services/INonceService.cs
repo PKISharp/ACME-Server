@@ -1,8 +1,8 @@
-﻿using ACME.Protocol.Model;
+﻿using ACME.Server.Model;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ACME.Protocol.Services
+namespace TG_IT.ACME.Protocol.Services
 {
     public interface INonceService
     {

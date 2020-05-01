@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>ACME.Protocol</RootNamespace>
+    <RootNamespace>TG_IT.ACME.Protocol</RootNamespace>
+    <AssemblyName>TG_IT.ACME.Protocol</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

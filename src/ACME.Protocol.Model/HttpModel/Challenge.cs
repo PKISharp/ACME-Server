@@ -1,4 +1,4 @@
-﻿namespace ACME.Protocol.HttpModel
+﻿namespace TG_IT.ACME.Protocol.HttpModel
 {
     public class Challenge
     {

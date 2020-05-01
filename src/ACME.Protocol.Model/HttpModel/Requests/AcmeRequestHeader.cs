@@ -1,10 +1,10 @@
-﻿using ACME.Protocol.HttpModel.Converters;
-using ACME.Protocol.Model;
+﻿using ACME.Server.HttpModel.Converters;
+using ACME.Server.Model;
 using System;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace ACME.Protocol.HttpModel.Requests
+namespace TG_IT.ACME.Protocol.HttpModel.Requests
 {
     public class AcmeRequestHeader
     {

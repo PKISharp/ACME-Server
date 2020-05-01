@@ -1,11 +1,11 @@
-﻿using ACME.Protocol.HttpModel.Requests;
+﻿using ACME.Server.HttpModel.Requests;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ACME.Protocol.HttpModel.Converters
+namespace TG_IT.ACME.Protocol.HttpModel.Converters
 {
     public class AcmeJsonConverter : JsonConverter<AcmeHttpRequest>
     {

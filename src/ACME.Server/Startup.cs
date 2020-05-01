@@ -1,12 +1,12 @@
-using ACME.Protocol.Server.Filters;
-using ACME.Protocol.Store.Filebased.Configuration;
+using ACME.Server.Filters;
+using ACME.Server.Store.Filebased.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace ACME.Server
+namespace TG_IT.ACME.Server
 {
     public class Startup
     {

@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3B1444E7-430
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Provider.ACDS", "src\Provider.ACDS\Provider.ACDS.csproj", "{498EB72D-2D0D-40E0-A4DE-640EA99E01BD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACME.Protocol.Model", "src\ACME.Protocol.Model\ACME.Protocol.Model.csproj", "{70B3BA4D-1FB3-47D7-A2DD-45A46215CF1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACME.Protocol", "src\ACME.Protocol.Model\ACME.Protocol.csproj", "{70B3BA4D-1FB3-47D7-A2DD-45A46215CF1C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4A7478FE-7DC4-4340-BFBE-5462BCD7D82D}"
 	ProjectSection(SolutionItems) = preProject
