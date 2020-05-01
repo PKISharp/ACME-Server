@@ -33,8 +33,8 @@ namespace TG_IT.ACME.Server.Controllers
         private async Task<ActionResult<Protocol.HttpModel.Account>> CreateAccountAsync(AcmeHttpRequest<CreateOrGetAccount> request)
         {
             var account = await _accountService.CreateAccountAsync(
-                request.Header!.Jwk,
-                request.Payload!.Contact,
+                request.Header.Jwk!, //Post requests are validated, JWK exists.
+                request.Payload.Contact,
                 request.Payload!.TermsOfServiceAgreed,
                 HttpContext.RequestAborted);
 
