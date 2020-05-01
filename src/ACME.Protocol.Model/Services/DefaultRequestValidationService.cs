@@ -59,6 +59,9 @@ namespace TG_IT.ACME.Protocol.Services
 
         public async Task ValidateSignatureAsync(AcmeHttpRequest request, CancellationToken cancellationToken)
         {
+            if (request?.Header?.Jwk == null)
+                throw new MalformedRequestException("The signature could not be verified");
+
             var jwk = request.Header.Jwk;
             if(jwk == null)
             {
@@ -67,9 +70,9 @@ namespace TG_IT.ACME.Protocol.Services
                 jwk = account.Jwk;
             }
 
-            var securityKey = jwk!.GetJwkSecurityKey();
+            var securityKey = jwk.GetJwkSecurityKey();
             
-            var signatureProvider = new AsymmetricSignatureProvider(securityKey, request.Header.Alg);
+            using var signatureProvider = new AsymmetricSignatureProvider(securityKey, request.Header.Alg);
             var plainText = System.Text.Encoding.UTF8.GetBytes($"{request.EncodedHeader}.{request.EncodedPayload}");
             var signature = Base64UrlEncoder.DecodeBytes(request.Signature);
 
