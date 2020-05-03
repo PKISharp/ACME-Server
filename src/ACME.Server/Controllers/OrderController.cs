@@ -100,10 +100,37 @@ namespace TG_IT.ACME.Server.Controllers
 
             var authZResponse = new Protocol.HttpModel.Authorization
             {
-                //TODO: Copy all neccessary data
+                Status = authZ.Status.ToString(),
+
+                Identifier = new Protocol.HttpModel.Identifier
+                {
+                    Type = authZ.Identifier.Type,
+                    Value = authZ.Identifier.Value
+                },
+
+                Expires = authZ.Expires,
+                Wildcard = authZ.IsWildcard,
+
+                Challanges = authZ.Challenges
+                    .Select(x => new Protocol.HttpModel.Challenge
+                    {
+                        Type = x.Type,
+                        Url = x.Url, //TODO: ChallengeURL berechnen
+
+                        Status = x.Status,
+                        Error = x.Error,
+                        Validated = x.Validated
+                    })
             };
 
             return authZResponse;
+        }
+
+        [Route("/order/{orderId}/auth/{authId}/chall/{challengeId}")]
+        [HttpPost]
+        public async Task<ActionResult<object>> AcceptChallenge(string orderId, string authId, string challengeId)
+        {
+
         }
 
         [Route("/order/{orderId}/finalize", Name = "FinalizeOrder")]
@@ -119,7 +146,6 @@ namespace TG_IT.ACME.Server.Controllers
         public async Task<ActionResult<byte[]>> GetCertficate(string orderId, AcmeHttpRequest<object> request)
         {
             throw new NotImplementedException();
-
         }
     }
 }

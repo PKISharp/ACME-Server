@@ -8,7 +8,7 @@ namespace TG_IT.ACME.Protocol.Model
     {
         public Account()
         {
-            AccountId = Base64UrlEncoder.Encode(Guid.NewGuid().ToByteArray());
+            AccountId = new GuidString();
         }
 
         public string AccountId { get; internal set; }
