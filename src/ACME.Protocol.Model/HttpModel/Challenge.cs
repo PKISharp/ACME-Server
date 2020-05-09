@@ -1,34 +1,32 @@
-﻿namespace TG_IT.ACME.Protocol.HttpModel
+﻿using System.Globalization;
+using TG_IT.ACME.Protocol.Model.Exceptions;
+
+namespace TG_IT.ACME.Protocol.HttpModel
 {
     public class Challenge
     {
-        public string Url { get; set; }
-        public string Type { get; set; }
-        public string Status { get; set; }
+        public Challenge(Model.Challenge model)
+        {
+            Type = model.Type;
+            Status = model.Status.ToString().ToLowerInvariant();
+
+            Validated = model.Validated?.ToString("o", CultureInfo.InvariantCulture);
+            Error = model.Error;
+        }
+
+
+        public string Type { get; }
+
+        public string Status { get; }
 
         public string? Validated { get; set; }
         public Error? Error { get; set; }
-    }
 
-    //TODO: HTTP Challange könnte zusammengefasst werden.
-    public class TokenChallenge : Challenge
-    {
-        public string Token { get; set; }
-    }
-
-    public class Dns01Challenge : TokenChallenge
-    {
-        public Dns01Challenge()
+        private string? _url;
+        public string Url
         {
-            Type = "dns-01";
-        }
-    }
-
-    public class Http01Challenge : TokenChallenge
-    {
-        public Http01Challenge()
-        {
-            Type = "http-01";
+            get => _url ?? throw new NotInitializedException();
+            set => _url = value;
         }
     }
 }
