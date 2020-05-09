@@ -10,12 +10,10 @@ namespace TG_IT.ACME.Server.Filters
     public class ValidateAcmeHeaderFilter : IAsyncActionFilter
     {
         private readonly IRequestValidationService _validationService;
-        private readonly ILogger<ValidateAcmeHeaderFilter> _logger;
 
-        public ValidateAcmeHeaderFilter(IRequestValidationService validationService, ILogger<ValidateAcmeHeaderFilter> logger)
+        public ValidateAcmeHeaderFilter(IRequestValidationService validationService)
         {
             _validationService = validationService;
-            _logger = logger;
         }
 
 
@@ -23,9 +21,7 @@ namespace TG_IT.ACME.Server.Filters
         {
             if (HttpMethods.IsPost(context.HttpContext.Request.Method))
             {
-                _logger.LogInformation("Attempting to validate Nonce");
                 var acmeRequest = context.GetAcmeRequest();
-
                 await _validationService.ValidateRequestHeaderAsync(acmeRequest, context.HttpContext.RequestAborted);
             }
 

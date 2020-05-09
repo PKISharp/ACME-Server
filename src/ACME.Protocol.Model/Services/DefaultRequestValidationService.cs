@@ -59,15 +59,24 @@ namespace TG_IT.ACME.Protocol.Services
 
         public async Task ValidateSignatureAsync(AcmeHttpRequest request, CancellationToken cancellationToken)
         {
-            if (request?.Header?.Jwk == null)
-                throw new MalformedRequestException("The signature could not be verified");
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            if (request.Header.Jwk == null && request.Header.Kid == null)
+                throw new MalformedRequestException("Either provide JWK or KID");
 
             var jwk = request.Header.Jwk;
             if(jwk == null)
             {
-                var accountId = request.Header.GetAccountId();
-                var account = await _accountService.LoadAcountAsync(accountId, cancellationToken);
-                jwk = account.Jwk;
+                try
+                {
+                    var accountId = request.Header.GetAccountId();
+                    var account = await _accountService.LoadAcountAsync(accountId, cancellationToken);
+                    jwk = account.Jwk;
+                } catch (InvalidOperationException)
+                {
+                    throw new MalformedRequestException("KID could not be found.");
+                }
             }
 
             var securityKey = jwk.GetJwkSecurityKey();

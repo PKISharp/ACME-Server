@@ -47,7 +47,7 @@ namespace TG_IT.ACME.Server.Controllers
                 
 
                 Identifiers = order.Identifiers
-                    .Select(x => new Protocol.HttpModel.Identifier { Type = x.Type, Value = x.Value })
+                    .Select(x => new Protocol.HttpModel.Identifier(x))
                     .ToList(),
                 Authorizations = order.Authorizations
                     .Select(x => Url.RouteUrl("GetAuthorization", new { orderId = order.OrderId, authId = x.AuthorizationId }, "https"))
@@ -72,9 +72,8 @@ namespace TG_IT.ACME.Server.Controllers
             {
                 Status = order.Status.ToString().ToLowerInvariant(),
 
-
                 Identifiers = order.Identifiers
-                    .Select(x => new Protocol.HttpModel.Identifier { Type = x.Type, Value = x.Value })
+                    .Select(x => new Protocol.HttpModel.Identifier(x))
                     .ToList(),
                 Authorizations = order.Authorizations
                     .Select(x => Url.RouteUrl("GetAuthorization", new { orderId = order.OrderId, authId = x.AuthorizationId }, "https"))
@@ -98,39 +97,28 @@ namespace TG_IT.ACME.Server.Controllers
             if (authZ == null)
                 return NotFound();
 
-            var authZResponse = new Protocol.HttpModel.Authorization
-            {
-                Status = authZ.Status.ToString(),
-
-                Identifier = new Protocol.HttpModel.Identifier
-                {
-                    Type = authZ.Identifier.Type,
-                    Value = authZ.Identifier.Value
-                },
-
-                Expires = authZ.Expires,
-                Wildcard = authZ.IsWildcard,
-
-                Challanges = authZ.Challenges
-                    .Select(x => new Protocol.HttpModel.Challenge
+            var authZResponse = new Protocol.HttpModel.Authorization(authZ);
+            authZResponse.Challenges.AddRange(
+                authZ.Challenges
+                    .Select(x => new Protocol.HttpModel.Challenge(x)
                     {
-                        Type = x.Type,
-                        Url = x.Url, //TODO: ChallengeURL berechnen
-
-                        Status = x.Status,
-                        Error = x.Error,
-                        Validated = x.Validated
+                        Url = Url.RouteUrl("AcceptChallenge", new
+                        {
+                            orderId = orderId,
+                            authId = authId,
+                            challangeId = x.ChallengeId
+                        }, "https"),
                     })
-            };
+            );
 
             return authZResponse;
         }
 
-        [Route("/order/{orderId}/auth/{authId}/chall/{challengeId}")]
+        [Route("/order/{orderId}/auth/{authId}/chall/{challengeId}", Name = "AcceptChallenge")]
         [HttpPost]
         public async Task<ActionResult<object>> AcceptChallenge(string orderId, string authId, string challengeId)
         {
-
+            throw new NotImplementedException();
         }
 
         [Route("/order/{orderId}/finalize", Name = "FinalizeOrder")]

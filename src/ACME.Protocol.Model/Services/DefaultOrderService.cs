@@ -33,5 +33,11 @@ namespace TG_IT.ACME.Protocol.Services
 
             return order;
         }
+
+        public async Task<Order> GetOrderAsync(Account account, string orderId, CancellationToken cancellationToken)
+        {
+            var order = await _orderStore.LoadOrderAsync(orderId, account, cancellationToken);
+            return order;
+        }
     }
 }
