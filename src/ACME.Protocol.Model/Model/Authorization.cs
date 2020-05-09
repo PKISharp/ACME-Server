@@ -1,4 +1,7 @@
-﻿namespace TG_IT.ACME.Protocol.Model
+﻿using System;
+using System.Collections.Generic;
+
+namespace TG_IT.ACME.Protocol.Model
 {
     public class Authorization
     {
@@ -11,8 +14,8 @@
 
         public Identifier Identifier { get; set; }
         public string Status { get; set; }
-        public string? Expires { get; set; }
-        public Challenge[] Challenges { get; set; }
+        public DateTimeOffset? Expires { get; set; }
+        public List<Challenge> Challenges { get; set; }
         public bool? IsWildcard { get; set; }
     }
 }
