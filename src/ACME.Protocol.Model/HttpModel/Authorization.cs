@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
-using TG_IT.ACME.Protocol.Model;
 
 namespace TG_IT.ACME.Protocol.HttpModel
 {
     public class Authorization
     {
-        public Authorization(Model.Authorization model)
+        public Authorization(Model.Authorization model, IEnumerable<Challenge> challenges)
         {
             if (model is null)
                 throw new System.ArgumentNullException(nameof(model));
+
+            if (challenges is null)
+                throw new System.ArgumentNullException(nameof(challenges));
 
             Status = model.Status.ToString().ToLowerInvariant();
 
@@ -17,7 +19,7 @@ namespace TG_IT.ACME.Protocol.HttpModel
             Wildcard = model.IsWildcard;
 
             Identifier = new Identifier(model.Identifier);
-            Challenges = new List<Challenge>();
+            Challenges = new List<Challenge>(challenges);
         }
 
         public string Status { get; }
@@ -26,6 +28,6 @@ namespace TG_IT.ACME.Protocol.HttpModel
         public string? Expires { get; }
         public bool? Wildcard { get; }
 
-        public List<Challenge> Challenges { get; }
+        public IEnumerable<Challenge> Challenges { get; }
     }
 }

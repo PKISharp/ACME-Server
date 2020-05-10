@@ -82,19 +82,16 @@ namespace TG_IT.ACME.Server.Controllers
             if (authZ == null)
                 return NotFound();
 
-            var authZResponse = new Protocol.HttpModel.Authorization(authZ);
-            authZResponse.Challenges.AddRange(
-                authZ.Challenges
-                    .Select(x => new Protocol.HttpModel.Challenge(x)
-                    {
-                        Url = Url.RouteUrl("AcceptChallenge", new
-                        {
-                            orderId = orderId,
-                            authId = authId,
-                            challangeId = x.ChallengeId
-                        }, "https"),
-                    })
-            );
+            var challenges = authZ.Challenges
+                .Select(x => {
+                    var challengeUrl = Url.RouteUrl("AcceptChallenge", 
+                        new { orderId = orderId, authId = authId, challangeId = x.ChallengeId },
+                        "https");
+
+                    return new Protocol.HttpModel.Challenge(x, challengeUrl);
+                });
+
+            var authZResponse = new Protocol.HttpModel.Authorization(authZ, challenges);
 
             return authZResponse;
         }
