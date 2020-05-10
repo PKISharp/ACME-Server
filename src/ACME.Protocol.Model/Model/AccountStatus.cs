@@ -2,6 +2,8 @@
 {
     public enum AccountStatus
     {
-        Valid
+        Valid,
+        Deactivated,
+        Revoked
     }
 }

@@ -1,9 +1,8 @@
 ﻿namespace TG_IT.ACME.Protocol.Model
 {
-    public enum OrderStatus
+    public enum ChallengeStatus
     {
         Pending,
-        Ready,
         Processing,
         Valid,
         Invalid

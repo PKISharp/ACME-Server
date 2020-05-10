@@ -13,7 +13,7 @@ namespace TG_IT.ACME.Protocol.Model
         public string ChallengeId { get; set; }
 
         public string Type { get; set; }
-        public ChallangeStatus Status { get; set; }
+        public ChallengeStatus Status { get; set; }
 
         public Error? Error { get; set; } //TODO: Probably change model to something else.
         public DateTimeOffset? Validated { get; set; }
