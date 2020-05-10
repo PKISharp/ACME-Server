@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TG_IT.ACME.Protocol.HttpModel.Requests;
+using TG_IT.ACME.Protocol.Model;
 using TG_IT.ACME.Protocol.Services;
 using TG_IT.ACME.Server.Filters;
 
@@ -41,24 +43,19 @@ namespace TG_IT.ACME.Server.Controllers
                 orderRequest.NotBefore, orderRequest.NotAfter,
                 HttpContext.RequestAborted);
 
-            var orderResponse = new Protocol.HttpModel.Order
-            {
-                Status = order.Status.ToString().ToLowerInvariant(),
-                
-
-                Identifiers = order.Identifiers
-                    .Select(x => new Protocol.HttpModel.Identifier(x))
-                    .ToList(),
-                Authorizations = order.Authorizations
-                    .Select(x => Url.RouteUrl("GetAuthorization", new { orderId = order.OrderId, authId = x.AuthorizationId }, "https"))
-                    .ToList(),
-
-                Finalize = Url.RouteUrl("FinalizeOrder", new { orderId = order.OrderId }, "https")
-                //TODO: Copy all neccessary data
-            };
+            GetOrderUrls(order, out var authorizationUrls, out var finalizeUrl, out var certificateUrl);
+            var orderResponse = new Protocol.HttpModel.Order(order, authorizationUrls, finalizeUrl, certificateUrl);
 
             var orderUrl = Url.RouteUrl("GetOrder", new { orderId = order.OrderId }, "https");
             return new CreatedResult(orderUrl, orderResponse);
+        }
+
+        private void GetOrderUrls(Order order, out IEnumerable<string> authorizationUrls, out string finalizeUrl, out string certificateUrl)
+        {
+            authorizationUrls = order.Authorizations
+                                .Select(x => Url.RouteUrl("GetAuthorization", new { orderId = order.OrderId, authId = x.AuthorizationId }, "https"));
+            finalizeUrl = Url.RouteUrl("FinalizeOrder", new { orderId = order.OrderId }, "https");
+            certificateUrl = Url.RouteUrl("GetCertificate", new { orderId = order.OrderId }, "https");
         }
 
         [Route("/order/{orderId}", Name = "GetOrder")]
@@ -68,20 +65,8 @@ namespace TG_IT.ACME.Server.Controllers
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
             var order = await _orderService.GetOrderAsync(account, orderId, HttpContext.RequestAborted);
 
-            var orderResponse = new Protocol.HttpModel.Order
-            {
-                Status = order.Status.ToString().ToLowerInvariant(),
-
-                Identifiers = order.Identifiers
-                    .Select(x => new Protocol.HttpModel.Identifier(x))
-                    .ToList(),
-                Authorizations = order.Authorizations
-                    .Select(x => Url.RouteUrl("GetAuthorization", new { orderId = order.OrderId, authId = x.AuthorizationId }, "https"))
-                    .ToList(),
-
-                Finalize = Url.RouteUrl("FinalizeOrder", new { orderId = order.OrderId }, "https")
-                //TODO: Copy all neccessary data
-            };
+            GetOrderUrls(order, out var authorizationUrls, out var finalizeUrl, out var certificateUrl);
+            var orderResponse = new Protocol.HttpModel.Order(order, authorizationUrls, finalizeUrl, certificateUrl);
 
             return orderResponse;
         }

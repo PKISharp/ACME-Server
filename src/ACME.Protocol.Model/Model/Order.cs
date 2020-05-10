@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using TG_IT.ACME.Protocol.HttpModel;
 using TG_IT.ACME.Protocol.Model.Exceptions;
 
 namespace TG_IT.ACME.Protocol.Model
@@ -43,5 +44,7 @@ namespace TG_IT.ACME.Protocol.Model
         public List<Authorization> Authorizations { get; set; }
         public DateTimeOffset? NotBefore { get; internal set; }
         public DateTimeOffset? NotAfter { get; internal set; }
+        public Error? Error { get; internal set; }
+        public DateTimeOffset? Expires { get; internal set; }
     }
 }
