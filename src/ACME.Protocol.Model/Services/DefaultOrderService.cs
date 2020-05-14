@@ -34,10 +34,28 @@ namespace TG_IT.ACME.Protocol.Services
             return order;
         }
 
+        public async Task<byte[]> GetCertificate(Account account, string orderId, CancellationToken cancellationToken)
+        {
+            var order = await _orderStore.LoadOrderAsync(orderId, account, cancellationToken);
+            throw new NotImplementedException();
+        }
+
         public async Task<Order> GetOrderAsync(Account account, string orderId, CancellationToken cancellationToken)
         {
             var order = await _orderStore.LoadOrderAsync(orderId, account, cancellationToken);
             return order;
+        }
+
+        public async Task<Challenge> ProcessChallengeAsync(Account account, string orderId, string authId, string challengeId, CancellationToken cancellationToken)
+        {
+            var order = await _orderStore.LoadOrderAsync(orderId, account, cancellationToken);
+            throw new NotImplementedException();
+        }
+
+        public async Task<Order> ProcessCsr(Account account, string orderId, string csr, CancellationToken cancellationToken)
+        {
+            var order = await _orderStore.LoadOrderAsync(orderId, account, cancellationToken);
+            throw new NotImplementedException();
         }
     }
 }

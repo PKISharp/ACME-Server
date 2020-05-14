@@ -117,7 +117,7 @@ namespace TG_IT.ACME.Server.Controllers
         public async Task<ActionResult<Protocol.HttpModel.Order>> FinalizeOrder(string orderId, AcmeHttpRequest<FinalizeOrderRequest> request)
         {
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
-            var order = await _orderService.ProcessCsr(account, orderId, request.Payload.Csr);
+            var order = await _orderService.ProcessCsr(account, orderId, request.Payload.Csr, HttpContext.RequestAborted);
             GetOrderUrls(order, out var authorizationUrls, out var finalizeUrl, out var certificateUrl);
 
             var orderResponse = new Protocol.HttpModel.Order(order, authorizationUrls, finalizeUrl, certificateUrl);
@@ -129,7 +129,7 @@ namespace TG_IT.ACME.Server.Controllers
         public async Task<IActionResult> GetCertficate(string orderId, AcmeHttpRequest request)
         {
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
-            var certificate = await _orderService.GetCertificate(account, orderId);
+            var certificate = await _orderService.GetCertificate(account, orderId, HttpContext.RequestAborted);
 
             return File(certificate, "pem/certificate");
         }
