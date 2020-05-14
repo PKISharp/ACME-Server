@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace TG_IT.ACME.Protocol.HttpModel.Requests
 {
-    public class CreateOrder
+    public class CreateOrderRequest
     {
         public List<Identifier> Identifiers { get; set; }
 

@@ -25,7 +25,7 @@ namespace TG_IT.ACME.Server.Controllers
 
         [Route("/new-order", Name = "NewOrder")]
         [HttpPost]
-        public async Task<ActionResult<Protocol.HttpModel.Order>> CreateOrder(AcmeHttpRequest<CreateOrder> request)
+        public async Task<ActionResult<Protocol.HttpModel.Order>> CreateOrder(AcmeHttpRequest<CreateOrderRequest> request)
         {
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
 
@@ -53,7 +53,7 @@ namespace TG_IT.ACME.Server.Controllers
         private void GetOrderUrls(Order order, out IEnumerable<string> authorizationUrls, out string finalizeUrl, out string certificateUrl)
         {
             authorizationUrls = order.Authorizations
-                                .Select(x => Url.RouteUrl("GetAuthorization", new { orderId = order.OrderId, authId = x.AuthorizationId }, "https"));
+                .Select(x => Url.RouteUrl("GetAuthorization", new { orderId = order.OrderId, authId = x.AuthorizationId }, "https"));
             finalizeUrl = Url.RouteUrl("FinalizeOrder", new { orderId = order.OrderId }, "https");
             certificateUrl = Url.RouteUrl("GetCertificate", new { orderId = order.OrderId }, "https");
         }
@@ -83,10 +83,9 @@ namespace TG_IT.ACME.Server.Controllers
                 return NotFound();
 
             var challenges = authZ.Challenges
-                .Select(x => {
-                    var challengeUrl = Url.RouteUrl("AcceptChallenge", 
-                        new { orderId = orderId, authId = authId, challangeId = x.ChallengeId },
-                        "https");
+                .Select(x =>
+                {
+                    var challengeUrl = GetChallengeUrl(orderId, authId, x);
 
                     return new Protocol.HttpModel.Challenge(x, challengeUrl);
                 });
@@ -96,26 +95,43 @@ namespace TG_IT.ACME.Server.Controllers
             return authZResponse;
         }
 
+        private string GetChallengeUrl(string orderId, string authId, Challenge challenge)
+        {
+            return Url.RouteUrl("AcceptChallenge",
+                new { orderId = orderId, authId = authId, challangeId = challenge.ChallengeId }, "https");
+        }
+
         [Route("/order/{orderId}/auth/{authId}/chall/{challengeId}", Name = "AcceptChallenge")]
         [HttpPost]
-        public async Task<ActionResult<object>> AcceptChallenge(string orderId, string authId, string challengeId)
+        public async Task<ActionResult<Protocol.HttpModel.Challenge>> AcceptChallenge(string orderId, string authId, string challengeId, AcmeHttpRequest request)
         {
-            throw new NotImplementedException();
+            var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
+            var challenge = await _orderService.ProcessChallengeAsync(account, orderId, authId, challengeId, HttpContext.RequestAborted);
+
+            var challengeResponse = new Protocol.HttpModel.Challenge(challenge, GetChallengeUrl(orderId, authId, challenge));
+            return challengeResponse;
         }
 
         [Route("/order/{orderId}/finalize", Name = "FinalizeOrder")]
         [HttpPost]
-        public async Task<ActionResult<Protocol.HttpModel.Order>> FinalizeOrder(string orderId, AcmeHttpRequest<object> request)
+        public async Task<ActionResult<Protocol.HttpModel.Order>> FinalizeOrder(string orderId, AcmeHttpRequest<FinalizeOrderRequest> request)
         {
-            //TODO: What will be submitted here?
-            throw new NotImplementedException();
+            var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
+            var order = await _orderService.ProcessCsr(account, orderId, request.Payload.Csr);
+            GetOrderUrls(order, out var authorizationUrls, out var finalizeUrl, out var certificateUrl);
+
+            var orderResponse = new Protocol.HttpModel.Order(order, authorizationUrls, finalizeUrl, certificateUrl);
+            return orderResponse;
         }
 
         [Route("/order/{orderId}/certificate", Name = "GetCertificate")]
         [HttpPost]
-        public async Task<ActionResult<byte[]>> GetCertficate(string orderId, AcmeHttpRequest<object> request)
+        public async Task<IActionResult> GetCertficate(string orderId, AcmeHttpRequest request)
         {
-            throw new NotImplementedException();
+            var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
+            var certificate = await _orderService.GetCertificate(account, orderId);
+
+            return File(certificate, "pem/certificate");
         }
     }
 }
