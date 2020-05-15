@@ -2,75 +2,62 @@
 using System;
 using System.IO;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using TG_IT.ACME.Protocol.Model;
+using TG_IT.ACME.Protocol.Model.Exceptions;
 using TG_IT.ACME.Protocol.Storage.FileStore.Configuration;
 
 namespace TG_IT.ACME.Protocol.Storage.FileStore
 {
-    public class AccountStore : IAccountStore, IOrderStore
+
+    public class AccountStore : StoreBase, IAccountStore
     {
-        private readonly IOptions<FileStoreOptions> _options;
-
-        private readonly Regex _idRegex;
-
         public AccountStore(IOptions<FileStoreOptions> options)
-        {
-            _options = options;
-            _idRegex = new Regex("[\\w\\d_-]+", RegexOptions.Compiled);
-        }
+            : base(options)
+        { }
 
-        public async Task<Account> LoadAccountAsync(string accountId, CancellationToken cancellationToken)
+        public async Task<Account?> LoadAccountAsync(string accountId, CancellationToken cancellationToken)
         {
-            if (!_idRegex.IsMatch(accountId))
-                throw new InvalidOperationException("AccountId seems invalid!");
+            if (!IdentifierRegex.IsMatch(accountId))
+                throw new MalformedRequestException("AccountId does not match expected format.");
 
-            var accountPath = Path.Combine(_options.Value.AccountPath,
+            var accountPath = Path.Combine(Options.Value.AccountPath,
                 accountId, "account.json");
 
-            var utf8Bytes = await File.ReadAllBytesAsync(accountPath, cancellationToken);
-            var result = JsonSerializer.Deserialize<Account>(utf8Bytes);
+            if (!File.Exists(accountPath))
+                return null;
 
-            return result;
+            using (var fileStream = File.OpenRead(accountPath))
+            {
+                var utf8Bytes = new byte[fileStream.Length];
+                await fileStream.ReadAsync(utf8Bytes, cancellationToken);
+                var result = JsonSerializer.Deserialize<Account>(utf8Bytes);
+
+                return result;
+            }
         }
 
-        public async Task<Order> LoadOrderAsync(string orderId, Account account, CancellationToken cancellationToken)
+        public async Task SaveAccountAsync(Account setAccount, CancellationToken cancellationToken)
         {
-            if (!_idRegex.IsMatch(orderId))
-                throw new InvalidOperationException("AccountId seems invalid!");
+            if (setAccount is null)
+                throw new ArgumentNullException(nameof(setAccount));
 
-            var orderPath = Path.Combine(_options.Value.AccountPath,
-                account.AccountId, "orders", $"{orderId}.json");
-
-            var utf8Bytes = await File.ReadAllBytesAsync(orderPath, cancellationToken);
-            var result = JsonSerializer.Deserialize<Order>(utf8Bytes);
-            result.Account = account;
-
-            return result;
-        }
-
-        public async Task SaveAccountAsync(Account newAccount, CancellationToken cancellationToken)
-        {
-            var accountPath = Path.Combine(_options.Value.AccountPath,
-                newAccount.AccountId, "account.json");
+            var accountPath = Path.Combine(Options.Value.AccountPath,
+                setAccount.AccountId, "account.json");
 
             Directory.CreateDirectory(Path.GetDirectoryName(accountPath));
 
-            var utf8Bytes = JsonSerializer.SerializeToUtf8Bytes(newAccount);
-            await File.WriteAllBytesAsync(accountPath, utf8Bytes, cancellationToken);
-        }
+            using (var fileStream = File.Open(accountPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
+            {
+                var existingAccount = await LoadAccountAsync(setAccount.AccountId, cancellationToken);
+                if (existingAccount != null && existingAccount.Version != setAccount.Version)
+                    throw new ConcurrencyException();
 
-        public async Task SaveOrderAsync(Order order, CancellationToken cancellationToken)
-        {
-            var orderPath = Path.Combine(_options.Value.AccountPath,
-                order.Account.AccountId, "orders", $"{order.OrderId}.json");
-
-            Directory.CreateDirectory(Path.GetDirectoryName(orderPath));
-
-            var utf8Bytes = JsonSerializer.SerializeToUtf8Bytes(order);
-            await File.WriteAllBytesAsync(orderPath, utf8Bytes, cancellationToken);
+                setAccount.Version = DateTime.UtcNow.Ticks;
+                var utf8Bytes = JsonSerializer.SerializeToUtf8Bytes(setAccount);
+                await fileStream.WriteAsync(utf8Bytes, cancellationToken);
+            }
         }
     }
 }
