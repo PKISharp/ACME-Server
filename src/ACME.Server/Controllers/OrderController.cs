@@ -137,7 +137,7 @@ namespace TG_IT.ACME.Server.Controllers
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
             var certificate = await _orderService.GetCertificate(account, orderId, HttpContext.RequestAborted);
 
-            return File(certificate, "pem/certificate");
+            return File(certificate, "application/pem-certificate-chain");
         }
     }
 }
