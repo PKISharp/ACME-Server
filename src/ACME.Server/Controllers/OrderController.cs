@@ -66,6 +66,9 @@ namespace TG_IT.ACME.Server.Controllers
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
             var order = await _orderService.GetOrderAsync(account, orderId, HttpContext.RequestAborted);
 
+            if (order == null)
+                return NotFound();
+
             GetOrderUrls(order, out var authorizationUrls, out var finalizeUrl, out var certificateUrl);
             var orderResponse = new Protocol.HttpModel.Order(order, authorizationUrls, finalizeUrl, certificateUrl);
 
@@ -79,7 +82,10 @@ namespace TG_IT.ACME.Server.Controllers
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
             var order = await _orderService.GetOrderAsync(account, orderId, HttpContext.RequestAborted);
 
-            var authZ = order.Authorizations.FirstOrDefault(x => x.AuthorizationId == authId);
+            if (order == null)
+                return NotFound();
+
+            var authZ = order.GetAuthorization(authId);
             if (authZ == null)
                 return NotFound();
 

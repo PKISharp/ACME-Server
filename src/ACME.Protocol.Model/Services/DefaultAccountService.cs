@@ -18,7 +18,7 @@ namespace TG_IT.ACME.Protocol.Services
             _accountStore = accountStore;
         }
 
-        public async Task<Account> CreateAccountAsync(Jwk jwk, List<string> contact,
+        public async Task<Account> CreateAccountAsync(Jwk jwk, List<string>? contact,
             bool termsOfServiceAgreed, CancellationToken cancellationToken)
         {
             var newAccount = new Account
@@ -32,24 +32,36 @@ namespace TG_IT.ACME.Protocol.Services
             return newAccount;
         }
 
-        public Task<Account> FindAccountAsync(Jwk jwk, CancellationToken cancellationToken)
+        public Task<Account?> FindAccountAsync(Jwk jwk, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Account> FromRequestAsync(AcmeHttpRequest request, CancellationToken cancellationToken)
+        public async Task<Account> FromRequestAsync(AcmeHttpRequest request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(request?.Header.Kid))
                 throw new MalformedRequestException("Kid header is missing");
 
             //TODO: Get accountId from Kid?
             var accountId = request.Header.GetAccountId();
-            return LoadAcountAsync(accountId, cancellationToken);
+            var account = await LoadAcountAsync(accountId, cancellationToken);
+            ValidateAccount(account);
+
+            return account!;
         }
 
-        public async Task<Account> LoadAcountAsync(string accountId, CancellationToken cancellationToken)
+        public async Task<Account?> LoadAcountAsync(string accountId, CancellationToken cancellationToken)
         {
             return await _accountStore.LoadAccountAsync(accountId, cancellationToken);
+        }
+
+        private void ValidateAccount(Account? account)
+        {
+            if (account == null)
+                throw new AccountException();
+
+            if (account.Status != AccountStatus.Valid)
+                throw new AccountException(account.Status);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using TG_IT.ACME.Protocol.HttpModel.Requests;
+using TG_IT.ACME.Protocol.Model.Exceptions;
 using TG_IT.ACME.Protocol.Services;
 using TG_IT.ACME.Server.Filters;
 
@@ -23,31 +24,24 @@ namespace TG_IT.ACME.Server.Controllers
         public async Task<ActionResult<Protocol.HttpModel.Account>> CreateOrGetAccount(AcmeHttpRequest<CreateOrGetAccount> request)
         {
             if(request.Payload!.OnlyReturnExisting)
-            {
                 return await FindAccountAsync(request);
-            }
 
             return await CreateAccountAsync(request);
         }
 
         private async Task<ActionResult<Protocol.HttpModel.Account>> CreateAccountAsync(AcmeHttpRequest<CreateOrGetAccount> request)
         {
+            if (request.Payload == null)
+                throw new MalformedRequestException("Payload was empty or could not be read.");
+
             var account = await _accountService.CreateAccountAsync(
                 request.Header.Jwk!, //Post requests are validated, JWK exists.
                 request.Payload.Contact,
-                request.Payload!.TermsOfServiceAgreed,
+                request.Payload.TermsOfServiceAgreed,
                 HttpContext.RequestAborted);
 
-            var accountResponse = new Protocol.HttpModel.Account
-            {
-                Status = account.Status.ToString(),
-
-                Contact = account.Contact,
-                TermsOfServiceAgreed = account.TOSAccepted.HasValue,
-
-                ExternalAccountBinding = null,
-                Orders = Url.RouteUrl("OrderList", new { accountId = account.AccountId }, "https")
-            };
+            var ordersUrl = Url.RouteUrl("OrderList", new { accountId = account.AccountId }, "https");
+            var accountResponse = new Protocol.HttpModel.Account(account, ordersUrl);
 
             var accountUrl = Url.RouteUrl("Account", new { accountId = account.AccountId }, "https");
             return new CreatedResult(accountUrl, accountResponse);
@@ -60,14 +54,14 @@ namespace TG_IT.ACME.Server.Controllers
 
         [Route("/account/{accountId}", Name = "Account")]
         [HttpPost, HttpPut]
-        public async Task<ActionResult<Protocol.HttpModel.Account>> SetAccount(string accountId)
+        public Task<ActionResult<Protocol.HttpModel.Account>> SetAccount(string accountId)
         {
-            return Ok();
+            throw new NotImplementedException();
         }
 
         [Route("/account/{accountId}/orders", Name = "OrderList")]
         [HttpPost]
-        public async Task<ActionResult<Protocol.HttpModel.OrdersList>> GetOrdersList(string accountId, AcmeHttpRequest request)
+        public Task<ActionResult<Protocol.HttpModel.OrdersList>> GetOrdersList(string accountId, AcmeHttpRequest request)
         {
             throw new NotImplementedException();
         }

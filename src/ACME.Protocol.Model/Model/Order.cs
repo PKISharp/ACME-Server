@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using TG_IT.ACME.Protocol.HttpModel;
 using TG_IT.ACME.Protocol.Model.Exceptions;
@@ -62,5 +63,8 @@ namespace TG_IT.ACME.Protocol.Model
         /// Concurrency Token
         /// </summary>
         public long Version { get; set; }
+
+        public Authorization? GetAuthorization(string authId) 
+            => Authorizations.FirstOrDefault(x => x.AuthorizationId == authId);
     }
 }

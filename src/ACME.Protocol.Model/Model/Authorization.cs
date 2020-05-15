@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TG_IT.ACME.Protocol.Model
 {
@@ -8,6 +9,7 @@ namespace TG_IT.ACME.Protocol.Model
         public Authorization()
         {
             AuthorizationId = new GuidString();
+            Challenges = new List<Challenge>();
         }
 
         public string AuthorizationId { get; set; }
@@ -17,5 +19,8 @@ namespace TG_IT.ACME.Protocol.Model
         public DateTimeOffset? Expires { get; set; }
         public List<Challenge> Challenges { get; set; }
         public bool? IsWildcard { get; set; }
+
+        public Challenge? GetChallenge(string challengeId)
+            => Challenges.FirstOrDefault(x => x.ChallengeId == challengeId);
     }
 }

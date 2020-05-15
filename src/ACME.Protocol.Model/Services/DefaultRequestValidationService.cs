@@ -77,12 +77,15 @@ namespace TG_IT.ACME.Protocol.Services
                 {
                     var accountId = request.Header.GetAccountId();
                     var account = await _accountService.LoadAcountAsync(accountId, cancellationToken);
-                    jwk = account.Jwk;
+                    jwk = account?.Jwk;
                 } catch (InvalidOperationException)
                 {
                     throw new MalformedRequestException("KID could not be found.");
                 }
             }
+
+            if(jwk == null)
+                throw new MalformedRequestException("Could not load JWK.");
 
             var securityKey = jwk.GetJwkSecurityKey();
             

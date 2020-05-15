@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TG_IT.ACME.Protocol.Model;
+using TG_IT.ACME.Protocol.Model.Exceptions;
 using TG_IT.ACME.Protocol.Storage;
 
 namespace TG_IT.ACME.Protocol.Services
@@ -52,8 +53,12 @@ namespace TG_IT.ACME.Protocol.Services
         public async Task<Challenge> ProcessChallengeAsync(Account account, string orderId, string authId, string challengeId, CancellationToken cancellationToken)
         {
             var order = await _orderStore.LoadOrderAsync(orderId, account, cancellationToken);
-            if (order == null)
-                throw new InvalidOperationException();
+            var authZ = order?.GetAuthorization(authId);
+            var challenge = authZ?.GetChallenge(challengeId);
+            
+            if (challenge == null)
+                throw new MalformedRequestException("Could not locate challenge");
+            if (order!.Status != OrderStatus.Pending)
 
             throw new NotImplementedException();
         }
