@@ -21,6 +21,9 @@ namespace TG_IT.ACME.Protocol.Services
             DateTimeOffset? notBefore, DateTimeOffset? notAfter, 
             CancellationToken cancellationToken)
         {
+            if (account is null)
+                throw new ArgumentNullException(nameof(account));
+
             var authorizations = new List<Authorization>();
 
             var order = new Order(account, identifiers, authorizations)
@@ -40,7 +43,7 @@ namespace TG_IT.ACME.Protocol.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Order> GetOrderAsync(Account account, string orderId, CancellationToken cancellationToken)
+        public async Task<Order?> GetOrderAsync(Account account, string orderId, CancellationToken cancellationToken)
         {
             var order = await _orderStore.LoadOrderAsync(orderId, account, cancellationToken);
             return order;
@@ -49,6 +52,9 @@ namespace TG_IT.ACME.Protocol.Services
         public async Task<Challenge> ProcessChallengeAsync(Account account, string orderId, string authId, string challengeId, CancellationToken cancellationToken)
         {
             var order = await _orderStore.LoadOrderAsync(orderId, account, cancellationToken);
+            if (order == null)
+                throw new InvalidOperationException();
+
             throw new NotImplementedException();
         }
 

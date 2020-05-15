@@ -13,7 +13,8 @@ namespace TG_IT.ACME.Protocol.Services
             DateTimeOffset? notBefore, DateTimeOffset? notAfter, 
             CancellationToken cancellationToken);
         
-        Task<Order> GetOrderAsync(Account account, string orderId, CancellationToken cancellationToken);
+        Task<Order?> GetOrderAsync(Account account, string orderId, CancellationToken cancellationToken);
+
         Task<Order> ProcessCsr(Account account, string orderId, string csr, CancellationToken cancellationToken);
         Task<byte[]> GetCertificate(Account account, string orderId, CancellationToken cancellationToken);
 
