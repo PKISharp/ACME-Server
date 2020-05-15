@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TG_IT.ACME.Protocol.HttpModel.Requests;
 using TG_IT.ACME.Protocol.Model;
+using TG_IT.ACME.Protocol.Model.Exceptions;
 using TG_IT.ACME.Protocol.Services;
 using TG_IT.ACME.Server.Filters;
 
@@ -116,6 +117,11 @@ namespace TG_IT.ACME.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Protocol.HttpModel.Order>> FinalizeOrder(string orderId, AcmeHttpRequest<FinalizeOrderRequest> request)
         {
+            if (request == null)
+                throw new MalformedRequestException("Request was empty");
+            if (request.Payload == null)
+                throw new MalformedRequestException("Request payload was empty");
+
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
             var order = await _orderService.ProcessCsr(account, orderId, request.Payload.Csr, HttpContext.RequestAborted);
             GetOrderUrls(order, out var authorizationUrls, out var finalizeUrl, out var certificateUrl);

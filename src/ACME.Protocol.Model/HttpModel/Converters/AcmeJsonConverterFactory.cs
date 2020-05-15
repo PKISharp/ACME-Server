@@ -22,6 +22,9 @@ namespace TG_IT.ACME.Protocol.HttpModel.Converters
 
         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
         {
+            if (typeToConvert is null)
+                throw new ArgumentNullException(nameof(typeToConvert));
+
             if (typeToConvert.IsGenericType)
             {
                 var genericType = typeToConvert.GetGenericArguments()[0];

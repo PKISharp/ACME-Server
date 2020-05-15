@@ -9,11 +9,14 @@ namespace TG_IT.ACME.Protocol.HttpModel.Requests
     {
         public AcmeHttpRequest(Base64EncodedRequest request, AcmeRequestHeader header)
         {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
             if (string.IsNullOrWhiteSpace(request.Header))
-                throw new ArgumentException("message", nameof(request.Header));
+                throw new ArgumentException("Request body header is missing", nameof(request));
 
             if (string.IsNullOrWhiteSpace(request.Signature))
-                throw new ArgumentException("message", nameof(request.Signature));
+                throw new ArgumentException("Request body signature is missing", nameof(request));
 
             EncodedHeader = request.Header;
             Signature = request.Signature;

@@ -28,8 +28,11 @@ namespace TG_IT.ACME.Protocol.Services
             _logger = logger;
         }
 
-        public async Task ValidateRequestHeaderAsync(AcmeHttpRequest request, CancellationToken cancellationToken)
+        public Task ValidateRequestHeaderAsync(AcmeHttpRequest request, CancellationToken cancellationToken)
         {
+            if (request is null)
+                throw new ArgumentNullException(nameof(request));
+
             _logger.LogInformation("Attempting to validate AcmeHeader");
             var header = request.Header;
 
@@ -40,6 +43,8 @@ namespace TG_IT.ACME.Protocol.Services
                 throw new MalformedRequestException("Do not provide both Jwk and Kid.");
             if (header.Jwk == null && header.Kid == null)
                 throw new MalformedRequestException("Provide either Jwk or Kid.");
+
+            return Task.CompletedTask;
         }
 
         public async Task ValidateNonceAsync(string? nonce, CancellationToken cancellationToken)

@@ -27,7 +27,7 @@ namespace TG_IT.ACME.Protocol.HttpModel.Converters
 
         public override void Write(Utf8JsonWriter writer, AcmeHttpRequest value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
     }
 
