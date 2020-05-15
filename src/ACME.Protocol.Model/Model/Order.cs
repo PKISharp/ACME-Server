@@ -10,13 +10,16 @@ namespace TG_IT.ACME.Protocol.Model
     public class Order
     {
         private string? _orderId;
+        private Account? _account;
+        private string? _accountId;
 
-        public Order() {
+        internal Order()
+        {
             Identifiers = new List<Identifier>();
             Authorizations = new List<Authorization>();
         }
 
-        public Order(Account account, IEnumerable<Identifier> identifiers, IEnumerable<Authorization> authorizations)
+        internal Order(Account account, IEnumerable<Identifier> identifiers, IEnumerable<Authorization> authorizations)
         {
             _orderId = Base64UrlEncoder.Encode(Guid.NewGuid().ToByteArray());
             Status = OrderStatus.Pending;
@@ -28,14 +31,22 @@ namespace TG_IT.ACME.Protocol.Model
             Authorizations = new List<Authorization>(authorizations);
         }
 
-        public string OrderId { 
+        public string OrderId
+        {
             get => _orderId ?? throw new NotInitializedException();
             set => _orderId = value;
         }
 
         [JsonIgnore]
-        public Account Account { get; set; }
-        public string AccountId { get; set; }
+        public Account Account
+        {
+            get => _account ?? throw new NotInitializedException();
+            set => _account = value;
+        }
+        public string AccountId {
+            get => _accountId ?? throw new NotInitializedException(); 
+            set => _accountId = value; 
+        }
 
 
         public OrderStatus Status { get; set; }
@@ -46,5 +57,10 @@ namespace TG_IT.ACME.Protocol.Model
         public DateTimeOffset? NotAfter { get; internal set; }
         public Error? Error { get; internal set; }
         public DateTimeOffset? Expires { get; internal set; }
+
+        /// <summary>
+        /// Concurrency Token
+        /// </summary>
+        public long Version { get; set; }
     }
 }
