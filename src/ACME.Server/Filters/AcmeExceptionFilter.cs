@@ -20,10 +20,16 @@ namespace TG_IT.ACME.Server.Filters
             {
                 _logger.LogDebug($"Detected {acmeException.GetType()}. Converting to BadRequest.");
 
-                var badRequestResult = new BadRequestObjectResult(acmeException.GetHttpError());
-                badRequestResult.ContentTypes.Add("application/problem+json");
-
-                context.Result = badRequestResult;
+                ObjectResult result;
+                if (acmeException is ConflictRequestException)
+                    result = new ConflictObjectResult(acmeException.GetHttpError());
+                else if (acmeException is NotFoundException)
+                    result = new NotFoundObjectResult(acmeException.GetHttpError());
+                else
+                    result = new BadRequestObjectResult(acmeException.GetHttpError());
+                
+                result.ContentTypes.Add("application/problem+json");
+                context.Result = result;
             }
         }
     }

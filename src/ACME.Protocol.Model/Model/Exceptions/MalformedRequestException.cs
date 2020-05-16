@@ -8,4 +8,32 @@
 
         public override string ErrorType => "malformed";
     }
+
+    public class NotFoundException : MalformedRequestException
+    {
+
+    }
+
+    public class ConflictRequestException : MalformedRequestException
+    {
+        public ConflictRequestException(AccountStatus status)
+        {
+
+        }
+
+        public ConflictRequestException(OrderStatus status)
+        {
+
+        }
+
+        public ConflictRequestException(AuthorizationStatus status)
+        {
+
+        }
+
+        public ConflictRequestException(ChallengeStatus status)
+        {
+
+        }
+    }
 }

@@ -18,15 +18,4 @@
         }
     }
 
-    public class InvalidStateException : AcmeException
-    {
-        public override string ErrorType { get; }
-
-        public InvalidStateException()
-            :base()
-        {
-            UrnBase = "urn:custom-errors";
-            ErrorType = "bad-state";
-        }
-    }
 }
