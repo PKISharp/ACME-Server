@@ -11,29 +11,31 @@
 
     public class NotFoundException : MalformedRequestException
     {
-
+        public NotFoundException()
+            :base("The resource requested by the request could not be found.")
+        { }
     }
 
     public class ConflictRequestException : MalformedRequestException
     {
-        public ConflictRequestException(AccountStatus status)
-        {
+        private ConflictRequestException(string resourceType, string expectedStatus, string actualStatus)
+            : base($"The {resourceType} used in this request did not have the expected status '{expectedStatus}' but had '{actualStatus}'.")
+        { }
 
-        }
+        public ConflictRequestException(AccountStatus expectedStatus, AccountStatus actualStatus)
+            : this("account", $"{expectedStatus}", $"{actualStatus}")
+        { }
 
-        public ConflictRequestException(OrderStatus status)
-        {
+        public ConflictRequestException(OrderStatus expectedStatus, OrderStatus actualStatus)
+            : this("order", $"{expectedStatus}", $"{actualStatus}")
+        { }
 
-        }
+        public ConflictRequestException(AuthorizationStatus expectedStatus, AuthorizationStatus actualStatus)
+            : this("authorization", $"{expectedStatus}", $"{actualStatus}")
+        { }
 
-        public ConflictRequestException(AuthorizationStatus status)
-        {
-
-        }
-
-        public ConflictRequestException(ChallengeStatus status)
-        {
-
-        }
+        public ConflictRequestException(ChallengeStatus expectedStatus, ChallengeStatus actualStatus)
+            : this("challenge", $"{expectedStatus}", $"{actualStatus}")
+        { }
     }
 }
