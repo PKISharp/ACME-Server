@@ -1,11 +1,14 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using TGIT.ACME.Protocol.Model.Exceptions;
 
 namespace TGIT.ACME.Protocol.Model
 {
     public class Jwk
     {
         private JsonWebKey? _jsonWebKey;
+        
         private string? _jsonKeyHash;
+        private string? _json;
 
         private Jwk() { }
 
@@ -17,10 +20,17 @@ namespace TGIT.ACME.Protocol.Model
             Json = json;
         }
 
-        public string Json { get; set; }
+        public string Json {
+            get => _json ?? throw new NotInitializedException(); 
+            set => _json = value; 
+        }
 
-
-        public JsonWebKey GetJwkSecurityKey()
+        public JsonWebKey SecurityKey
             => _jsonWebKey ??= JsonWebKey.Create(Json);
+
+        public string KeyHash
+            => _jsonKeyHash ??= Base64UrlEncoder.Encode(
+                SecurityKey.ComputeJwkThumbprint()
+            );
     }
 }
