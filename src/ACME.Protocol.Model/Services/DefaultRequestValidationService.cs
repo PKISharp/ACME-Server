@@ -87,7 +87,7 @@ namespace TGIT.ACME.Protocol.Services
             if(jwk == null)
                 throw new MalformedRequestException("Could not load JWK.");
 
-            var securityKey = jwk.GetJwkSecurityKey();
+            var securityKey = jwk.JwkSecurityKey();
             
             using var signatureProvider = new AsymmetricSignatureProvider(securityKey, request.Header.Alg);
             var plainText = System.Text.Encoding.UTF8.GetBytes($"{request.EncodedHeader}.{request.EncodedPayload}");

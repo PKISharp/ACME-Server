@@ -59,7 +59,7 @@ namespace TGIT.ACME.Protocol.Services
             if (challenge == null)
                 throw new MalformedRequestException("Could not locate challenge");
             if (order!.Status != OrderStatus.Pending)
-
+            { }
             throw new NotImplementedException();
         }
 
