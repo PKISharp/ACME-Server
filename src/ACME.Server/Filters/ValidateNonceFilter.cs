@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using TG_IT.ACME.Protocol.Services;
-using TG_IT.ACME.Server.Extensions;
+using TGIT.ACME.Protocol.Services;
+using TGIT.ACME.Server.Extensions;
 
-namespace TG_IT.ACME.Server.Filters
+namespace TGIT.ACME.Server.Filters
 {
     public class ValidateNonceFilter : IAsyncActionFilter
     {

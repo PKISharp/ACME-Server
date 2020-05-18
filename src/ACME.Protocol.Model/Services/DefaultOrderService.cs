@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using TG_IT.ACME.Protocol.Model;
-using TG_IT.ACME.Protocol.Model.Exceptions;
-using TG_IT.ACME.Protocol.Storage;
+using TGIT.ACME.Protocol.Model;
+using TGIT.ACME.Protocol.Model.Exceptions;
+using TGIT.ACME.Protocol.Storage;
 
-namespace TG_IT.ACME.Protocol.Services
+namespace TGIT.ACME.Protocol.Services
 {
     public class DefaultOrderService : IOrderService
     {

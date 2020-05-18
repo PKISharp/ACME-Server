@@ -1,6 +1,6 @@
-﻿using TG_IT.ACME.Server.Model;
+﻿using TGIT.ACME.Server.Model;
 
-namespace TG_IT.ACME.Protocol.Services
+namespace TGIT.ACME.Protocol.Services
 {
     public interface IAcmeContextAccesor
     {

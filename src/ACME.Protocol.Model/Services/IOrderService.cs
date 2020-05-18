@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using TG_IT.ACME.Protocol.Model;
+using TGIT.ACME.Protocol.Model;
 
-namespace TG_IT.ACME.Protocol.Services
+namespace TGIT.ACME.Protocol.Services
 {
     public interface IOrderService
     {

@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
-using TG_IT.ACME.Protocol.Model.Exceptions;
+using TGIT.ACME.Protocol.Model.Exceptions;
 
-namespace TG_IT.ACME.Protocol.HttpModel
+namespace TGIT.ACME.Protocol.HttpModel
 {
     public class Challenge
     {

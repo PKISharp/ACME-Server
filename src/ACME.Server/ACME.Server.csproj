@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>TG_IT.ACME.Server</RootNamespace>
-    <AssemblyName>TG_IT.ACME.Server</AssemblyName>
+    <RootNamespace>TGIT.ACME.Server</RootNamespace>
+    <AssemblyName>TGIT.ACME.Server</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

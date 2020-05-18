@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TG_IT.ACME.Protocol.HttpModel.Requests
+namespace TGIT.ACME.Protocol.HttpModel.Requests
 {
     public class FinalizeOrderRequest
     {

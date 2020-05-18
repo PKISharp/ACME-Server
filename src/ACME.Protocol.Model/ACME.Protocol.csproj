@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <RootNamespace>TG_IT.ACME.Protocol</RootNamespace>
-    <AssemblyName>TG_IT.ACME.Protocol</AssemblyName>
+    <RootNamespace>TGIT.ACME.Protocol</RootNamespace>
+    <AssemblyName>TGIT.ACME.Protocol</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

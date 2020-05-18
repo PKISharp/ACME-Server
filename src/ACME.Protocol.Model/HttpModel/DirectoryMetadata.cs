@@ -1,4 +1,4 @@
-﻿namespace TG_IT.ACME.Protocol.HttpModel
+﻿namespace TGIT.ACME.Protocol.HttpModel
 {
     public class DirectoryMetadata
     {

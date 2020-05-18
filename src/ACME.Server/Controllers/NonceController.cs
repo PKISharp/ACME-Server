@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TG_IT.ACME.Server.Filters;
+using TGIT.ACME.Server.Filters;
 
-namespace TG_IT.ACME.Server.Controllers
+namespace TGIT.ACME.Server.Controllers
 {
     [ApiController]
     [AddNextNonce]

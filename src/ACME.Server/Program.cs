@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace TG_IT.ACME.Server
+namespace TGIT.ACME.Server
 {
     public class Program
     {

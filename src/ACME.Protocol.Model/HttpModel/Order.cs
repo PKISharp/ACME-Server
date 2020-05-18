@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 
-namespace TG_IT.ACME.Protocol.HttpModel
+namespace TGIT.ACME.Protocol.HttpModel
 {
     public class Order
     {

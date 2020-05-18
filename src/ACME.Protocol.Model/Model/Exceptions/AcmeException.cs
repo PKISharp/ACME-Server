@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TG_IT.ACME.Protocol.Model.Exceptions
+namespace TGIT.ACME.Protocol.Model.Exceptions
 {
     public abstract class AcmeException : Exception
     {

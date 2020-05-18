@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TG_IT.ACME.Protocol.Model
+namespace TGIT.ACME.Protocol.Model
 {
     public class Authorization
     {

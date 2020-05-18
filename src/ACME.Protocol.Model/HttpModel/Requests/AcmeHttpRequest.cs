@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text.Json.Serialization;
-using TG_IT.ACME.Protocol.HttpModel.Converters;
+using TGIT.ACME.Protocol.HttpModel.Converters;
 
-namespace TG_IT.ACME.Protocol.HttpModel.Requests
+namespace TGIT.ACME.Protocol.HttpModel.Requests
 {
     [JsonConverter(typeof(AcmeJsonConverterFactory))]
     public class AcmeHttpRequest

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using TG_IT.ACME.Protocol.Services;
+using TGIT.ACME.Protocol.Services;
 
-namespace TG_IT.ACME.Server.Filters
+namespace TGIT.ACME.Server.Filters
 {
     public class AddNextNonceAttribute : ServiceFilterAttribute
     {

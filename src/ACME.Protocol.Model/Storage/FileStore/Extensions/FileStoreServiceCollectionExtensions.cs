@@ -1,5 +1,5 @@
-﻿using TG_IT.ACME.Protocol.Storage;
-using TG_IT.ACME.Protocol.Storage.FileStore;
+﻿using TGIT.ACME.Protocol.Storage;
+using TGIT.ACME.Protocol.Storage.FileStore;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

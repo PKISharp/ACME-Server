@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using TG_IT.ACME.Protocol.HttpModel.Requests;
-using TG_IT.ACME.Protocol.Model.Exceptions;
-using TG_IT.ACME.Protocol.Services;
-using TG_IT.ACME.Server.Filters;
+using TGIT.ACME.Protocol.HttpModel.Requests;
+using TGIT.ACME.Protocol.Model.Exceptions;
+using TGIT.ACME.Protocol.Services;
+using TGIT.ACME.Server.Filters;
 
-namespace TG_IT.ACME.Server.Controllers
+namespace TGIT.ACME.Server.Controllers
 {
     [ApiController]
     [AddNextNonce]

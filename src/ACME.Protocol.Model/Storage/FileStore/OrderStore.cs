@@ -4,11 +4,11 @@ using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using TG_IT.ACME.Protocol.Model;
-using TG_IT.ACME.Protocol.Model.Exceptions;
-using TG_IT.ACME.Protocol.Storage.FileStore.Configuration;
+using TGIT.ACME.Protocol.Model;
+using TGIT.ACME.Protocol.Model.Exceptions;
+using TGIT.ACME.Protocol.Storage.FileStore.Configuration;
 
-namespace TG_IT.ACME.Protocol.Storage.FileStore
+namespace TGIT.ACME.Protocol.Storage.FileStore
 {
     public class OrderStore : StoreBase, IOrderStore
     {

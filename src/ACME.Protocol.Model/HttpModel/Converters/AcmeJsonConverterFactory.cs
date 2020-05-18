@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using TG_IT.ACME.Protocol.HttpModel.Requests;
+using TGIT.ACME.Protocol.HttpModel.Requests;
 
-namespace TG_IT.ACME.Protocol.HttpModel.Converters
+namespace TGIT.ACME.Protocol.HttpModel.Converters
 {
     public class AcmeJsonConverterFactory : JsonConverterFactory
     {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using TG_IT.ACME.Server.Configuration;
+using TGIT.ACME.Server.Configuration;
 
-namespace TG_IT.ACME.Server.Controllers
+namespace TGIT.ACME.Server.Controllers
 {
     public class DirectoryController : ControllerBase
     {

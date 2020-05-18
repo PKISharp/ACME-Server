@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TG_IT.ACME.Server.Filters
+namespace TGIT.ACME.Server.Filters
 {
     public class AcmeIndexLinkFilter : IActionFilter
     {

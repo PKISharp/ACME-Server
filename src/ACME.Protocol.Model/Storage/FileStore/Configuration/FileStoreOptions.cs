@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using TGIT.ACME.Protocol.Model.Exceptions;
 
-namespace TG_IT.ACME.Protocol.Storage.FileStore.Configuration
+namespace TGIT.ACME.Protocol.Storage.FileStore.Configuration
 {
     public class FileStoreOptions
     {
-        public string NoncePath { get; set; }
-        public string AccountPath { get; set; }
+        private string? _noncePath;
+        private string? _accountPath;
+
+        public string NoncePath {
+            get => _noncePath ?? throw new NotInitializedException(); 
+            set => _noncePath = value; 
+        }
+
+        public string AccountPath { 
+            get => _accountPath ?? throw new NotInitializedException(); 
+            set => _accountPath = value; 
+        }
     }
 }

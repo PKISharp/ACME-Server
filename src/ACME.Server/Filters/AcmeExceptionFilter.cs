@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using TG_IT.ACME.Protocol.Model.Exceptions;
+using TGIT.ACME.Protocol.Model.Exceptions;
 
-namespace TG_IT.ACME.Server.Filters
+namespace TGIT.ACME.Server.Filters
 {
     public class AcmeExceptionFilter : IExceptionFilter
     {

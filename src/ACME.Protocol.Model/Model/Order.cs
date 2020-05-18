@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using TG_IT.ACME.Protocol.HttpModel;
-using TG_IT.ACME.Protocol.Model.Exceptions;
+using TGIT.ACME.Protocol.HttpModel;
+using TGIT.ACME.Protocol.Model.Exceptions;
 
-namespace TG_IT.ACME.Protocol.Model
+namespace TGIT.ACME.Protocol.Model
 {
     public class Order
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TG_IT.ACME.Protocol.Services;
-using TG_IT.ACME.Server.Filters;
+using TGIT.ACME.Protocol.Services;
+using TGIT.ACME.Server.Filters;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

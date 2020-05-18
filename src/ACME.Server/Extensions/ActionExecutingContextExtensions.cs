@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Linq;
-using TG_IT.ACME.Protocol.HttpModel.Requests;
+using TGIT.ACME.Protocol.HttpModel.Requests;
 
-namespace TG_IT.ACME.Server.Extensions
+namespace TGIT.ACME.Server.Extensions
 {
     public static class ActionExecutingContextExtensions
     {

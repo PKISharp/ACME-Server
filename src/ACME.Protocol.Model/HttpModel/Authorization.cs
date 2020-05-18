@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 
-namespace TG_IT.ACME.Protocol.HttpModel
+namespace TGIT.ACME.Protocol.HttpModel
 {
     public class Authorization
     {

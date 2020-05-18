@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TG_IT.ACME.Protocol.Model
+namespace TGIT.ACME.Protocol.Model
 {
     internal class GuidString
     {

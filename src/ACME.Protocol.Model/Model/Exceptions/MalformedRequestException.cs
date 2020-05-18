@@ -1,4 +1,4 @@
-﻿namespace TG_IT.ACME.Protocol.Model.Exceptions
+﻿namespace TGIT.ACME.Protocol.Model.Exceptions
 {
     public class MalformedRequestException : AcmeException
     {

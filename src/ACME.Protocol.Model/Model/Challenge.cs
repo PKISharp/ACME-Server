@@ -1,7 +1,7 @@
 ﻿using System;
-using TG_IT.ACME.Protocol.HttpModel;
+using TGIT.ACME.Protocol.HttpModel;
 
-namespace TG_IT.ACME.Protocol.Model
+namespace TGIT.ACME.Protocol.Model
 {
     public class Challenge
     {
