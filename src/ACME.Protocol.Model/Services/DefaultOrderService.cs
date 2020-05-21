@@ -56,10 +56,16 @@ namespace TGIT.ACME.Protocol.Services
             var authZ = order?.GetAuthorization(authId);
             var challenge = authZ?.GetChallenge(challengeId);
             
-            if (challenge == null)
-                throw new MalformedRequestException("Could not locate challenge");
-            if (order!.Status != OrderStatus.Pending)
-            { }
+            if (order == null || authZ == null || challenge == null)
+                throw new NotFoundException();
+
+            if (order.Status != OrderStatus.Pending)
+                throw new ConflictRequestException(OrderStatus.Pending, order.Status);
+            if (authZ.Status != AuthorizationStatus.Pending)
+                throw new ConflictRequestException(AuthorizationStatus.Pending, authZ.Status);
+            if (challenge.Status != ChallengeStatus.Pending)
+                throw new ConflictRequestException(ChallengeStatus.Pending, challenge.Status);
+
             throw new NotImplementedException();
         }
 
