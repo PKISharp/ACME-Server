@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>TGIT.ACME.CertProvider.ACDS</AssemblyName>
+    <RootNamespace>TGIT.ACME.CertProvider.ACDS</RootNamespace>
+  </PropertyGroup>
+
+</Project>

@@ -6,6 +6,7 @@ namespace TGIT.ACME.Protocol.Storage.FileStore.Configuration
     {
         private string? _noncePath;
         private string? _accountPath;
+        private string? _workingPath;
 
         public string NoncePath {
             get => _noncePath ?? throw new NotInitializedException(); 
@@ -15,6 +16,12 @@ namespace TGIT.ACME.Protocol.Storage.FileStore.Configuration
         public string AccountPath { 
             get => _accountPath ?? throw new NotInitializedException(); 
             set => _accountPath = value; 
+        }
+        
+        public string WorkingPath
+        { 
+            get => _workingPath ?? throw new NotInitializedException(); 
+            set => _workingPath = value; 
         }
     }
 }

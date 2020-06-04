@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -62,6 +64,25 @@ namespace TGIT.ACME.Protocol.Storage.FileStore
                 var utf8Bytes = JsonSerializer.SerializeToUtf8Bytes(setOrder);
                 await fileStream.WriteAsync(utf8Bytes, cancellationToken);
             }
+        }
+
+        public Task<List<Order>> GetValidatableOrders(CancellationToken cancellationToken)
+        {
+            var workPath = Path.Combine(Options.Value.WorkingPath, "validateable");
+            var files = Directory.EnumerateFiles(workPath);
+
+            var result = new List<Order>();
+            foreach(var file in files)
+            {
+                var orderPath = 
+            }
+
+            return result;
+        }
+
+        public Task<List<Order>> GetFinalizableOrders(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }
