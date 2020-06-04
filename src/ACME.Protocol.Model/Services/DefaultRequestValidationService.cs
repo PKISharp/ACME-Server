@@ -28,7 +28,7 @@ namespace TGIT.ACME.Protocol.Services
             _logger = logger;
         }
 
-        public Task ValidateRequestHeaderAsync(AcmeHttpRequest request, CancellationToken cancellationToken)
+        public Task ValidateRequestHeaderAsync(AcmePostRequest request, CancellationToken cancellationToken)
         {
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
@@ -36,12 +36,12 @@ namespace TGIT.ACME.Protocol.Services
             _logger.LogInformation("Attempting to validate AcmeHeader");
             var header = request.Header;
 
-            if (!_supportedAlgs.Contains(header.Alg))
+            if (!_supportedAlgs.Contains(header.Value.Alg))
                 throw new BadSignatureAlgorithmException();
 
-            if (header.Jwk != null && header.Kid != null)
+            if (header.Value.Jwk != null && header.Value.Kid != null)
                 throw new MalformedRequestException("Do not provide both Jwk and Kid.");
-            if (header.Jwk == null && header.Kid == null)
+            if (header.Value.Jwk == null && header.Value.Kid == null)
                 throw new MalformedRequestException("Provide either Jwk or Kid.");
 
             return Task.CompletedTask;
@@ -62,20 +62,20 @@ namespace TGIT.ACME.Protocol.Services
             }
         }
 
-        public async Task ValidateSignatureAsync(AcmeHttpRequest request, CancellationToken cancellationToken)
+        public async Task ValidateSignatureAsync(AcmePostRequest request, CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
-            if (request.Header.Jwk == null && request.Header.Kid == null)
+            if (request.Header.Value.Jwk == null && request.Header.Value.Kid == null)
                 throw new MalformedRequestException("Either provide JWK or KID");
 
-            var jwk = request.Header.Jwk;
+            var jwk = request.Header.Value.Jwk;
             if(jwk == null)
             {
                 try
                 {
-                    var accountId = request.Header.GetAccountId();
+                    var accountId = request.Header.Value.GetAccountId();
                     var account = await _accountService.LoadAcountAsync(accountId, cancellationToken);
                     jwk = account?.Jwk;
                 } catch (InvalidOperationException)
@@ -89,8 +89,8 @@ namespace TGIT.ACME.Protocol.Services
 
             var securityKey = jwk.SecurityKey;
             
-            using var signatureProvider = new AsymmetricSignatureProvider(securityKey, request.Header.Alg);
-            var plainText = System.Text.Encoding.UTF8.GetBytes($"{request.EncodedHeader}.{request.EncodedPayload}");
+            using var signatureProvider = new AsymmetricSignatureProvider(securityKey, request.Header.Value.Alg);
+            var plainText = System.Text.Encoding.UTF8.GetBytes($"{request.Header.EncodedJson}.{request.Payload?.EncodedJson ?? ""}");
             var signature = Base64UrlEncoder.DecodeBytes(request.Signature);
 
             if (!signatureProvider.Verify(plainText, signature))

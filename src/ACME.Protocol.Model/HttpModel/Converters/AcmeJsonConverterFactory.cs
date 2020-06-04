@@ -17,7 +17,7 @@ namespace TGIT.ACME.Protocol.HttpModel.Converters
 
         public override bool CanConvert(Type typeToConvert)
         {
-            return typeof(AcmeHttpRequest).IsAssignableFrom(typeToConvert);
+            return typeof(AcmePostRequest).IsAssignableFrom(typeToConvert);
         }
 
         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)

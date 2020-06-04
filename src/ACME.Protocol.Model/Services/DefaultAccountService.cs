@@ -32,13 +32,13 @@ namespace TGIT.ACME.Protocol.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Account> FromRequestAsync(AcmeHttpRequest request, CancellationToken cancellationToken)
+        public async Task<Account> FromRequestAsync(AcmePostRequest request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(request?.Header.Kid))
+            if (string.IsNullOrEmpty(request?.Header.Value.Kid))
                 throw new MalformedRequestException("Kid header is missing");
 
             //TODO: Get accountId from Kid?
-            var accountId = request.Header.GetAccountId();
+            var accountId = request.Header.Value.GetAccountId();
             var account = await LoadAcountAsync(accountId, cancellationToken);
             ValidateAccount(account);
 

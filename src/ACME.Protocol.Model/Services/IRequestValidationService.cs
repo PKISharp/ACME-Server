@@ -6,8 +6,8 @@ namespace TGIT.ACME.Protocol.Services
 {
     public interface IRequestValidationService
     {
-        Task ValidateRequestHeaderAsync(AcmeHttpRequest request, CancellationToken cancellationToken);
-        Task ValidateSignatureAsync(AcmeHttpRequest request, CancellationToken cancellationToken);
+        Task ValidateRequestHeaderAsync(AcmePostRequest request, CancellationToken cancellationToken);
+        Task ValidateSignatureAsync(AcmePostRequest request, CancellationToken cancellationToken);
 
         Task ValidateNonceAsync(string? nonce, CancellationToken cancellationToken);
 

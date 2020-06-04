@@ -7,10 +7,10 @@ namespace TGIT.ACME.Server.Extensions
 {
     public static class ActionExecutingContextExtensions
     {
-        public static AcmeHttpRequest GetAcmeRequest(this ActionExecutingContext context)
+        public static AcmePostRequest GetAcmeRequest(this ActionExecutingContext context)
         {
             var acmeRequest = context.ActionArguments.Values
-                    .OfType<AcmeHttpRequest>()
+                    .OfType<AcmePostRequest>()
                     .SingleOrDefault();
 
             if (acmeRequest == null)

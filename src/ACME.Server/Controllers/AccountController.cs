@@ -21,7 +21,7 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/new-account", Name = "NewAccount")]
         [HttpPost]
-        public async Task<ActionResult<Protocol.HttpModel.Account>> CreateOrGetAccount(AcmeHttpRequest<CreateOrGetAccount> request)
+        public async Task<ActionResult<Protocol.HttpModel.Account>> CreateOrGetAccount(AcmePostRequest<CreateOrGetAccount> request)
         {
             if(request.Payload!.OnlyReturnExisting)
                 return await FindAccountAsync(request);
@@ -29,7 +29,7 @@ namespace TGIT.ACME.Server.Controllers
             return await CreateAccountAsync(request);
         }
 
-        private async Task<ActionResult<Protocol.HttpModel.Account>> CreateAccountAsync(AcmeHttpRequest<CreateOrGetAccount> request)
+        private async Task<ActionResult<Protocol.HttpModel.Account>> CreateAccountAsync(AcmePostRequest<CreateOrGetAccount> request)
         {
             if (request.Payload == null)
                 throw new MalformedRequestException("Payload was empty or could not be read.");
@@ -47,7 +47,7 @@ namespace TGIT.ACME.Server.Controllers
             return new CreatedResult(accountUrl, accountResponse);
         }
 
-        private Task<ActionResult<Protocol.HttpModel.Account>> FindAccountAsync(AcmeHttpRequest<CreateOrGetAccount> request)
+        private Task<ActionResult<Protocol.HttpModel.Account>> FindAccountAsync(AcmePostRequest<CreateOrGetAccount> request)
         {
             throw new NotImplementedException();
         }
@@ -61,7 +61,7 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/account/{accountId}/orders", Name = "OrderList")]
         [HttpPost]
-        public Task<ActionResult<Protocol.HttpModel.OrdersList>> GetOrdersList(string accountId, AcmeHttpRequest request)
+        public Task<ActionResult<Protocol.HttpModel.OrdersList>> GetOrdersList(string accountId, AcmePostRequest request)
         {
             throw new NotImplementedException();
         }

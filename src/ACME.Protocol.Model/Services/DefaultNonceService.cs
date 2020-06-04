@@ -27,10 +27,5 @@ namespace TGIT.ACME.Protocol.Services
 
             return nonce;
         }
-
-        public async Task ValidateNonceAsync(string? nonce, CancellationToken cancellationToken)
-        {
-            
-        }
     }
 }

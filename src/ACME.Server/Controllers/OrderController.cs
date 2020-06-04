@@ -26,7 +26,7 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/new-order", Name = "NewOrder")]
         [HttpPost]
-        public async Task<ActionResult<Protocol.HttpModel.Order>> CreateOrder(AcmeHttpRequest<CreateOrderRequest> request)
+        public async Task<ActionResult<Protocol.HttpModel.Order>> CreateOrder(AcmePostRequest<CreateOrderRequest> request)
         {
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
 
@@ -61,7 +61,7 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/order/{orderId}", Name = "GetOrder")]
         [HttpPost]
-        public async Task<ActionResult<Protocol.HttpModel.Order>> GetOrder(string orderId, AcmeHttpRequest request)
+        public async Task<ActionResult<Protocol.HttpModel.Order>> GetOrder(string orderId, AcmePostRequest request)
         {
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
             var order = await _orderService.GetOrderAsync(account, orderId, HttpContext.RequestAborted);
@@ -77,7 +77,7 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/order/{orderId}/auth/{authId}", Name = "GetAuthorization")]
         [HttpPost]
-        public async Task<ActionResult<Protocol.HttpModel.Authorization>> GetAuthorization(string orderId, string authId, AcmeHttpRequest request)
+        public async Task<ActionResult<Protocol.HttpModel.Authorization>> GetAuthorization(string orderId, string authId, AcmePostRequest request)
         {
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
             var order = await _orderService.GetOrderAsync(account, orderId, HttpContext.RequestAborted);
@@ -110,7 +110,7 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/order/{orderId}/auth/{authId}/chall/{challengeId}", Name = "AcceptChallenge")]
         [HttpPost]
-        public async Task<ActionResult<Protocol.HttpModel.Challenge>> AcceptChallenge(string orderId, string authId, string challengeId, AcmeHttpRequest request)
+        public async Task<ActionResult<Protocol.HttpModel.Challenge>> AcceptChallenge(string orderId, string authId, string challengeId, AcmePostRequest request)
         {
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
             var challenge = await _orderService.ProcessChallengeAsync(account, orderId, authId, challengeId, HttpContext.RequestAborted);
@@ -121,7 +121,7 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/order/{orderId}/finalize", Name = "FinalizeOrder")]
         [HttpPost]
-        public async Task<ActionResult<Protocol.HttpModel.Order>> FinalizeOrder(string orderId, AcmeHttpRequest<FinalizeOrderRequest> request)
+        public async Task<ActionResult<Protocol.HttpModel.Order>> FinalizeOrder(string orderId, AcmePostRequest<FinalizeOrderRequest> request)
         {
             if (request == null)
                 throw new MalformedRequestException("Request was empty");
@@ -138,7 +138,7 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/order/{orderId}/certificate", Name = "GetCertificate")]
         [HttpPost]
-        public async Task<IActionResult> GetCertficate(string orderId, AcmeHttpRequest request)
+        public async Task<IActionResult> GetCertficate(string orderId, AcmePostRequest request)
         {
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
             var certificate = await _orderService.GetCertificate(account, orderId, HttpContext.RequestAborted);

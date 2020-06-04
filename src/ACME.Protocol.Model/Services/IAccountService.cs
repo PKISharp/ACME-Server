@@ -15,6 +15,6 @@ namespace TGIT.ACME.Protocol.Services
 
         Task<Account?> LoadAcountAsync(string accountId, CancellationToken cancellationToken);
 
-        Task<Account> FromRequestAsync(AcmeHttpRequest request, CancellationToken cancellationToken);
+        Task<Account> FromRequestAsync(AcmePostRequest request, CancellationToken cancellationToken);
     }
 }

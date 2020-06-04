@@ -4,13 +4,12 @@ using System.Text.Json.Serialization;
 using TGIT.ACME.Protocol.HttpModel.Converters;
 using TGIT.ACME.Protocol.Model;
 
-namespace TGIT.ACME.Protocol.HttpModel.Requests
+namespace TGIT.ACME.Protocol.Infrastructure
 {
-    public class AcmeRequestHeader
+    public class AcmeHeader
     {
         public string? Nonce { get; set; }
         public string? Url { get; set; }
-
 
         public string? Alg { get; set; }
         public string? Kid { get; set; }

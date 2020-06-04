@@ -3,56 +3,72 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using TGIT.ACME.Protocol.HttpModel.Requests;
+using TGIT.ACME.Protocol.Infrastructure;
 
 namespace TGIT.ACME.Protocol.HttpModel.Converters
 {
-    public class AcmeJsonConverter : JsonConverter<AcmeHttpRequest>
+    public class AcmeJsonConverter : JsonConverter<AcmePostRequest>
     {
-        public override AcmeHttpRequest Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override AcmePostRequest Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var encodedRequest = ReadEncodedRequest(ref reader, options);
+            var header = ReadHeader(encodedRequest, options);
 
-            var headerJson = Base64UrlEncoder.Decode(encodedRequest.Header);
-            var header = JsonSerializer.Deserialize<AcmeRequestHeader>(headerJson, options);
-
-            var result = new AcmeHttpRequest(encodedRequest, header);
+            var result = new AcmePostRequest(header, encodedRequest.Signature);
 
             return result;
         }
 
-        protected static Base64EncodedRequest ReadEncodedRequest(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        protected static DecodedHeader ReadHeader(AcmeRawPostRequest encodedRequest, JsonSerializerOptions options)
         {
-            return JsonSerializer.Deserialize<Base64EncodedRequest>(ref reader, options);
+            if (encodedRequest is null)
+                throw new ArgumentNullException(nameof(encodedRequest));
+
+            var headerJson = Base64UrlEncoder.Decode(encodedRequest.Header);
+            var headerValue = JsonSerializer.Deserialize<AcmeHeader>(headerJson, options);
+            var header = new DecodedHeader(encodedRequest.Header, headerValue);
+
+            return header;
         }
 
-        public override void Write(Utf8JsonWriter writer, AcmeHttpRequest value, JsonSerializerOptions options)
+        protected static AcmeRawPostRequest ReadEncodedRequest(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        {
+            return JsonSerializer.Deserialize<AcmeRawPostRequest>(ref reader, options);
+        }
+
+        public override void Write(Utf8JsonWriter writer, AcmePostRequest value, JsonSerializerOptions options)
         {
             throw new InvalidOperationException();
         }
     }
 
     public class AcmeJsonConverter<TPayload> : AcmeJsonConverter
-        where TPayload : class
+        where TPayload : class?
     {
-        public override AcmeHttpRequest Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override AcmePostRequest Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var encodedRequest = ReadEncodedRequest(ref reader, options);
 
-            var headerJson = Base64UrlEncoder.Decode(encodedRequest.Header);
-            var header = JsonSerializer.Deserialize<AcmeRequestHeader>(headerJson, options);
+            var header = ReadHeader(encodedRequest, options);
 
             if (string.IsNullOrWhiteSpace(encodedRequest.Payload))
-                return new AcmeHttpRequest<TPayload>(encodedRequest, header, null);
+            {
+                var payload = new DecodedPayload<TPayload>("", null!);
+                return new AcmePostRequest<TPayload>(header, payload, encodedRequest.Signature);
+            }
+            else
+            {
+                var payloadJson = Base64UrlEncoder.Decode(encodedRequest.Payload);
+                var payloadValue = JsonSerializer.Deserialize<TPayload>(payloadJson, options);
+                var payload = new DecodedPayload<TPayload>(payloadJson, payloadValue);
 
-            var payloadJson = Base64UrlEncoder.Decode(encodedRequest.Payload);
-            var payload = JsonSerializer.Deserialize<TPayload>(payloadJson, options);
-
-            return new AcmeHttpRequest<TPayload>(encodedRequest, header, payload);
+                return new AcmePostRequest<TPayload>(header, payload, encodedRequest.Signature);
+            }
         }
 
-        public override void Write(Utf8JsonWriter writer, AcmeHttpRequest value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, AcmePostRequest value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
     }
 }
