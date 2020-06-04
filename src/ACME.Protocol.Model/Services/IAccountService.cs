@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using TGIT.ACME.Protocol.HttpModel.Requests;
+using TGIT.ACME.Protocol.Infrastructure;
 using TGIT.ACME.Protocol.Model;
 
 namespace TGIT.ACME.Protocol.Services

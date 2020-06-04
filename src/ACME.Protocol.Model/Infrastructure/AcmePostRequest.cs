@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Text.Json.Serialization;
-using TGIT.ACME.Protocol.HttpModel.Converters;
-using TGIT.ACME.Protocol.Infrastructure;
 
-namespace TGIT.ACME.Protocol.HttpModel.Requests
+namespace TGIT.ACME.Protocol.Infrastructure
 {
-    [JsonConverter(typeof(AcmeJsonConverterFactory))]
     public class AcmePostRequest
     {
         public AcmePostRequest(DecodedHeader header, string signature)
@@ -26,7 +22,6 @@ namespace TGIT.ACME.Protocol.HttpModel.Requests
         public string Signature { get; private set; }
     }
 
-    [JsonConverter(typeof(AcmeJsonConverterFactory))]
     public class AcmePostRequest<TPayload> : AcmePostRequest
         where TPayload : class?
     {

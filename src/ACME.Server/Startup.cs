@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Linq;
+using TGIT.ACME.Protocol.HttpModel.Converters;
 using TGIT.ACME.Protocol.Storage.FileStore.Configuration;
 
 namespace TGIT.ACME.Server
@@ -18,7 +21,16 @@ namespace TGIT.ACME.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(mvc =>
+            {
+                var jsonConverters = mvc.InputFormatters
+                    .OfType<SystemTextJsonInputFormatter>()
+                    .First()
+                    .SerializerOptions
+                    .Converters;
+
+                jsonConverters.Add(new AcmeJsonConverterFactory());
+            });
             services.AddACMEServer();
             services.AddACMEFileStore();
 
