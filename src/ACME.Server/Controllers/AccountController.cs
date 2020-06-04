@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.HttpModel.Requests;
+using TGIT.ACME.Protocol.Infrastructure;
 using TGIT.ACME.Protocol.Model.Exceptions;
 using TGIT.ACME.Protocol.Services;
 using TGIT.ACME.Server.Filters;
@@ -23,7 +24,7 @@ namespace TGIT.ACME.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Protocol.HttpModel.Account>> CreateOrGetAccount(AcmePostRequest<CreateOrGetAccount> request)
         {
-            if(request.Payload!.OnlyReturnExisting)
+            if(request.Payload!.Value.OnlyReturnExisting)
                 return await FindAccountAsync(request);
 
             return await CreateAccountAsync(request);
@@ -35,9 +36,9 @@ namespace TGIT.ACME.Server.Controllers
                 throw new MalformedRequestException("Payload was empty or could not be read.");
 
             var account = await _accountService.CreateAccountAsync(
-                request.Header.Jwk!, //Post requests are validated, JWK exists.
-                request.Payload.Contact,
-                request.Payload.TermsOfServiceAgreed,
+                request.Header.Value.Jwk!, //Post requests are validated, JWK exists.
+                request.Payload.Value.Contact,
+                request.Payload.Value.TermsOfServiceAgreed,
                 HttpContext.RequestAborted);
 
             var ordersUrl = Url.RouteUrl("OrderList", new { accountId = account.AccountId }, "https");

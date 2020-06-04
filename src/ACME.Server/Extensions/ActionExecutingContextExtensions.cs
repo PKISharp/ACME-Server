@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Linq;
-using TGIT.ACME.Protocol.HttpModel.Requests;
+using TGIT.ACME.Protocol.Infrastructure;
 
 namespace TGIT.ACME.Server.Extensions
 {

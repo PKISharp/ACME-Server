@@ -21,6 +21,12 @@ namespace TGIT.ACME.Protocol.HttpModel
                 .ToList();
         }
 
+        public AcmeError(string type, string detail)
+        {
+            Type = type;
+            Detail = detail;
+        }
+
         public string Type { get; set; }
         public string Detail { get; set; }
         

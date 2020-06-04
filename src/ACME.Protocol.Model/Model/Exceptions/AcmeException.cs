@@ -12,11 +12,7 @@ namespace TGIT.ACME.Protocol.Model.Exceptions
 
         public virtual HttpModel.AcmeError GetHttpError()
         {
-            return new HttpModel.AcmeError
-            {
-                Type = $"{UrnBase}:{ErrorType}",
-                Detail = Message
-            };
+            return new HttpModel.AcmeError($"{UrnBase}:{ErrorType}", Message);
         }
     }
 }

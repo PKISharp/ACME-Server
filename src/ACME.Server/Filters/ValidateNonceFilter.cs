@@ -24,7 +24,7 @@ namespace TGIT.ACME.Server.Filters
             {
                 _logger.LogInformation("Attempting to validate Nonce");
                 var acmeRequest = context.GetAcmeRequest();
-                await _validationService.ValidateNonceAsync(acmeRequest.Header.Nonce, context.HttpContext.RequestAborted);
+                await _validationService.ValidateNonceAsync(acmeRequest.Header.Value.Nonce, context.HttpContext.RequestAborted);
             }
 
             await next();

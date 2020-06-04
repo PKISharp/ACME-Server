@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.HttpModel.Requests;
+using TGIT.ACME.Protocol.Infrastructure;
 using TGIT.ACME.Protocol.Model;
 using TGIT.ACME.Protocol.Model.Exceptions;
 using TGIT.ACME.Protocol.Services;
@@ -30,7 +31,7 @@ namespace TGIT.ACME.Server.Controllers
         {
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
 
-            var orderRequest = request.Payload!;
+            var orderRequest = request.Payload!.Value;
 
             var identifiers = orderRequest.Identifiers.Select(x =>
                 new Protocol.Model.Identifier
@@ -129,7 +130,7 @@ namespace TGIT.ACME.Server.Controllers
                 throw new MalformedRequestException("Request payload was empty");
 
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
-            var order = await _orderService.ProcessCsr(account, orderId, request.Payload.Csr, HttpContext.RequestAborted);
+            var order = await _orderService.ProcessCsr(account, orderId, request.Payload.Value.Csr, HttpContext.RequestAborted);
             GetOrderUrls(order, out var authorizationUrls, out var finalizeUrl, out var certificateUrl);
 
             var orderResponse = new Protocol.HttpModel.Order(order, authorizationUrls, finalizeUrl, certificateUrl);

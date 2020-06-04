@@ -19,6 +19,9 @@ namespace TGIT.ACME.Server.Filters
             if (context.Exception is AcmeException acmeException)
             {
                 _logger.LogDebug($"Detected {acmeException.GetType()}. Converting to BadRequest.");
+#if DEBUG
+                _logger.LogError(context.Exception, "AcmeException detected.");
+#endif
 
                 ObjectResult result;
                 if (acmeException is ConflictRequestException)
