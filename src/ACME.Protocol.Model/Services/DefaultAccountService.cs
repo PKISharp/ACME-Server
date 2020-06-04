@@ -18,15 +18,10 @@ namespace TGIT.ACME.Protocol.Services
             _accountStore = accountStore;
         }
 
-        public async Task<Account> CreateAccountAsync(Jwk jwk, List<string>? contact,
+        public async Task<Account> CreateAccountAsync(Jwk jwk, List<string>? contacts,
             bool termsOfServiceAgreed, CancellationToken cancellationToken)
         {
-            var newAccount = new Account
-            {
-                Jwk = jwk,
-                Contact = contact,
-                TOSAccepted = termsOfServiceAgreed ? DateTimeOffset.Now : (DateTimeOffset?)null
-            };
+            var newAccount = new Account(jwk, contacts, termsOfServiceAgreed);
 
             await _accountStore.SaveAccountAsync(newAccount, cancellationToken);
             return newAccount;

@@ -20,10 +20,7 @@ namespace TGIT.ACME.Protocol.Services
 
         public  async Task<Nonce> CreateNonceAsync(CancellationToken cancellationToken)
         {
-            var nonce = new Nonce
-            {
-                Token = Guid.NewGuid().ToString()
-            };
+            var nonce = new Nonce(GuidString.NewValue());
 
             await _nonceStore.SaveNonceAsync(nonce, cancellationToken);
             _logger.LogInformation($"Created and saved new nonce: {nonce.Token}.");

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using TGIT.ACME.Protocol.Model.Exceptions;
 
 namespace TGIT.ACME.Protocol.Model
 {
@@ -9,11 +10,11 @@ namespace TGIT.ACME.Protocol.Model
         private string? _value;
 
         public string Type { 
-            get => _type; 
+            get => _type ?? throw new NotInitializedException(); 
             set => _type = value?.Trim().ToLowerInvariant();
         }
         public string Value { 
-            get => _value; 
+            get => _value ?? throw new NotInitializedException();
             set => _value = value?.Trim().ToLowerInvariant(); 
         }
 
@@ -25,7 +26,7 @@ namespace TGIT.ACME.Protocol.Model
         public bool Equals([AllowNull] Identifier other)
         {
             return Type == other.Type &&
-                   Value == other.Value;
+                Value == other.Value;
         }
 
         public override int GetHashCode()

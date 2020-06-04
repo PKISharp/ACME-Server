@@ -1,7 +1,9 @@
-﻿namespace TGIT.ACME.Protocol.HttpModel
+﻿using System.Collections.Generic;
+
+namespace TGIT.ACME.Protocol.HttpModel
 {
     public class OrdersList
     {
-        public string[] Orders { get; set; }
+        public List<string> Orders { get; set; }
     }
 }

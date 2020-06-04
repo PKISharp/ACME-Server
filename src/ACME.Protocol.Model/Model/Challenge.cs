@@ -1,21 +1,42 @@
 ﻿using System;
 using TGIT.ACME.Protocol.HttpModel;
+using TGIT.ACME.Protocol.Model.Exceptions;
 
 namespace TGIT.ACME.Protocol.Model
 {
     public class Challenge
     {
-        public Challenge()
+        private string? _challengeId;
+        private string? _type;
+        private string? _token;
+
+        private Challenge() { }
+
+        public Challenge(string type, string token)
         {
-            ChallengeId = new GuidString();
+            ChallengeId = GuidString.NewValue();
+            Type = type;
+            Token = token;
         }
 
-        public string ChallengeId { get; set; }
+        public string ChallengeId {
+            get => _challengeId ?? throw new NotInitializedException();
+            private set => _challengeId = value;
+        }
 
-        public string Type { get; set; }
+        public string Type {
+            get => _type ?? throw new NotInitializedException();
+            private set => _type = value;
+        }
         public ChallengeStatus Status { get; set; }
 
-        public Error? Error { get; set; } //TODO: Probably change model to something else.
+        public string Token {
+            get => _token ?? throw new NotInitializedException();
+            private set => _token = value; 
+        }
+
+        public HttpModel.AcmeError? Error { get; set; } //TODO: Probably change model to something else.
+        
         public DateTimeOffset? Validated { get; set; }
     }
 }

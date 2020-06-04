@@ -11,7 +11,7 @@ namespace TGIT.ACME.Protocol.HttpModel
 
             Status = model.Status.ToString();
 
-            Contact = model.Contact;
+            Contact = model.Contacts;
             TermsOfServiceAgreed = model.TOSAccepted.HasValue;
 
             ExternalAccountBinding = null;

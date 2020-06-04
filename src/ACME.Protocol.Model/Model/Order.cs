@@ -22,7 +22,7 @@ namespace TGIT.ACME.Protocol.Model
 
         internal Order(Account account, IEnumerable<Identifier> identifiers, IEnumerable<Authorization> authorizations)
         {
-            _orderId = Base64UrlEncoder.Encode(Guid.NewGuid().ToByteArray());
+            _orderId = GuidString.NewValue();
             Status = OrderStatus.Pending;
 
             AccountId = account.AccountId;
@@ -56,7 +56,7 @@ namespace TGIT.ACME.Protocol.Model
         public List<Authorization> Authorizations { get; set; }
         public DateTimeOffset? NotBefore { get; internal set; }
         public DateTimeOffset? NotAfter { get; internal set; }
-        public Error? Error { get; internal set; }
+        public HttpModel.AcmeError? Error { get; internal set; }
         public DateTimeOffset? Expires { get; internal set; }
 
         /// <summary>

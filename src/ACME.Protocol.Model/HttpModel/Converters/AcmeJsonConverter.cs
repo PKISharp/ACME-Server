@@ -20,7 +20,7 @@ namespace TGIT.ACME.Protocol.HttpModel.Converters
             return result;
         }
 
-        protected Base64EncodedRequest ReadEncodedRequest(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        protected static Base64EncodedRequest ReadEncodedRequest(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             return JsonSerializer.Deserialize<Base64EncodedRequest>(ref reader, options);
         }

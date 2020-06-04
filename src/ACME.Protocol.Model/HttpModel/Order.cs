@@ -44,7 +44,7 @@ namespace TGIT.ACME.Protocol.HttpModel
         public string? NotBefore { get; }
         public string? NotAfter { get; }
 
-        public Error? Error { get; }
+        public AcmeError? Error { get; }
 
         public IEnumerable<string> Authorizations { get; }
         public string Finalize { get; }

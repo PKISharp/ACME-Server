@@ -1,7 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace TGIT.ACME.Protocol.Model
 {
@@ -14,9 +12,6 @@ namespace TGIT.ACME.Protocol.Model
 
         public string Value { get; }
 
-        public static implicit operator string(GuidString instance)
-        {
-            return instance.Value;
-        }
+        public static string NewValue() => new GuidString().Value;
     }
 }

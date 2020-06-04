@@ -1,7 +1,7 @@
 ﻿using System;
 using TGIT.ACME.Protocol.Model;
 
-namespace TGIT.ACME.Server.Model
+namespace TGIT.ACME.Server.Infrastructure
 {
     public class AcmeRequestContext
     {

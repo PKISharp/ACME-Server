@@ -6,8 +6,15 @@ namespace TGIT.ACME.Protocol.Model
     {
         private string? _token;
 
+        private Nonce() { }
+
+        public Nonce(string token)
+        {
+            Token = token;
+        }
+
         public string Token {
             get => _token ?? throw new NotInitializedException();
-            set => _token = value; }
+            private set => _token = value; }
     }
 }

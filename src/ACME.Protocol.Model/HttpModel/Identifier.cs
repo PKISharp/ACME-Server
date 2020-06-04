@@ -1,4 +1,8 @@
-﻿namespace TGIT.ACME.Protocol.HttpModel
+﻿using System.ComponentModel.DataAnnotations;
+
+#pragma warning disable CS8618 // Non-nullable field is uninitialized.
+
+namespace TGIT.ACME.Protocol.HttpModel
 {
     public class Identifier
     {

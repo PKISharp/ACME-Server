@@ -27,7 +27,7 @@ namespace TGIT.ACME.Protocol.HttpModel
         public string Status { get; }
 
         public string? Validated { get; }
-        public Error? Error { get; }
+        public AcmeError? Error { get; }
 
         public string Url { get; }
     }
