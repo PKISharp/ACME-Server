@@ -7,6 +7,13 @@ namespace TGIT.ACME.Protocol.Model
 {
     public class Authorization
     {
+        private static Dictionary<AuthorizationStatus, AuthorizationStatus[]> _validStatusTransitions =
+            new Dictionary<AuthorizationStatus, AuthorizationStatus[]>
+            {
+                { AuthorizationStatus.Pending, new [] { AuthorizationStatus.Invalid, AuthorizationStatus.Expired, AuthorizationStatus.Valid } },
+                { AuthorizationStatus.Valid, new [] { AuthorizationStatus.Revoked, AuthorizationStatus.Deactivated, AuthorizationStatus.Expired } }
+            };
+
         private string? _authorizationId;
         private Identifier? _identifier;
         private List<Challenge>? _challenges;
@@ -43,7 +50,25 @@ namespace TGIT.ACME.Protocol.Model
             private set => _challenges = value.ToList(); 
         }
         
+
         public Challenge? GetChallenge(string challengeId)
             => Challenges.FirstOrDefault(x => x.ChallengeId == challengeId);
+
+        internal void SelectChallenge(Challenge challenge)
+        {
+            _challenges?.RemoveAll(c => c != challenge);
+        }
+
+
+        internal void SetStatus(AuthorizationStatus nextStatus)
+        {
+            if (!_validStatusTransitions.ContainsKey(Status))
+                throw new InvalidOperationException($"Cannot do challenge status transition from '{Status}'.");
+
+            if (!_validStatusTransitions[Status].Contains(nextStatus))
+                throw new InvalidOperationException($"Cannot do challenge status transition from '{Status}' to {nextStatus}.");
+
+            Status = nextStatus;
+        }
     }
 }

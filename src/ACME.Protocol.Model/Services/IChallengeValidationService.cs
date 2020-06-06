@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using TGIT.ACME.Protocol.HttpModel;
+using TGIT.ACME.Protocol.Model;
 
 namespace TGIT.ACME.Protocol.Services
 {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -18,15 +19,12 @@ namespace TGIT.ACME.Protocol.Storage.FileStore
             : base(options)
         { }
 
-        public async Task<Order?> LoadOrderAsync(string orderId, Account account, CancellationToken cancellationToken)
+        public async Task<Order?> LoadOrderAsync(string orderId, CancellationToken cancellationToken)
         {
-            if (account is null)
-                throw new ArgumentNullException(nameof(account));
             if (!IdentifierRegex.IsMatch(orderId))
                 throw new MalformedRequestException("OrderId does not match expected format.");
 
-            var orderPath = Path.Combine(Options.Value.AccountPath,
-                account.AccountId, "orders", $"{orderId}.json");
+            var orderPath = Path.Combine(Options.Value.OrderPath, $"{orderId}.json");
 
             if (!File.Exists(orderPath))
                 return null;
@@ -36,8 +34,6 @@ namespace TGIT.ACME.Protocol.Storage.FileStore
                 var utf8Bytes = new byte[fileStream.Length];
                 await fileStream.ReadAsync(utf8Bytes, cancellationToken);
                 var result = JsonSerializer.Deserialize<Order>(utf8Bytes);
-                
-                result.Account = account;
 
                 return result;
             }
@@ -48,14 +44,16 @@ namespace TGIT.ACME.Protocol.Storage.FileStore
             if (setOrder is null)
                 throw new ArgumentNullException(nameof(setOrder));
 
-            var orderPath = Path.Combine(Options.Value.AccountPath,
-                setOrder.Account.AccountId, "orders", $"{setOrder.OrderId}.json");
+            var orderFilePath = Path.Combine(Options.Value.OrderPath, $"{setOrder.OrderId}.json");
 
-            Directory.CreateDirectory(Path.GetDirectoryName(orderPath));
+            Directory.CreateDirectory(Path.GetDirectoryName(orderFilePath));
 
-            using (var fileStream = File.Open(orderPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
+            await CreateOwnerFileAsync(setOrder, cancellationToken);
+            await WriteWorkFilesAsync(setOrder, cancellationToken);
+
+            using (var fileStream = File.Open(orderFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
             {
-                var existingOrder = await LoadOrderAsync(setOrder.OrderId, setOrder.Account, cancellationToken);
+                var existingOrder = await LoadOrderAsync(setOrder.OrderId, cancellationToken);
                 if (existingOrder != null && existingOrder.Version != setOrder.Version)
                     throw new ConcurrencyException();
 
@@ -66,23 +64,93 @@ namespace TGIT.ACME.Protocol.Storage.FileStore
             }
         }
 
-        public Task<List<Order>> GetValidatableOrders(CancellationToken cancellationToken)
+        private async Task CreateOwnerFileAsync(Order order, CancellationToken cancellationToken)
         {
-            var workPath = Path.Combine(Options.Value.WorkingPath, "validateable");
+            var ownerFilePath = Path.Combine(Options.Value.AccountPath, order.AccountId, "orders", order.OrderId);
+            if (!File.Exists(ownerFilePath)) {
+                await File.WriteAllTextAsync(ownerFilePath, 
+                    order.Expires?.ToString("o", CultureInfo.InvariantCulture), 
+                    cancellationToken);
+            }
+        }
+
+        private async Task WriteWorkFilesAsync(Order order, CancellationToken cancellationToken)
+        {
+            var validationFilePath = Path.Combine(Options.Value.WorkingPath, "validate", order.OrderId);
+            if (order.Authorizations.Any(a => a.Challenges.Any(c => c.Status == ChallengeStatus.Processing)))
+            {
+                if (!File.Exists(validationFilePath)) {
+                    await File.WriteAllTextAsync(validationFilePath, 
+                        order.Authorizations.Min(a => a.Expires)?.ToString("o", CultureInfo.InvariantCulture),
+                        cancellationToken);
+                }
+            } 
+            else if (File.Exists(validationFilePath))
+            {
+                File.Delete(validationFilePath);
+            }
+
+            var processingFilePath = Path.Combine(Options.Value.WorkingPath, "process", order.OrderId);
+            if(order.Status == OrderStatus.Processing)
+            {
+                if (!File.Exists(processingFilePath)) {
+                    await File.WriteAllTextAsync(processingFilePath, 
+                        order.Expires?.ToString("o", CultureInfo.InvariantCulture),
+                        cancellationToken);
+                }
+            }
+            else if (File.Exists(processingFilePath))
+            {
+                File.Delete(processingFilePath);
+            }
+        }
+
+        public async Task<List<Order>> GetValidatableOrders(CancellationToken cancellationToken)
+        {
+            var workPath = Path.Combine(Options.Value.WorkingPath, "validate");
             var files = Directory.EnumerateFiles(workPath);
 
             var result = new List<Order>();
-            foreach(var file in files)
+            foreach(var filePath in files)
             {
-                var orderPath = 
+                try
+                {
+                    var orderId = Path.GetFileName(filePath);
+                    var order = await LoadOrderAsync(orderId, cancellationToken);
+
+                    if(order != null)
+                        result.Add(order);
+                }
+                catch {
+                    //TODO: Write log message
+                }
             }
 
             return result;
         }
 
-        public Task<List<Order>> GetFinalizableOrders(CancellationToken cancellationToken)
+        public async Task<List<Order>> GetFinalizableOrders(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var workPath = Path.Combine(Options.Value.WorkingPath, "process");
+            var files = Directory.EnumerateFiles(workPath);
+
+            var result = new List<Order>();
+            foreach (var filePath in files)
+            {
+                try
+                {
+                    var orderId = Path.GetFileName(filePath);
+                    var order = await LoadOrderAsync(orderId, cancellationToken);
+
+                    if (order != null)
+                        result.Add(order);
+                }
+                catch {
+                    //TODO: Write log message
+                }
+            }
+
+            return result;
         }
     }
 }

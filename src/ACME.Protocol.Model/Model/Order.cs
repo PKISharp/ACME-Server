@@ -1,17 +1,21 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
-using TGIT.ACME.Protocol.HttpModel;
 using TGIT.ACME.Protocol.Model.Exceptions;
 
 namespace TGIT.ACME.Protocol.Model
 {
     public class Order
     {
+        private static Dictionary<OrderStatus, OrderStatus[]> _validStatusTransitions =
+            new Dictionary<OrderStatus, OrderStatus[]>
+            {
+                { OrderStatus.Pending, new [] { OrderStatus.Ready, OrderStatus.Invalid } },
+                { OrderStatus.Ready, new [] { OrderStatus.Processing, OrderStatus.Invalid } },
+                { OrderStatus.Processing, new [] { OrderStatus.Valid, OrderStatus.Invalid } },
+            };
+
         private string? _orderId;
-        private Account? _account;
         private string? _accountId;
 
         internal Order()
@@ -26,7 +30,6 @@ namespace TGIT.ACME.Protocol.Model
             Status = OrderStatus.Pending;
 
             AccountId = account.AccountId;
-            Account = account;
 
             Identifiers = new List<Identifier>(identifiers);
             Authorizations = new List<Authorization>(authorizations);
@@ -38,19 +41,13 @@ namespace TGIT.ACME.Protocol.Model
             set => _orderId = value;
         }
 
-        [JsonIgnore]
-        public Account Account
-        {
-            get => _account ?? throw new NotInitializedException();
-            set => _account = value;
-        }
         public string AccountId {
             get => _accountId ?? throw new NotInitializedException(); 
             set => _accountId = value; 
         }
 
 
-        public OrderStatus Status { get; set; }
+        public OrderStatus Status { get; private set; }
         public List<Identifier> Identifiers { get; set; }
 
         public List<Authorization> Authorizations { get; set; }
@@ -66,5 +63,17 @@ namespace TGIT.ACME.Protocol.Model
 
         public Authorization? GetAuthorization(string authId) 
             => Authorizations.FirstOrDefault(x => x.AuthorizationId == authId);
+
+
+        internal void SetStatus(OrderStatus nextStatus)
+        {
+            if (!_validStatusTransitions.ContainsKey(Status))
+                throw new InvalidOperationException($"Cannot do challenge status transition from '{Status}'.");
+
+            if (!_validStatusTransitions[Status].Contains(nextStatus))
+                throw new InvalidOperationException($"Cannot do challenge status transition from '{Status}' to {nextStatus}.");
+
+            Status = nextStatus;
+        }
     }
 }
