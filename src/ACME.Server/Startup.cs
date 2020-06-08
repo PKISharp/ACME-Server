@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using System.Linq;
 using TGIT.ACME.Protocol.HttpModel.Converters;
 using TGIT.ACME.Protocol.Storage.FileStore.Configuration;
+using TGIT.ACME.Server.BackgroundServices;
 using TGIT.ACME.Server.Configuration;
 
 namespace TGIT.ACME.Server
@@ -22,30 +23,10 @@ namespace TGIT.ACME.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(mvc =>
-            {
-                var jsonConverters = mvc.InputFormatters
-                    .OfType<SystemTextJsonInputFormatter>()
-                    .First()
-                    .SerializerOptions
-                    .Converters;
+            services.AddControllers();
 
-                jsonConverters.Add(new AcmeJsonConverterFactory());
-            });
-            services.AddACMEServer();
-            services.AddACMEFileStore();
-
-            var acmeServerConfig = _configuration.GetSection("AcmeServer");
-            var acmeServerOptions = new ACMEServerOptions();
-            acmeServerConfig.Bind(acmeServerOptions);
-
-            services.Configure<ACMEServerOptions>(acmeServerConfig);
-            services.Configure<FileStoreOptions>(_configuration.GetSection("FileStore"));
-
-            if (acmeServerOptions.UseHostedServices) {
-                //TODO: Register Challenge Validation
-                //TODO: Register Certificate Issuance
-            }
+            services.AddACMEServer(_configuration);
+            services.AddACMEFileStore(_configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

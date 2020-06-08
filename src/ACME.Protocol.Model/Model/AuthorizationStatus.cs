@@ -1,4 +1,6 @@
-﻿namespace TGIT.ACME.Protocol.Model
+﻿using System.Linq;
+
+namespace TGIT.ACME.Protocol.Model
 {
     public enum AuthorizationStatus
     {

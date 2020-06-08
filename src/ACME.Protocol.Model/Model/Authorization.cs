@@ -23,8 +23,8 @@ namespace TGIT.ACME.Protocol.Model
         public Authorization(Identifier identifier, IEnumerable<Challenge> challenges, DateTimeOffset expires)
         {
             AuthorizationId = GuidString.NewValue();
-            Challenges = challenges.ToList();
-
+            _challenges = challenges.ToList();
+            
             Identifier = identifier;
             IsWildcard = identifier.Value.StartsWith("*", StringComparison.InvariantCulture);
 
@@ -36,7 +36,7 @@ namespace TGIT.ACME.Protocol.Model
             private set => _authorizationId = value; 
         }
         public AuthorizationStatus Status { get; private set; }
-
+        public Order Parent { get; }
         public Identifier Identifier {
             get => _identifier ?? throw new NotInitializedException(); 
             private set => _identifier = value; 
@@ -45,9 +45,10 @@ namespace TGIT.ACME.Protocol.Model
 
         public DateTimeOffset? Expires { get; private set; }
 
-        public IReadOnlyCollection<Challenge> Challenges {
+        
+        public IReadOnlyList<Challenge> Challenges {
             get => _challenges ?? throw new NotInitializedException();
-            private set => _challenges = value.ToList(); 
+            private set => _challenges = value?.ToList();
         }
         
 
@@ -55,9 +56,10 @@ namespace TGIT.ACME.Protocol.Model
             => Challenges.FirstOrDefault(x => x.ChallengeId == challengeId);
 
         internal void SelectChallenge(Challenge challenge)
-        {
-            _challenges?.RemoveAll(c => c != challenge);
-        }
+            => _challenges?.RemoveAll(c => c != challenge);
+
+        internal void ClearChallenges()
+            => _challenges?.Clear();
 
 
         internal void SetStatus(AuthorizationStatus nextStatus)

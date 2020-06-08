@@ -75,5 +75,14 @@ namespace TGIT.ACME.Protocol.Model
 
             Status = nextStatus;
         }
+
+        internal void SetStatusFromAuthorizations()
+        {
+            if (Authorizations.All(a => a.Status == AuthorizationStatus.Valid))
+                SetStatus(OrderStatus.Ready);
+
+            if (Authorizations.Any(a => a.Status.IsInvalid()))
+                SetStatus(OrderStatus.Invalid);
+        }
     }
 }
