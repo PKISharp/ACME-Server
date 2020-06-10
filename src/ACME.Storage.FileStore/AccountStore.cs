@@ -1,16 +1,17 @@
 ﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.IO;
-using System.Text.Json;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.Model;
 using TGIT.ACME.Protocol.Model.Exceptions;
-using TGIT.ACME.Protocol.Storage.FileStore.Configuration;
+using TGIT.ACME.Protocol.Storage;
+using TGIT.ACME.Storage.FileStore.Configuration;
 
-namespace TGIT.ACME.Protocol.Storage.FileStore
+namespace TGIT.ACME.Storage.FileStore
 {
-
     public class AccountStore : StoreBase, IAccountStore
     {
         public AccountStore(IOptions<FileStoreOptions> options)
@@ -32,7 +33,7 @@ namespace TGIT.ACME.Protocol.Storage.FileStore
             {
                 var utf8Bytes = new byte[fileStream.Length];
                 await fileStream.ReadAsync(utf8Bytes, cancellationToken);
-                var result = JsonSerializer.Deserialize<Account>(utf8Bytes);
+                var result = JsonConvert.DeserializeObject<Account>(Encoding.UTF8.GetString(utf8Bytes));
 
                 return result;
             }
@@ -55,7 +56,7 @@ namespace TGIT.ACME.Protocol.Storage.FileStore
                     throw new ConcurrencyException();
 
                 setAccount.Version = DateTime.UtcNow.Ticks;
-                var utf8Bytes = JsonSerializer.SerializeToUtf8Bytes(setAccount);
+                var utf8Bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(setAccount));
                 await fileStream.WriteAsync(utf8Bytes, cancellationToken);
             }
         }

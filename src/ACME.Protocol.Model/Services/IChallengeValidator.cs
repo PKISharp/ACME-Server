@@ -1,22 +1,43 @@
-﻿using System.Threading;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Threading;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.Model;
 
 namespace TGIT.ACME.Protocol.Services
 {
-    public interface IChallangeValidatorFactory
-    {
-        IChallengeValidator GetValidator(Challenge challenge);
-    }
-
     public interface IChallengeValidator
     {
-        Task<bool> ValidateChallengeAsync(Challenge challenge, CancellationToken cancellationToken);
+        Task<bool> ValidateChallengeAsync(Challenge challenge, Account account, CancellationToken cancellationToken);
     }
 
-    public class Dns01ChallangeValidator : IChallengeValidator
-    { }
+    public abstract class TokenChallengeValidator : IChallengeValidator
+    {
+        protected abstract Task<string> LoadChallengeResponseAsync(Challenge challenge);
 
-    public class Http01ChallangeValidator : IChallengeValidator
-    { }
+        private async Task<bool> ValidateChallengeAsync(Challenge challenge, Account account, string challengeResponse, CancellationToken cancellationToken)
+        {
+            return false;
+        }
+
+        public Task<bool> ValidateChallengeAsync(Challenge challenge, Account account, CancellationToken cancellationToken)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public class Dns01ChallangeValidator : TokenChallengeValidator
+    {
+        protected override Task<string> LoadChallengeResponseAsync(Challenge challenge)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public class Http01ChallangeValidator : TokenChallengeValidator
+    {
+        protected override Task<string> LoadChallengeResponseAsync(Challenge challenge)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }

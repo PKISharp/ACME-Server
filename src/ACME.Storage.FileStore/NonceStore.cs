@@ -4,9 +4,10 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.Model;
-using TGIT.ACME.Protocol.Storage.FileStore.Configuration;
+using TGIT.ACME.Protocol.Storage;
+using TGIT.ACME.Storage.FileStore.Configuration;
 
-namespace TGIT.ACME.Protocol.Storage.FileStore
+namespace TGIT.ACME.Storage.FileStore
 {
     public class NonceStore : INonceStore
     {

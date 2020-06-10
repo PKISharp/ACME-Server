@@ -1,6 +1,6 @@
 ﻿using TGIT.ACME.Protocol.Model.Exceptions;
 
-namespace TGIT.ACME.Protocol.Storage.FileStore.Configuration
+namespace TGIT.ACME.Storage.FileStore.Configuration
 {
     public class FileStoreOptions
     {

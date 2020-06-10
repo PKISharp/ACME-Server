@@ -5,12 +5,12 @@ using System.Linq;
 using TGIT.ACME.Protocol.HttpModel.Converters;
 using TGIT.ACME.Protocol.Services;
 using TGIT.ACME.Protocol.Storage;
-using TGIT.ACME.Protocol.Storage.FileStore;
-using TGIT.ACME.Protocol.Storage.FileStore.Configuration;
 using TGIT.ACME.Protocol.Workers;
 using TGIT.ACME.Server.BackgroundServices;
 using TGIT.ACME.Server.Configuration;
 using TGIT.ACME.Server.Filters;
+using TGIT.ACME.Storage.FileStore;
+using TGIT.ACME.Storage.FileStore.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

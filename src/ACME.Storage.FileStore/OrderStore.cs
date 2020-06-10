@@ -1,17 +1,19 @@
 ﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.Model;
 using TGIT.ACME.Protocol.Model.Exceptions;
-using TGIT.ACME.Protocol.Storage.FileStore.Configuration;
+using TGIT.ACME.Protocol.Storage;
+using TGIT.ACME.Storage.FileStore.Configuration;
 
-namespace TGIT.ACME.Protocol.Storage.FileStore
+namespace TGIT.ACME.Storage.FileStore
 {
     public class OrderStore : StoreBase, IOrderStore
     {
@@ -33,7 +35,7 @@ namespace TGIT.ACME.Protocol.Storage.FileStore
             {
                 var utf8Bytes = new byte[fileStream.Length];
                 await fileStream.ReadAsync(utf8Bytes, cancellationToken);
-                var result = JsonSerializer.Deserialize<Order>(utf8Bytes);
+                var result = JsonConvert.DeserializeObject<Order>(Encoding.UTF8.GetString(utf8Bytes));
 
                 return result;
             }
@@ -59,7 +61,7 @@ namespace TGIT.ACME.Protocol.Storage.FileStore
 
                 setOrder.Version = DateTime.UtcNow.Ticks;
 
-                var utf8Bytes = JsonSerializer.SerializeToUtf8Bytes(setOrder);
+                var utf8Bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(setOrder, JsonDefaults.Settings));
                 await fileStream.WriteAsync(utf8Bytes, cancellationToken);
             }
         }

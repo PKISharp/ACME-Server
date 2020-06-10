@@ -16,11 +16,14 @@ namespace TGIT.ACME.Protocol.Workers
     public class ValidationWorker : IValidationWorker
     {
         private readonly IOrderStore _orderStore;
+        private readonly IAccountStore _accountStore;
         private readonly IChallangeValidatorFactory _challangeValidatorFactory;
 
-        public ValidationWorker(IOrderStore orderStore, IChallangeValidatorFactory challangeValidatorFactory)
+        public ValidationWorker(IOrderStore orderStore, IAccountStore accountStore,
+            IChallangeValidatorFactory challangeValidatorFactory)
         {
             _orderStore = orderStore;
+            _accountStore = accountStore;
             _challangeValidatorFactory = challangeValidatorFactory;
         }
 
@@ -42,6 +45,10 @@ namespace TGIT.ACME.Protocol.Workers
 
         private async Task ValidateOrder(Order order, CancellationToken cancellationToken)
         {
+            var account = await _accountStore.LoadAccountAsync(order.AccountId, cancellationToken);
+            if (account == null)
+                return;
+
             var pendingAuthZs = order.Authorizations.Where(a => a.Challenges.Any(c => c.Status == ChallengeStatus.Processing));
 
             foreach(var pendingAuthZ in pendingAuthZs)
@@ -56,7 +63,7 @@ namespace TGIT.ACME.Protocol.Workers
                 var challenge = pendingAuthZ.Challenges[0];
 
                 var validator = _challangeValidatorFactory.GetValidator(challenge);
-                var isValid = await validator.ValidateChallengeAsync(challenge, cancellationToken);
+                var isValid = await validator.ValidateChallengeAsync(challenge, account, cancellationToken);
 
                 challenge.SetStatus(isValid ? ChallengeStatus.Valid : ChallengeStatus.Invalid);
                 pendingAuthZ.SetStatus(isValid ? AuthorizationStatus.Valid : AuthorizationStatus.Invalid);

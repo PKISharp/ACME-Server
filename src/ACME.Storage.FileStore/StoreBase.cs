@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Text.RegularExpressions;
-using TGIT.ACME.Protocol.Storage.FileStore.Configuration;
+using TGIT.ACME.Storage.FileStore.Configuration;
 
-namespace TGIT.ACME.Protocol.Storage.FileStore
+namespace TGIT.ACME.Storage.FileStore
 {
     public class StoreBase
     {

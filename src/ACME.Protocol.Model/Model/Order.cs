@@ -24,7 +24,7 @@ namespace TGIT.ACME.Protocol.Model
             Authorizations = new List<Authorization>();
         }
 
-        internal Order(Account account, IEnumerable<Identifier> identifiers, IEnumerable<Authorization> authorizations)
+        internal Order(Account account, IEnumerable<Identifier> identifiers)
         {
             _orderId = GuidString.NewValue();
             Status = OrderStatus.Pending;
@@ -32,7 +32,7 @@ namespace TGIT.ACME.Protocol.Model
             AccountId = account.AccountId;
 
             Identifiers = new List<Identifier>(identifiers);
-            Authorizations = new List<Authorization>(authorizations);
+            Authorizations = new List<Authorization>();
         }
 
         public string OrderId
@@ -48,13 +48,13 @@ namespace TGIT.ACME.Protocol.Model
 
 
         public OrderStatus Status { get; private set; }
-        public List<Identifier> Identifiers { get; set; }
+        public List<Identifier> Identifiers { get; private set; }
 
-        public List<Authorization> Authorizations { get; set; }
+        public List<Authorization> Authorizations { get; private set; }
         public DateTimeOffset? NotBefore { get; internal set; }
         public DateTimeOffset? NotAfter { get; internal set; }
-        public HttpModel.AcmeError? Error { get; internal set; }
-        public DateTimeOffset? Expires { get; internal set; }
+        public HttpModel.AcmeError? Error { get; set; }
+        public DateTimeOffset? Expires { get; set; }
 
         /// <summary>
         /// Concurrency Token

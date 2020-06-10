@@ -26,9 +26,10 @@ namespace TGIT.ACME.Protocol.Services
             if (account is null)
                 throw new ArgumentNullException(nameof(account));
 
+            // TODO: Calculate Authorizations;
             var authorizations = new List<Authorization>();
 
-            var order = new Order(account, identifiers, authorizations)
+            var order = new Order(account, identifiers)
             {
                 NotBefore = notBefore,
                 NotAfter = notAfter

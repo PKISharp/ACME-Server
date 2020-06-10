@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>TGIT.ACME.Storage.FileStore</RootNamespace>
+    <AssemblyName>TGIT.ACME.Storage.FileStore</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ACME.Protocol.Model\ACME.Protocol.csproj" />
+  </ItemGroup>
+
+</Project>

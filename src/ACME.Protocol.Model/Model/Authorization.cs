@@ -16,15 +16,20 @@ namespace TGIT.ACME.Protocol.Model
 
         private string? _authorizationId;
         private Identifier? _identifier;
-        private List<Challenge>? _challenges;
+        private Order? _parent;
 
-        private Authorization() { }
+        private Authorization() {
+            Challenges = new List<Challenge>();
+        }
 
-        public Authorization(Identifier identifier, IEnumerable<Challenge> challenges, DateTimeOffset expires)
+        public Authorization(Order parent, Identifier identifier, DateTimeOffset expires)
         {
             AuthorizationId = GuidString.NewValue();
-            _challenges = challenges.ToList();
+            Challenges = new List<Challenge>();
             
+            Parent = parent;
+            Parent.Authorizations.Add(this);
+
             Identifier = identifier;
             IsWildcard = identifier.Value.StartsWith("*", StringComparison.InvariantCulture);
 
@@ -36,30 +41,33 @@ namespace TGIT.ACME.Protocol.Model
             private set => _authorizationId = value; 
         }
         public AuthorizationStatus Status { get; private set; }
-        public Order Parent { get; }
+
+        public Order Parent {
+            get => _parent ?? throw new NotInitializedException();
+            private set => _parent = value;
+        }
+        
         public Identifier Identifier {
             get => _identifier ?? throw new NotInitializedException(); 
             private set => _identifier = value; 
         }
+        
         public bool IsWildcard { get; private set; }
 
         public DateTimeOffset? Expires { get; private set; }
 
         
-        public IReadOnlyList<Challenge> Challenges {
-            get => _challenges ?? throw new NotInitializedException();
-            private set => _challenges = value?.ToList();
-        }
+        public List<Challenge> Challenges { get; private set; }
         
 
         public Challenge? GetChallenge(string challengeId)
             => Challenges.FirstOrDefault(x => x.ChallengeId == challengeId);
 
         internal void SelectChallenge(Challenge challenge)
-            => _challenges?.RemoveAll(c => c != challenge);
+            => Challenges.RemoveAll(c => c != challenge);
 
         internal void ClearChallenges()
-            => _challenges?.Clear();
+            => Challenges.Clear();
 
 
         internal void SetStatus(AuthorizationStatus nextStatus)

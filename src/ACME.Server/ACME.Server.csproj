@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ACME.Protocol.Model\ACME.Protocol.csproj" />
+    <ProjectReference Include="..\ACME.Storage.FileStore\ACME.Storage.FileStore.csproj" />
   </ItemGroup>
 
 </Project>
