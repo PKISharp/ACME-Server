@@ -12,7 +12,7 @@ namespace TGIT.ACME.Protocol.Model
 
         private AcmeError() { }
 
-        public AcmeError(string type, string detail, Identifier identifier, IEnumerable<AcmeError>? subErrors = null)
+        public AcmeError(string type, string detail, Identifier? identifier = null, IEnumerable<AcmeError>? subErrors = null)
         {
             Type = type;
             Detail = detail;

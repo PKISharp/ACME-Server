@@ -63,10 +63,16 @@ namespace TGIT.ACME.Protocol.Workers
                 var challenge = pendingAuthZ.Challenges[0];
 
                 var validator = _challangeValidatorFactory.GetValidator(challenge);
-                var isValid = await validator.ValidateChallengeAsync(challenge, account, cancellationToken);
+                var validationResult = await validator.ValidateChallengeAsync(challenge, account, cancellationToken);
 
-                challenge.SetStatus(isValid ? ChallengeStatus.Valid : ChallengeStatus.Invalid);
-                pendingAuthZ.SetStatus(isValid ? AuthorizationStatus.Valid : AuthorizationStatus.Invalid);
+                if (validationResult.IsValid)
+                {
+                    challenge.SetStatus(validationResult.IsValid ? ChallengeStatus.Valid : ChallengeStatus.Invalid);
+                    pendingAuthZ.SetStatus(validationResult.IsValid ? AuthorizationStatus.Valid : AuthorizationStatus.Invalid);
+                } else
+                {
+                    // TODO!
+                }
             }
 
             order.SetStatusFromAuthorizations();

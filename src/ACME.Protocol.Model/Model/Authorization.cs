@@ -16,7 +16,7 @@ namespace TGIT.ACME.Protocol.Model
 
         private string? _authorizationId;
         private Identifier? _identifier;
-        private Order? _parent;
+        private Order? _order;
 
         private Authorization() {
             Challenges = new List<Challenge>();
@@ -27,11 +27,11 @@ namespace TGIT.ACME.Protocol.Model
             AuthorizationId = GuidString.NewValue();
             Challenges = new List<Challenge>();
             
-            Parent = parent;
-            Parent.Authorizations.Add(this);
+            Order = parent;
+            Order.Authorizations.Add(this);
 
             Identifier = identifier;
-            IsWildcard = identifier.Value.StartsWith("*", StringComparison.InvariantCulture);
+            IsWildcard = identifier.IsWildcard;
 
             Expires = expires;
         }
@@ -42,9 +42,9 @@ namespace TGIT.ACME.Protocol.Model
         }
         public AuthorizationStatus Status { get; private set; }
 
-        public Order Parent {
-            get => _parent ?? throw new NotInitializedException();
-            private set => _parent = value;
+        public Order Order {
+            get => _order ?? throw new NotInitializedException();
+            private set => _order = value;
         }
         
         public Identifier Identifier {

@@ -18,6 +18,9 @@ namespace TGIT.ACME.Protocol.Model
             set => _value = value?.Trim().ToLowerInvariant(); 
         }
 
+        public bool IsWildcard
+            => Value.StartsWith("*", StringComparison.InvariantCulture);
+
         public override bool Equals(object? obj)
         {
             return obj is Identifier identifier && Equals(identifier);

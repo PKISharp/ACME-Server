@@ -51,7 +51,7 @@ namespace TGIT.ACME.Protocol.Services
             return await _accountStore.LoadAccountAsync(accountId, cancellationToken);
         }
 
-        private void ValidateAccount(Account? account)
+        private static void ValidateAccount(Account? account)
         {
             if (account == null)
                 throw new NotFoundException();

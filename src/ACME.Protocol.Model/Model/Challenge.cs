@@ -24,7 +24,7 @@ namespace TGIT.ACME.Protocol.Model
             };
 
         private string? _challengeId;
-        private Authorization? _parent;
+        private Authorization? _authorization;
 
         private string? _type;
         private string? _token;
@@ -37,8 +37,8 @@ namespace TGIT.ACME.Protocol.Model
                 throw new InvalidOperationException($"Unknown ChallengeType {type}");
 
             ChallengeId = GuidString.NewValue();
-            Parent = parent;
-            Parent.Challenges.Add(this);
+            Authorization = parent;
+            Authorization.Challenges.Add(this);
 
             Type = type;
             Token = token;
@@ -48,9 +48,9 @@ namespace TGIT.ACME.Protocol.Model
             get => _challengeId ?? throw new NotInitializedException();
             private set => _challengeId = value;
         }
-        public Authorization Parent {
-            get => _parent ?? throw new NotInitializedException();
-            private set => _parent = value;
+        public Authorization Authorization {
+            get => _authorization ?? throw new NotInitializedException();
+            private set => _authorization = value;
         }
 
         public string Type {
