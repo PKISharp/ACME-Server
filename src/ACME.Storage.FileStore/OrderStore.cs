@@ -50,13 +50,9 @@ namespace TGIT.ACME.Storage.FileStore
             using (var fileStream = File.Open(orderFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
             {
                 var existingOrder = await LoadFromStream<Order>(fileStream, cancellationToken);
-                if (existingOrder != null && existingOrder.Version != setOrder.Version)
-                    throw new ConcurrencyException();
 
-                setOrder.Version = DateTime.UtcNow.Ticks;
-
-                var utf8Bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(setOrder, JsonDefaults.Settings));
-                await fileStream.WriteAsync(utf8Bytes, cancellationToken);
+                HandleVersioning(existingOrder, setOrder);
+                await ReplaceFileStreamContent(fileStream, setOrder);
             }
         }
 

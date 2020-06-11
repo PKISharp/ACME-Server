@@ -14,7 +14,7 @@ namespace TGIT.ACME.Protocol.HttpModel.Converters
             var encodedRequest = ReadEncodedRequest(ref reader, options);
             var header = ReadHeader(encodedRequest, options);
 
-            var result = new AcmePostRequest(header, encodedRequest.Signature);
+            var result = new AcmePostRequest(header, encodedRequest.Payload, encodedRequest.Signature);
 
             return result;
         }

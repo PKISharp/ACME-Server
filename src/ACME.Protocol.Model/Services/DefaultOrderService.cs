@@ -84,6 +84,8 @@ namespace TGIT.ACME.Protocol.Services
             challenge.SetStatus(ChallengeStatus.Processing);
             authZ.SelectChallenge(challenge);
 
+            await _orderStore.SaveOrderAsync(order, cancellationToken);
+
             return challenge;
         }
 

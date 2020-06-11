@@ -1,10 +1,13 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using TGIT.ACME.Protocol.Model;
+using TGIT.ACME.Protocol.Model.Exceptions;
 using TGIT.ACME.Storage.FileStore.Configuration;
 
 namespace TGIT.ACME.Storage.FileStore
@@ -45,6 +48,23 @@ namespace TGIT.ACME.Storage.FileStore
             var result = JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(utf8Bytes), JsonDefaults.Settings);
 
             return result;
+        }
+
+        protected static async Task ReplaceFileStreamContent<T>(FileStream fileStream, T content)
+        {
+            if (fileStream.Length > 0)
+                fileStream.SetLength(0);
+
+            var utf8Bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(content, JsonDefaults.Settings));
+            await fileStream.WriteAsync(utf8Bytes);
+        }
+
+        protected static void HandleVersioning(IVersioned? existingContent, IVersioned newContent)
+        {
+            if (existingContent != null && existingContent.Version != newContent.Version)
+                throw new ConcurrencyException();
+
+            newContent.Version = DateTime.UtcNow.Ticks;
         }
     }
 }

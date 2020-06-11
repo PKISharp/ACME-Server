@@ -4,20 +4,23 @@ namespace TGIT.ACME.Protocol.Infrastructure
 {
     public class AcmePostRequest
     {
-        public AcmePostRequest(DecodedHeader header, string signature)
+        protected AcmePostRequest(DecodedHeader header, string signature)
         {
-            if (header == null)
-                throw new ArgumentNullException(nameof(header));
-
             if (string.IsNullOrWhiteSpace(signature))
                 throw new ArgumentException("Request body signature is missing", nameof(signature));
 
-            Header = header;
+            Header = header ?? throw new ArgumentNullException(nameof(header));
             Signature = signature;
         }
 
+        public AcmePostRequest(DecodedHeader header, string? payload, string signature)
+            :this(header, signature)
+        {
+            Payload = new DecodedPayload(payload ?? "");
+        }
+
         public DecodedHeader Header { get; private set; }
-        public DecodedPayload? Payload { get; protected set; }
+        public DecodedPayload Payload { get; protected set; }
 
         public string Signature { get; private set; }
     }
@@ -31,8 +34,8 @@ namespace TGIT.ACME.Protocol.Infrastructure
             Payload = payload;
         }
 
-        public new DecodedPayload<TPayload>? Payload { 
-            get => base.Payload as DecodedPayload<TPayload>; 
+        public new DecodedPayload<TPayload> Payload { 
+            get => (DecodedPayload<TPayload>)base.Payload; 
             private set => base.Payload = value; 
         }
     }

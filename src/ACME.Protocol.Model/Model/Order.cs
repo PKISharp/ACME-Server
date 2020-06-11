@@ -5,7 +5,7 @@ using TGIT.ACME.Protocol.Model.Exceptions;
 
 namespace TGIT.ACME.Protocol.Model
 {
-    public class Order
+    public class Order : IVersioned
     {
         private static readonly Dictionary<OrderStatus, OrderStatus[]> _validStatusTransitions =
             new Dictionary<OrderStatus, OrderStatus[]>

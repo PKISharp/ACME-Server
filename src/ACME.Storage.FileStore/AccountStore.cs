@@ -43,12 +43,9 @@ namespace TGIT.ACME.Storage.FileStore
             using (var fileStream = File.Open(accountPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
             {
                 var existingAccount = await LoadFromStream<Account>(fileStream, cancellationToken);
-                if (existingAccount != null && existingAccount.Version != setAccount.Version)
-                    throw new ConcurrencyException();
+                HandleVersioning(existingAccount, setAccount);
 
-                setAccount.Version = DateTime.UtcNow.Ticks;
-                var utf8Bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(setAccount, JsonDefaults.Settings));
-                await fileStream.WriteAsync(utf8Bytes, cancellationToken);
+                await ReplaceFileStreamContent(fileStream, setAccount);
             }
         }
     }

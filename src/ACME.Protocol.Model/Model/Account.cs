@@ -6,7 +6,7 @@ using TGIT.ACME.Protocol.Model.Exceptions;
 
 namespace TGIT.ACME.Protocol.Model
 {
-    public class Account
+    public class Account : IVersioned
     {
         private string? _accountId;
         private Jwk? _jwk;
