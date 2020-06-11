@@ -21,24 +21,18 @@ namespace TGIT.ACME.Storage.FileStore
             : base(options)
         { }
 
+        private string GetOrderPath(string orderId)
+            => Path.Combine(Options.Value.OrderPath, $"{orderId}.json");
+
         public async Task<Order?> LoadOrderAsync(string orderId, CancellationToken cancellationToken)
         {
-            if (!IdentifierRegex.IsMatch(orderId))
+            if (string.IsNullOrWhiteSpace(orderId) || !IdentifierRegex.IsMatch(orderId))
                 throw new MalformedRequestException("OrderId does not match expected format.");
 
-            var orderPath = Path.Combine(Options.Value.OrderPath, $"{orderId}.json");
+            var orderFilePath = GetOrderPath(orderId);
 
-            if (!File.Exists(orderPath))
-                return null;
-
-            using (var fileStream = File.OpenRead(orderPath))
-            {
-                var utf8Bytes = new byte[fileStream.Length];
-                await fileStream.ReadAsync(utf8Bytes, cancellationToken);
-                var result = JsonConvert.DeserializeObject<Order>(Encoding.UTF8.GetString(utf8Bytes));
-
-                return result;
-            }
+            var order = await LoadFromPath<Order>(orderFilePath, cancellationToken);
+            return order;
         }
 
         public async Task SaveOrderAsync(Order setOrder, CancellationToken cancellationToken)
@@ -46,7 +40,7 @@ namespace TGIT.ACME.Storage.FileStore
             if (setOrder is null)
                 throw new ArgumentNullException(nameof(setOrder));
 
-            var orderFilePath = Path.Combine(Options.Value.OrderPath, $"{setOrder.OrderId}.json");
+            var orderFilePath = GetOrderPath(setOrder.OrderId);
 
             Directory.CreateDirectory(Path.GetDirectoryName(orderFilePath));
 
@@ -55,7 +49,7 @@ namespace TGIT.ACME.Storage.FileStore
 
             using (var fileStream = File.Open(orderFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
             {
-                var existingOrder = await LoadOrderAsync(setOrder.OrderId, cancellationToken);
+                var existingOrder = await LoadFromStream<Order>(fileStream, cancellationToken);
                 if (existingOrder != null && existingOrder.Version != setOrder.Version)
                     throw new ConcurrencyException();
 
@@ -68,7 +62,10 @@ namespace TGIT.ACME.Storage.FileStore
 
         private async Task CreateOwnerFileAsync(Order order, CancellationToken cancellationToken)
         {
-            var ownerFilePath = Path.Combine(Options.Value.AccountPath, order.AccountId, "orders", order.OrderId);
+            var ownerDirectory = Path.Combine(Options.Value.AccountPath, order.AccountId, "orders");
+            Directory.CreateDirectory(ownerDirectory);
+
+            var ownerFilePath = Path.Combine(ownerDirectory, order.OrderId);
             if (!File.Exists(ownerFilePath)) {
                 await File.WriteAllTextAsync(ownerFilePath, 
                     order.Expires?.ToString("o", CultureInfo.InvariantCulture), 
@@ -78,12 +75,15 @@ namespace TGIT.ACME.Storage.FileStore
 
         private async Task WriteWorkFilesAsync(Order order, CancellationToken cancellationToken)
         {
-            var validationFilePath = Path.Combine(Options.Value.WorkingPath, "validate", order.OrderId);
+            var validationDirectory = Path.Combine(Options.Value.WorkingPath, "validate");
+            Directory.CreateDirectory(validationDirectory);
+
+            var validationFilePath = Path.Combine(validationDirectory, order.OrderId);
             if (order.Authorizations.Any(a => a.Challenges.Any(c => c.Status == ChallengeStatus.Processing)))
             {
                 if (!File.Exists(validationFilePath)) {
                     await File.WriteAllTextAsync(validationFilePath, 
-                        order.Authorizations.Min(a => a.Expires)?.ToString("o", CultureInfo.InvariantCulture),
+                        order.Authorizations.Min(a => a.Expires).ToString("o", CultureInfo.InvariantCulture),
                         cancellationToken);
                 }
             } 
@@ -92,7 +92,10 @@ namespace TGIT.ACME.Storage.FileStore
                 File.Delete(validationFilePath);
             }
 
-            var processingFilePath = Path.Combine(Options.Value.WorkingPath, "process", order.OrderId);
+            var processDirectory = Path.Combine(Options.Value.WorkingPath!, "process");
+            Directory.CreateDirectory(processDirectory);
+
+            var processingFilePath = Path.Combine(processDirectory, order.OrderId);
             if(order.Status == OrderStatus.Processing)
             {
                 if (!File.Exists(processingFilePath)) {
@@ -109,10 +112,13 @@ namespace TGIT.ACME.Storage.FileStore
 
         public async Task<List<Order>> GetValidatableOrders(CancellationToken cancellationToken)
         {
-            var workPath = Path.Combine(Options.Value.WorkingPath, "validate");
-            var files = Directory.EnumerateFiles(workPath);
-
             var result = new List<Order>();
+
+            var workPath = Path.Combine(Options.Value.WorkingPath, "validate");
+            if (!Directory.Exists(workPath))
+                return result;
+
+            var files = Directory.EnumerateFiles(workPath);
             foreach(var filePath in files)
             {
                 try
@@ -133,10 +139,13 @@ namespace TGIT.ACME.Storage.FileStore
 
         public async Task<List<Order>> GetFinalizableOrders(CancellationToken cancellationToken)
         {
-            var workPath = Path.Combine(Options.Value.WorkingPath, "process");
-            var files = Directory.EnumerateFiles(workPath);
-
             var result = new List<Order>();
+
+            var workPath = Path.Combine(Options.Value.WorkingPath, "process");
+            if (!Directory.Exists(workPath))
+                return result;
+
+            var files = Directory.EnumerateFiles(workPath);
             foreach (var filePath in files)
             {
                 try

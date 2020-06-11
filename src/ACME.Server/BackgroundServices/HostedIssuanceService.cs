@@ -23,7 +23,6 @@ namespace TGIT.ACME.Server.BackgroundServices
         protected override bool EnableService => _options.Value.HostedWorkers?.EnableIssuanceService == true;
         protected override TimeSpan TimerInterval => TimeSpan.FromSeconds(_options.Value.HostedWorkers!.ValidationCheckInterval);
 
-
         protected override async Task DoWork(IServiceProvider services, CancellationToken cancellationToken)
         {
             var issuanceWorker = services.GetRequiredService<IIssuanceWorker>();

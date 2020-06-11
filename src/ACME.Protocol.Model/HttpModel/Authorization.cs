@@ -15,7 +15,7 @@ namespace TGIT.ACME.Protocol.HttpModel
 
             Status = model.Status.ToString().ToLowerInvariant();
 
-            Expires = model.Expires?.ToString("o", CultureInfo.InvariantCulture);
+            Expires = model.Expires.ToString("o", CultureInfo.InvariantCulture);
             Wildcard = model.IsWildcard;
 
             Identifier = new Identifier(model.Identifier);

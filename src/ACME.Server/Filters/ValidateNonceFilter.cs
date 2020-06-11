@@ -22,7 +22,6 @@ namespace TGIT.ACME.Server.Filters
         {
             if (HttpMethods.IsPost(context.HttpContext.Request.Method))
             {
-                _logger.LogInformation("Attempting to validate Nonce");
                 var acmeRequest = context.GetAcmeRequest();
                 await _validationService.ValidateNonceAsync(acmeRequest.Header.Value.Nonce, context.HttpContext.RequestAborted);
             }

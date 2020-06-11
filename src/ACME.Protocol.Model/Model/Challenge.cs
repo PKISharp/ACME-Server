@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using TGIT.ACME.Protocol.HttpModel;
 using TGIT.ACME.Protocol.Model.Exceptions;
@@ -16,7 +17,7 @@ namespace TGIT.ACME.Protocol.Model
 
     public class Challenge
     {
-        private static Dictionary<ChallengeStatus, ChallengeStatus[]> _validStatusTransitions = 
+        private static readonly Dictionary<ChallengeStatus, ChallengeStatus[]> _validStatusTransitions = 
             new Dictionary<ChallengeStatus, ChallengeStatus[]>
             {
                 { ChallengeStatus.Pending, new [] { ChallengeStatus.Processing } },
@@ -29,40 +30,51 @@ namespace TGIT.ACME.Protocol.Model
         private string? _type;
         private string? _token;
 
-        private Challenge() { }
+        public Challenge() 
+        {
+            ChallengeId = GuidString.NewValue();
+        }
 
-        public Challenge(Authorization parent, string type, string token)
+        public Challenge(Authorization authorization, string type, string token)
+            :this()
         {
             if (!ChallengeTypes.AllTypes.Contains(type))
                 throw new InvalidOperationException($"Unknown ChallengeType {type}");
 
-            ChallengeId = GuidString.NewValue();
-            Authorization = parent;
-            Authorization.Challenges.Add(this);
-
             Type = type;
             Token = token;
+
+            Authorization = authorization;
         }
 
         public string ChallengeId {
             get => _challengeId ?? throw new NotInitializedException();
-            private set => _challengeId = value;
+            set => _challengeId = value;
         }
+
+        [DisallowNull]
         public Authorization Authorization {
-            get => _authorization ?? throw new NotInitializedException();
-            private set => _authorization = value;
+            get => _authorization;
+            set
+            {
+                if (_authorization != null)
+                    _authorization.Challenges.Remove(this);
+
+                _authorization = value;
+                _authorization.Challenges.Add(this);
+            }
         }
 
         public string Type {
             get => _type ?? throw new NotInitializedException();
-            private set => _type = value;
+            set => _type = value;
         }
 
-        public ChallengeStatus Status { get; private set; }
+        public ChallengeStatus Status { get; set; }
 
         public string Token {
             get => _token ?? throw new NotInitializedException();
-            private set => _token = value; 
+            set => _token = value; 
         }
 
         public AcmeError? Error { get; set; }

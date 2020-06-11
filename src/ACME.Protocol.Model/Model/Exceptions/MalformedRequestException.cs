@@ -16,6 +16,13 @@
         { }
     }
 
+    public class NotAllowedException : MalformedRequestException
+    {
+        public NotAllowedException()
+            : base("The resoruce requested by the request may not be accessed by the requestor.")
+        { }
+    }
+
     public class ConflictRequestException : MalformedRequestException
     {
         private ConflictRequestException(string resourceType, string expectedStatus, string actualStatus)

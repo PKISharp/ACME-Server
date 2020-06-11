@@ -13,8 +13,8 @@ namespace TGIT.ACME.Protocol.HttpModel
             Type = model.Type;
             Detail = model.Detail;
 
-            if(model.Identifier.HasValue)
-                Identifier = new Identifier(model.Identifier.Value);
+            if(model.Identifier != null)
+                Identifier = new Identifier(model.Identifier);
 
             Subproblems = model.SubErrors?
                 .Select(x => new AcmeError(x))

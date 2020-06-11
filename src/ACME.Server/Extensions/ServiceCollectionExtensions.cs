@@ -23,13 +23,19 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IAccountService, DefaultAccountService>();
             services.AddScoped<IOrderService, DefaultOrderService>();
 
+            services.AddScoped<IAuthorizationFactory, DefaultAuthorizationFactory>();
+
             services.AddScoped<IIssuanceWorker, IssuanceWorker>();
             services.AddScoped<IValidationWorker, ValidationWorker>();
+
+            services.AddHttpClient<Http01ChallangeValidator>();
+            services.AddScoped<Dns01ChallangeValidator>();
+            services.AddScoped<IChallangeValidatorFactory, DefaultChallangeValidatorFactory>();
 
             services.AddScoped<AddNextNonceFilter>();
 
             services.AddHostedService<HostedValidationService>();
-            services.AddHostedService<HostedIssuanceService>();
+            //services.AddHostedService<HostedIssuanceService>();
 
             services.Configure<MvcOptions>(opt =>
             {
@@ -63,7 +69,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IAccountStore, AccountStore>();
             services.AddScoped<IOrderStore, OrderStore>();
 
-            services.Configure<FileStoreOptions>(configuration.GetSection("FileStore"));
+            services.AddOptions<FileStoreOptions>()
+                .Bind(configuration.GetSection("FileStore"))
+                .ValidateDataAnnotations();
 
             return services;
         }

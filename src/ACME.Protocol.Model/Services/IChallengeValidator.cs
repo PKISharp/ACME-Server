@@ -20,19 +20,25 @@ namespace TGIT.ACME.Protocol.Services
 
         public async Task<(bool IsValid, AcmeError? error)> ValidateChallengeAsync(Challenge challenge, Account account, CancellationToken cancellationToken)
         {
+            if (challenge is null)
+                throw new ArgumentNullException(nameof(challenge));
+            if (account is null)
+                throw new ArgumentNullException(nameof(account));
+
+
             //TODO: Check account state;
             //TODO: Check authorization expiry;
             //TODO: Check order expiry
 
-            var challengeResponse = await LoadChallengeResponseAsync(challenge, cancellationToken);
-            if (challengeResponse.Error != null)
-                return (false, challengeResponse.Error);
+            var (challengeContent, error) = await LoadChallengeResponseAsync(challenge, cancellationToken);
+            if (error != null)
+                return (false, error);
 
             var expectedResponse = GetExpectedContent(challenge, account);
-            if(expectedResponse == challengeResponse.Content)
+            if(expectedResponse == challengeContent)
                 return (true, null);
 
-            var error = new AcmeError("TODO", "TODO", challenge.Authorization.Identifier);
+            error = new AcmeError("TODO", "TODO", challenge.Authorization.Identifier);
             return (false, error);
         }
     }

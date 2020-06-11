@@ -1,36 +1,32 @@
-﻿using TGIT.ACME.Protocol.Model.Exceptions;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace TGIT.ACME.Storage.FileStore.Configuration
 {
-    public class FileStoreOptions
+    public class FileStoreOptions : IValidatableObject
     {
-        private string? _noncePath;
-        private string? _accountPath;
-        private string? _workingPath;
-        private string? _orderPath;
+        public string NoncePath { get; set; } = null!;
 
-        public string NoncePath
+        public string AccountPath { get; set; } = null!;
+
+        public string OrderPath { get; set; } = null!;
+
+        public string WorkingPath { get; set; } = null!;
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            get => _noncePath ?? throw new NotInitializedException();
-            set => _noncePath = value;
-        }
+            if (string.IsNullOrWhiteSpace(NoncePath) || !Directory.Exists(NoncePath))
+                yield return new ValidationResult("NoncePath was empty or did not exist.", new[] { nameof(NoncePath) });
 
-        public string AccountPath
-        {
-            get => _accountPath ?? throw new NotInitializedException();
-            set => _accountPath = value;
+            if (string.IsNullOrWhiteSpace(AccountPath) || !Directory.Exists(AccountPath))
+                yield return new ValidationResult("AccountPath was empty or did not exist.", new[] { nameof(AccountPath) });
+            
+            if (string.IsNullOrWhiteSpace(OrderPath) || !Directory.Exists(OrderPath))
+                yield return new ValidationResult("OrderPath was empty or did not exist.", new[] { nameof(OrderPath) });
+            
+            if (string.IsNullOrWhiteSpace(WorkingPath) || !Directory.Exists(WorkingPath))
+                yield return new ValidationResult("WorkingPath was empty or did not exist.", new[] { nameof(WorkingPath) });
         }
-
-        public string OrderPath { 
-            get => _orderPath ?? throw new NotInitializedException();
-            set => _orderPath = value; 
-        }
-
-        public string WorkingPath
-        {
-            get => _workingPath ?? throw new NotInitializedException();
-            set => _workingPath = value;
-        }
-
     }
 }

@@ -34,7 +34,7 @@ namespace TGIT.ACME.Protocol.Services
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
 
-            _logger.LogInformation("Attempting to validate AcmeHeader");
+            _logger.LogDebug("Attempting to validate AcmeHeader ...");
             var header = request.Header;
 
             if (!_supportedAlgs.Contains(header.Value.Alg))
@@ -45,26 +45,31 @@ namespace TGIT.ACME.Protocol.Services
             if (header.Value.Jwk == null && header.Value.Kid == null)
                 throw new MalformedRequestException("Provide either Jwk or Kid.");
 
+            _logger.LogDebug("successfully validated AcmeHeader.");
             return Task.CompletedTask;
         }
 
         public async Task ValidateNonceAsync(string? nonce, CancellationToken cancellationToken)
         {
+            _logger.LogDebug("Attempting to validate replay nonce ...");
             if (string.IsNullOrWhiteSpace(nonce))
             {
-                _logger.LogInformation($"Nonce was empty.");
+                _logger.LogDebug($"Nonce was empty.");
                 throw new BadNonceException();
             }
 
             if (!await _nonceStore.TryRemoveNonceAsync(new Nonce(nonce), cancellationToken))
             {
-                _logger.LogInformation($"Nonce could not be located.");
+                _logger.LogDebug($"Nonce was invalid.");
                 throw new BadNonceException();
             }
+
+            _logger.LogDebug("successfully validated replay nonce.");
         }
 
         public async Task ValidateSignatureAsync(AcmePostRequest request, CancellationToken cancellationToken)
         {
+            _logger.LogDebug("Attempting to validate signature ...");
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
@@ -91,11 +96,14 @@ namespace TGIT.ACME.Protocol.Services
             var securityKey = jwk.SecurityKey;
             
             using var signatureProvider = new AsymmetricSignatureProvider(securityKey, request.Header.Value.Alg);
+            //TODO: Payload was null for AcceptChallenge - might be empty object and wrongly assigned.
             var plainText = System.Text.Encoding.UTF8.GetBytes($"{request.Header.EncodedJson}.{request.Payload?.EncodedJson ?? ""}");
             var signature = Base64UrlEncoder.DecodeBytes(request.Signature);
 
             if (!signatureProvider.Verify(plainText, signature))
                 throw new MalformedRequestException("The signature could not be verified");
+
+            _logger.LogDebug("successfully validated signature.");
         }
     }
 }

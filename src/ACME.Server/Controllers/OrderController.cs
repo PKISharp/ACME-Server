@@ -34,11 +34,8 @@ namespace TGIT.ACME.Server.Controllers
             var orderRequest = request.Payload!.Value;
 
             var identifiers = orderRequest.Identifiers.Select(x =>
-                new Protocol.Model.Identifier
-                {
-                    Type = x.Type,
-                    Value = x.Value
-                });
+                new Identifier { Type = x.Type, Value = x.Value }
+            );
 
             var order = await _orderService.CreateOrderAsync(
                 account, identifiers,
@@ -91,11 +88,11 @@ namespace TGIT.ACME.Server.Controllers
                 return NotFound();
 
             var challenges = authZ.Challenges
-                .Select(x =>
+                .Select(challenge =>
                 {
-                    var challengeUrl = GetChallengeUrl(orderId, authId, x);
+                    var challengeUrl = GetChallengeUrl(challenge);
 
-                    return new Protocol.HttpModel.Challenge(x, challengeUrl);
+                    return new Protocol.HttpModel.Challenge(challenge, challengeUrl);
                 });
 
             var authZResponse = new Protocol.HttpModel.Authorization(authZ, challenges);
@@ -103,10 +100,14 @@ namespace TGIT.ACME.Server.Controllers
             return authZResponse;
         }
 
-        private string GetChallengeUrl(string orderId, string authId, Challenge challenge)
+        private string GetChallengeUrl(Challenge challenge)
         {
             return Url.RouteUrl("AcceptChallenge",
-                new { orderId = orderId, authId = authId, challangeId = challenge.ChallengeId }, "https");
+                new { 
+                    orderId = challenge.Authorization.Order.OrderId,
+                    authId = challenge.Authorization.AuthorizationId,
+                    challengeId = challenge.ChallengeId },
+                "https");
         }
 
         [Route("/order/{orderId}/auth/{authId}/chall/{challengeId}", Name = "AcceptChallenge")]
@@ -116,7 +117,10 @@ namespace TGIT.ACME.Server.Controllers
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
             var challenge = await _orderService.ProcessChallengeAsync(account, orderId, authId, challengeId, HttpContext.RequestAborted);
 
-            var challengeResponse = new Protocol.HttpModel.Challenge(challenge, GetChallengeUrl(orderId, authId, challenge));
+            if (challenge == null)
+                throw new NotFoundException();
+
+            var challengeResponse = new Protocol.HttpModel.Challenge(challenge, GetChallengeUrl(challenge));
             return challengeResponse;
         }
 

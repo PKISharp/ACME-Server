@@ -1,8 +1,10 @@
-﻿namespace TGIT.ACME.Protocol.Model
+﻿using System.Linq;
+
+namespace TGIT.ACME.Protocol.Model
 {
     public static class AuthorizationStatusExtensions
     {
-        private static AuthorizationStatus[] _invalidStatus = new[]
+        private static readonly AuthorizationStatus[] _invalidStatus = new[]
         {
             AuthorizationStatus.Invalid,
             AuthorizationStatus.Deactivated,

@@ -20,3 +20,6 @@ dotnet_diagnostic.CA1308.severity = none
 
 # CA1054: Uri parameters should not be strings
 dotnet_diagnostic.CA1054.severity = none
+
+# IDE0063: Use simple 'using' statement
+csharp_prefer_simple_using_statement = false:suggestion

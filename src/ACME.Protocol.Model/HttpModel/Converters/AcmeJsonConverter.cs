@@ -60,7 +60,7 @@ namespace TGIT.ACME.Protocol.HttpModel.Converters
             {
                 var payloadJson = Base64UrlEncoder.Decode(encodedRequest.Payload);
                 var payloadValue = JsonSerializer.Deserialize<TPayload>(payloadJson, options);
-                var payload = new DecodedPayload<TPayload>(payloadJson, payloadValue);
+                var payload = new DecodedPayload<TPayload>(encodedRequest.Payload, payloadValue);
 
                 return new AcmePostRequest<TPayload>(header, payload, encodedRequest.Signature);
             }

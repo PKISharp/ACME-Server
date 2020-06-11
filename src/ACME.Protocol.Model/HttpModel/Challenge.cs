@@ -18,7 +18,7 @@ namespace TGIT.ACME.Protocol.HttpModel
             Url = challengeUrl;
 
             Validated = model.Validated?.ToString("o", CultureInfo.InvariantCulture);
-            Error = model.Error;
+            Error = model.Error != null ? new AcmeError(model.Error) : null;
         }
 
 

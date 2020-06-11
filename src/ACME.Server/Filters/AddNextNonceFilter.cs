@@ -38,6 +38,9 @@ namespace TGIT.ACME.Server.Filters
 
         private async Task AddNonceHeader(HttpContext httpContext)
         {
+            if (httpContext.Response.Headers.ContainsKey("Replay-Nonce"))
+                return;
+
             var newNonce = await _nonceService.CreateNonceAsync(httpContext.RequestAborted);
             httpContext.Response.Headers.Add("Replay-Nonce", newNonce.Token);
 

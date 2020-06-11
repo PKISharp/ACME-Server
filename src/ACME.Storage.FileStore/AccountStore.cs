@@ -18,25 +18,18 @@ namespace TGIT.ACME.Storage.FileStore
             : base(options)
         { }
 
+        private string GetPath(string accountId)
+            => Path.Combine(Options.Value.AccountPath, accountId, "account.json");
+
         public async Task<Account?> LoadAccountAsync(string accountId, CancellationToken cancellationToken)
         {
-            if (!IdentifierRegex.IsMatch(accountId))
+            if (string.IsNullOrWhiteSpace(accountId) || !IdentifierRegex.IsMatch(accountId))
                 throw new MalformedRequestException("AccountId does not match expected format.");
 
-            var accountPath = Path.Combine(Options.Value.AccountPath,
-                accountId, "account.json");
+            var accountPath = GetPath(accountId);
 
-            if (!File.Exists(accountPath))
-                return null;
-
-            using (var fileStream = File.OpenRead(accountPath))
-            {
-                var utf8Bytes = new byte[fileStream.Length];
-                await fileStream.ReadAsync(utf8Bytes, cancellationToken);
-                var result = JsonConvert.DeserializeObject<Account>(Encoding.UTF8.GetString(utf8Bytes));
-
-                return result;
-            }
+            var account = await LoadFromPath<Account>(accountPath, cancellationToken);
+            return account;
         }
 
         public async Task SaveAccountAsync(Account setAccount, CancellationToken cancellationToken)
@@ -44,19 +37,17 @@ namespace TGIT.ACME.Storage.FileStore
             if (setAccount is null)
                 throw new ArgumentNullException(nameof(setAccount));
 
-            var accountPath = Path.Combine(Options.Value.AccountPath,
-                setAccount.AccountId, "account.json");
-
+            var accountPath = GetPath(setAccount.AccountId);
             Directory.CreateDirectory(Path.GetDirectoryName(accountPath));
 
             using (var fileStream = File.Open(accountPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
             {
-                var existingAccount = await LoadAccountAsync(setAccount.AccountId, cancellationToken);
+                var existingAccount = await LoadFromStream<Account>(fileStream, cancellationToken);
                 if (existingAccount != null && existingAccount.Version != setAccount.Version)
                     throw new ConcurrencyException();
 
                 setAccount.Version = DateTime.UtcNow.Ticks;
-                var utf8Bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(setAccount));
+                var utf8Bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(setAccount, JsonDefaults.Settings));
                 await fileStream.WriteAsync(utf8Bytes, cancellationToken);
             }
         }

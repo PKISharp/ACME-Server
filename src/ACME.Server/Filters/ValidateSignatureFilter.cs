@@ -22,9 +22,7 @@ namespace TGIT.ACME.Server.Filters
         {
             if (HttpMethods.IsPost(context.HttpContext.Request.Method))
             {
-                _logger.LogInformation("Attempting to validate Signature");
                 var acmeRequest = context.GetAcmeRequest();
-
                 await _validationService.ValidateSignatureAsync(acmeRequest, context.HttpContext.RequestAborted);
             }
 

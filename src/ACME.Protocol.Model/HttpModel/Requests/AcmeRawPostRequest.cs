@@ -13,14 +13,14 @@ namespace TGIT.ACME.Protocol.HttpModel.Requests
         [JsonPropertyName("protected")]
         public string Header { 
             get => _header ?? throw new NotInitializedException();
-            private set => _header = value;
+            set => _header = value;
         }
         
-        public string? Payload { get; private set; } 
+        public string? Payload { get; set; } 
         
         public string Signature { 
             get => _signature ?? throw new NotInitializedException();
-            private set => _signature = value;
+            set => _signature = value;
         }
     }
 }

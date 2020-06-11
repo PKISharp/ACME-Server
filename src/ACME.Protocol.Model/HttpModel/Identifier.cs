@@ -10,6 +10,9 @@ namespace TGIT.ACME.Protocol.HttpModel
 
         public Identifier(Model.Identifier model)
         {
+            if (model is null)
+                throw new System.ArgumentNullException(nameof(model));
+
             Type = model.Type;
             Value = model.Value;
         }

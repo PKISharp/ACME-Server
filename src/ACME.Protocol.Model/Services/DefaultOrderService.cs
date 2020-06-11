@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -12,10 +13,12 @@ namespace TGIT.ACME.Protocol.Services
     public class DefaultOrderService : IOrderService
     {
         private readonly IOrderStore _orderStore;
+        private readonly IAuthorizationFactory _authorizationFactory;
 
-        public DefaultOrderService(IOrderStore orderStore)
+        public DefaultOrderService(IOrderStore orderStore, IAuthorizationFactory authorizationFactory)
         {
             _orderStore = orderStore;
+            _authorizationFactory = authorizationFactory;
         }
 
         public async Task<Order> CreateOrderAsync(Account account,
@@ -26,14 +29,13 @@ namespace TGIT.ACME.Protocol.Services
             if (account is null)
                 throw new ArgumentNullException(nameof(account));
 
-            // TODO: Calculate Authorizations;
-            var authorizations = new List<Authorization>();
-
             var order = new Order(account, identifiers)
             {
                 NotBefore = notBefore,
                 NotAfter = notAfter
             };
+
+            _authorizationFactory.CreateAuthorizations(order);
 
             await _orderStore.SaveOrderAsync(order, cancellationToken);
 
@@ -49,8 +51,7 @@ namespace TGIT.ACME.Protocol.Services
             if (order == null)
                 throw new NotFoundException();
 
-            if (order.AccountId != account.AccountId)
-                throw new NotImplementedException();
+            ValidateOrderAccess(order, account);
             if (order.Status != OrderStatus.Valid)
                 throw new ConflictRequestException(OrderStatus.Valid, order.Status);
 
@@ -90,6 +91,15 @@ namespace TGIT.ACME.Protocol.Services
         {
             var order = await _orderStore.LoadOrderAsync(orderId, cancellationToken);
             throw new NotImplementedException();
+        }
+
+        private void ValidateOrderAccess(Order order, Account account)
+        {
+            if (order.AccountId != account.AccountId)
+                throw new NotAllowedException();
+
+            if (account.Status != AccountStatus.Valid)
+                throw new NotAllowedException();
         }
     }
 }

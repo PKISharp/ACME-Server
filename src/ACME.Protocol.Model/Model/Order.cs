@@ -7,7 +7,7 @@ namespace TGIT.ACME.Protocol.Model
 {
     public class Order
     {
-        private static Dictionary<OrderStatus, OrderStatus[]> _validStatusTransitions =
+        private static readonly Dictionary<OrderStatus, OrderStatus[]> _validStatusTransitions =
             new Dictionary<OrderStatus, OrderStatus[]>
             {
                 { OrderStatus.Pending, new [] { OrderStatus.Ready, OrderStatus.Invalid } },
@@ -47,12 +47,12 @@ namespace TGIT.ACME.Protocol.Model
         }
 
 
-        public OrderStatus Status { get; private set; }
+        public OrderStatus Status { get; set; }
         public List<Identifier> Identifiers { get; private set; }
 
         public List<Authorization> Authorizations { get; private set; }
-        public DateTimeOffset? NotBefore { get; internal set; }
-        public DateTimeOffset? NotAfter { get; internal set; }
+        public DateTimeOffset? NotBefore { get; set; }
+        public DateTimeOffset? NotAfter { get; set; }
         public HttpModel.AcmeError? Error { get; set; }
         public DateTimeOffset? Expires { get; set; }
 

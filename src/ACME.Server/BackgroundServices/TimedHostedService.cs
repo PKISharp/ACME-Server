@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace TGIT.ACME.Server.BackgroundServices
         protected abstract TimeSpan TimerInterval { get; }
 
         private Timer? _timer;
-        private ManualResetEventSlim _interlock;
+        private readonly SemaphoreSlim _interlock;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         public TimedHostedService(IServiceProvider services, ILogger<TimedHostedService> logger)
@@ -24,7 +25,7 @@ namespace TGIT.ACME.Server.BackgroundServices
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _logger = logger;
 
-            _interlock = new ManualResetEventSlim(true);
+            _interlock = new SemaphoreSlim(1);
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
@@ -33,7 +34,7 @@ namespace TGIT.ACME.Server.BackgroundServices
             if (EnableService)
             {
                 _logger.LogInformation("Timed Hosted Service running.");
-                _timer = new Timer(DoWorkCallback, null, TimeSpan.Zero, TimerInterval);
+                _timer = new Timer(DoWorkCallback, null, TimeSpan.FromSeconds(15), TimerInterval);
             }
 
             return Task.CompletedTask;
@@ -41,9 +42,9 @@ namespace TGIT.ACME.Server.BackgroundServices
 
         protected async void DoWorkCallback(object? state)
         {
-            if(!_interlock.Wait(TimerInterval / 2))
+            if(! await _interlock.WaitAsync(TimerInterval / 2, _cancellationTokenSource.Token))
             {
-                _logger.LogInformation("Waited half an execution time, but did not get lock.");
+                _logger.LogInformation("Waited half an execution time, but did not get execution lock.");
                 return;
             }
 
@@ -51,8 +52,13 @@ namespace TGIT.ACME.Server.BackgroundServices
             {
                 using var scopedServices = _services.CreateScope();
                 await DoWork(scopedServices.ServiceProvider, _cancellationTokenSource.Token);
-            } finally {
-                _interlock.Set();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "TimedHostedService failed with exception.");
+            }
+            finally {
+                _interlock.Release();
             }
         }
 
@@ -62,7 +68,7 @@ namespace TGIT.ACME.Server.BackgroundServices
         {
             _logger.LogInformation("Timed Hosted Service is stopping.");
 
-            _timer?.Change(Timeout.Infinite, 0);
+            _timer?.Change(Timeout.Infinite, Timeout.Infinite);
             _cancellationTokenSource.Cancel();
 
             return Task.CompletedTask;

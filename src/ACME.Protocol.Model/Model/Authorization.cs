@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using TGIT.ACME.Protocol.Model.Exceptions;
 
@@ -7,7 +8,7 @@ namespace TGIT.ACME.Protocol.Model
 {
     public class Authorization
     {
-        private static Dictionary<AuthorizationStatus, AuthorizationStatus[]> _validStatusTransitions =
+        private static readonly Dictionary<AuthorizationStatus, AuthorizationStatus[]> _validStatusTransitions =
             new Dictionary<AuthorizationStatus, AuthorizationStatus[]>
             {
                 { AuthorizationStatus.Pending, new [] { AuthorizationStatus.Invalid, AuthorizationStatus.Expired, AuthorizationStatus.Valid } },
@@ -18,43 +19,49 @@ namespace TGIT.ACME.Protocol.Model
         private Identifier? _identifier;
         private Order? _order;
 
-        private Authorization() {
+        public Authorization() {
+            AuthorizationId = GuidString.NewValue();
             Challenges = new List<Challenge>();
         }
 
-        public Authorization(Order parent, Identifier identifier, DateTimeOffset expires)
+        public Authorization(Order order, Identifier identifier, DateTimeOffset expires)
+            :this()
         {
-            AuthorizationId = GuidString.NewValue();
-            Challenges = new List<Challenge>();
-            
-            Order = parent;
-            Order.Authorizations.Add(this);
+            Order = order;
 
-            Identifier = identifier;
-            IsWildcard = identifier.IsWildcard;
+            Identifier = identifier ?? throw new ArgumentNullException(nameof(identifier));
 
             Expires = expires;
         }
 
         public string AuthorizationId { 
             get => _authorizationId ?? throw new NotInitializedException(); 
-            private set => _authorizationId = value; 
+            set => _authorizationId = value; 
         }
-        public AuthorizationStatus Status { get; private set; }
+        public AuthorizationStatus Status { get; set; }
 
+        [DisallowNull]
         public Order Order {
-            get => _order ?? throw new NotInitializedException();
-            private set => _order = value;
-        }
-        
-        public Identifier Identifier {
-            get => _identifier ?? throw new NotInitializedException(); 
-            private set => _identifier = value; 
-        }
-        
-        public bool IsWildcard { get; private set; }
+            get => _order;
+            set
+            {
+                if (_order != null)
+                    _order.Authorizations.Remove(this);
 
-        public DateTimeOffset? Expires { get; private set; }
+                _order = value;
+                _order.Authorizations.Add(this);
+            }
+        }
+        
+        [DisallowNull]
+        public Identifier Identifier {
+            get => _identifier; 
+            set => _identifier = value; 
+        }
+
+        public bool IsWildcard => Identifier.IsWildcard;
+
+        public DateTimeOffset Expires { get; set; }
 
         
         public List<Challenge> Challenges { get; private set; }
