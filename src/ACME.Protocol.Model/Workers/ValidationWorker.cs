@@ -67,11 +67,12 @@ namespace TGIT.ACME.Protocol.Workers
 
                 if (isValid)
                 {
-                    challenge.SetStatus(isValid ? ChallengeStatus.Valid : ChallengeStatus.Invalid);
-                    pendingAuthZ.SetStatus(isValid ? AuthorizationStatus.Valid : AuthorizationStatus.Invalid);
+                    challenge.SetStatus(ChallengeStatus.Valid);
+                    pendingAuthZ.SetStatus(AuthorizationStatus.Valid);
                 } else
                 {
-                    // TODO!
+                    challenge.SetStatus(ChallengeStatus.Invalid);
+                    pendingAuthZ.SetStatus(AuthorizationStatus.Invalid);
                 }
             }
 

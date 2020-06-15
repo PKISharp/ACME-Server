@@ -28,9 +28,9 @@ namespace TGIT.ACME.Protocol.Model
             :this()
         {
             Order = order;
+            Order.Authorizations.Add(this);
 
             Identifier = identifier ?? throw new ArgumentNullException(nameof(identifier));
-
             Expires = expires;
         }
 
@@ -43,14 +43,7 @@ namespace TGIT.ACME.Protocol.Model
         [DisallowNull]
         public Order Order {
             get => _order;
-            set
-            {
-                if (_order != null)
-                    _order.Authorizations.Remove(this);
-
-                _order = value;
-                _order.Authorizations.Add(this);
-            }
+            set => _order = value;
         }
         
         [DisallowNull]

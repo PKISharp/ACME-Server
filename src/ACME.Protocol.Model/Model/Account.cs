@@ -25,7 +25,7 @@ namespace TGIT.ACME.Protocol.Model
 
         public string AccountId { 
             get => _accountId ?? throw new NotInitializedException(); 
-            private set => _accountId = value; 
+            set => _accountId = value; 
         }
 
         public AccountStatus Status { get; set; }

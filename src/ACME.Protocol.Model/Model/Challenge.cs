@@ -45,6 +45,7 @@ namespace TGIT.ACME.Protocol.Model
             Token = token;
 
             Authorization = authorization;
+            Authorization.Challenges.Add(this);
         }
 
         public string ChallengeId {
@@ -55,14 +56,7 @@ namespace TGIT.ACME.Protocol.Model
         [DisallowNull]
         public Authorization Authorization {
             get => _authorization;
-            set
-            {
-                if (_authorization != null)
-                    _authorization.Challenges.Remove(this);
-
-                _authorization = value;
-                _authorization.Challenges.Add(this);
-            }
+            set => _authorization = value;
         }
 
         public string Type {
