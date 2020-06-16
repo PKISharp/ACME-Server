@@ -14,11 +14,13 @@ namespace TGIT.ACME.Protocol.Services
     {
         private readonly IOrderStore _orderStore;
         private readonly IAuthorizationFactory _authorizationFactory;
+        private readonly ICsrValidator _csrValidator;
 
-        public DefaultOrderService(IOrderStore orderStore, IAuthorizationFactory authorizationFactory)
+        public DefaultOrderService(IOrderStore orderStore, IAuthorizationFactory authorizationFactory, ICsrValidator csrValidator)
         {
             _orderStore = orderStore;
             _authorizationFactory = authorizationFactory;
+            _csrValidator = csrValidator;
         }
 
         public async Task<Order> CreateOrderAsync(Account account,
@@ -92,7 +94,15 @@ namespace TGIT.ACME.Protocol.Services
         public async Task<Order> ProcessCsr(Account account, string orderId, string csr, CancellationToken cancellationToken)
         {
             var order = await _orderStore.LoadOrderAsync(orderId, cancellationToken);
-            throw new NotImplementedException();
+            if (order == null)
+                throw new NotFoundException();
+
+            _csrValidator.ValidateCsr(order, csr, cancellationToken);
+
+            order.SetStatus(OrderStatus.Processing);
+            await _orderStore.SaveOrderAsync(order, cancellationToken);
+
+            return order;
         }
 
         private void ValidateOrderAccess(Order order, Account account)

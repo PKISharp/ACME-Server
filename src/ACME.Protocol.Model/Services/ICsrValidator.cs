@@ -1,0 +1,16 @@
+﻿using System.Threading;
+using System.Threading.Tasks;
+using TGIT.ACME.Protocol.Model;
+
+namespace TGIT.ACME.Protocol.Services
+{
+    public interface ICsrValidator
+    {
+        Task ValidateCsr(Order order, string csr, CancellationToken cancellationToken);
+    }
+
+    public interface ICertificateIssuer
+    {
+        Task IssueCertificate(Order order, string csr);
+    }
+}

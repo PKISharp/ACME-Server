@@ -135,6 +135,7 @@ namespace TGIT.ACME.Server.Controllers
 
             var account = await _accountService.FromRequestAsync(request, HttpContext.RequestAborted);
             var order = await _orderService.ProcessCsr(account, orderId, request.Payload.Value.Csr, HttpContext.RequestAborted);
+
             GetOrderUrls(order, out var authorizationUrls, out var finalizeUrl, out var certificateUrl);
 
             var orderResponse = new Protocol.HttpModel.Order(order, authorizationUrls, finalizeUrl, certificateUrl);
