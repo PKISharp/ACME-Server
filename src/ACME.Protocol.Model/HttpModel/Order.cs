@@ -33,7 +33,8 @@ namespace TGIT.ACME.Protocol.HttpModel
             Finalize = finalizeUrl;
             Certificate = certificateUrl;
 
-            Error = model.Error;
+            if(model.Error != null)
+                Error = new AcmeError(model.Error);
         }
 
         public string Status { get; }

@@ -7,7 +7,7 @@ namespace TGIT.ACME.Storage.FileStore
         public static readonly JsonSerializerSettings Settings =
             new JsonSerializerSettings { 
                 PreserveReferencesHandling = PreserveReferencesHandling.All,
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Include
             };
     }
 }

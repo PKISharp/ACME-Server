@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using TGIT.ACME.Protocol.Model.Exceptions;
+using TGIT.ACME.Protocol.Model.Extensions;
 
 namespace TGIT.ACME.Protocol.Model
 {
@@ -17,12 +18,9 @@ namespace TGIT.ACME.Protocol.Model
                 { OrderStatus.Processing, new [] { OrderStatus.Valid, OrderStatus.Invalid } },
             };
 
-        private string? _orderId;
-        private string? _accountId;
-
         internal Order(Account account, IEnumerable<Identifier> identifiers)
         {
-            _orderId = GuidString.NewValue();
+            OrderId = GuidString.NewValue();
             Status = OrderStatus.Pending;
 
             AccountId = account.AccountId;
@@ -31,33 +29,27 @@ namespace TGIT.ACME.Protocol.Model
             Authorizations = new List<Authorization>();
         }
 
-        public string OrderId
-        {
-            get => _orderId ?? throw new NotInitializedException();
-            set => _orderId = value;
-        }
+        public string OrderId { get; }
+        public string AccountId { get; }
 
-        public string AccountId {
-            get => _accountId ?? throw new NotInitializedException(); 
-            set => _accountId = value; 
-        }
-
-
-        public OrderStatus Status { get; set; }
+        public OrderStatus Status { get; private set; }
+        
         public List<Identifier> Identifiers { get; private set; }
-
         public List<Authorization> Authorizations { get; private set; }
+        
         public DateTimeOffset? NotBefore { get; set; }
         public DateTimeOffset? NotAfter { get; set; }
-        public HttpModel.AcmeError? Error { get; set; }
         public DateTimeOffset? Expires { get; set; }
+
+        public AcmeError? Error { get; set; }
+
 
         /// <summary>
         /// Concurrency Token
         /// </summary>
         public long Version { get; set; }
 
-        public Authorization? GetAuthorization(string authId) 
+        public Authorization? GetAuthorization(string authId)
             => Authorizations.FirstOrDefault(x => x.AuthorizationId == authId);
 
         internal void SetStatus(OrderStatus nextStatus)
@@ -82,14 +74,53 @@ namespace TGIT.ACME.Protocol.Model
 
 
 
-        protected Order(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        // --- Serialization Methods --- //
+
+        protected Order(SerializationInfo info, StreamingContext streamingContext)
         {
-            throw new NotImplementedException();
+            if (info is null)
+                throw new ArgumentNullException(nameof(info));
+
+            OrderId = info.GetString(nameof(OrderId));
+            AccountId = info.GetString(nameof(AccountId));
+
+            Status = (OrderStatus)info.GetInt32(nameof(Status));
+
+            Identifiers = info.GetValue<List<Identifier>>(nameof(Identifiers));
+            Authorizations = info.GetValue<List<Authorization>>(nameof(Authorizations));
+
+            foreach (var auth in Authorizations)
+                auth.Order = this;
+            
+            NotBefore = info.TryGetValue<DateTimeOffset?>(nameof(NotBefore));
+            NotAfter = info.TryGetValue<DateTimeOffset?>(nameof(NotAfter));
+            Expires = info.TryGetValue<DateTimeOffset?>(nameof(Expires));
+
+            Error = info.TryGetValue<AcmeError?>(nameof(Error));
+            Version = info.GetInt64(nameof(Version));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            throw new NotImplementedException();
+            if (info is null)
+                throw new ArgumentNullException(nameof(info));
+
+            info.AddValue("SerializationVersion", 1);
+
+            info.AddValue(nameof(OrderId), OrderId);
+            info.AddValue(nameof(AccountId), AccountId);
+
+            info.AddValue(nameof(Status), Status);
+
+            info.AddValue(nameof(Identifiers), Identifiers);
+            info.AddValue(nameof(Authorizations), Authorizations);
+            
+            info.AddValue(nameof(NotBefore), NotBefore);
+            info.AddValue(nameof(NotAfter), NotAfter);
+            info.AddValue(nameof(Expires), Expires);
+
+            info.AddValue(nameof(Error), Error);
+            info.AddValue(nameof(Version), Version);
         }
     }
 }

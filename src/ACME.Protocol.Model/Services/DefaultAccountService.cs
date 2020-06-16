@@ -22,7 +22,7 @@ namespace TGIT.ACME.Protocol.Services
         public async Task<Account> CreateAccountAsync(Jwk jwk, List<string>? contacts,
             bool termsOfServiceAgreed, CancellationToken cancellationToken)
         {
-            var newAccount = new Account(jwk, contacts, termsOfServiceAgreed);
+            var newAccount = new Account(jwk, contacts, termsOfServiceAgreed ? DateTimeOffset.UtcNow : (DateTimeOffset?)null);
 
             await _accountStore.SaveAccountAsync(newAccount, cancellationToken);
             return newAccount;

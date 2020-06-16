@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.Serialization;
 using TGIT.ACME.Protocol.Model.Exceptions;
+using TGIT.ACME.Protocol.Model.Extensions;
 
 namespace TGIT.ACME.Protocol.Model
 {
-    public class Authorization
+    [Serializable]
+    public class Authorization : ISerializable
     {
         private static readonly Dictionary<AuthorizationStatus, AuthorizationStatus[]> _validStatusTransitions =
             new Dictionary<AuthorizationStatus, AuthorizationStatus[]>
@@ -15,48 +17,33 @@ namespace TGIT.ACME.Protocol.Model
                 { AuthorizationStatus.Valid, new [] { AuthorizationStatus.Revoked, AuthorizationStatus.Deactivated, AuthorizationStatus.Expired } }
             };
 
-        private string? _authorizationId;
-        private Identifier? _identifier;
         private Order? _order;
 
-        public Authorization() {
+        public Authorization(Order order, Identifier identifier, DateTimeOffset expires)
+        {
             AuthorizationId = GuidString.NewValue();
             Challenges = new List<Challenge>();
-        }
 
-        public Authorization(Order order, Identifier identifier, DateTimeOffset expires)
-            :this()
-        {
-            Order = order;
+            Order = order ?? throw new ArgumentNullException(nameof(order));
             Order.Authorizations.Add(this);
 
             Identifier = identifier ?? throw new ArgumentNullException(nameof(identifier));
             Expires = expires;
         }
 
-        public string AuthorizationId { 
-            get => _authorizationId ?? throw new NotInitializedException(); 
-            set => _authorizationId = value; 
-        }
+        public string AuthorizationId { get; }
         public AuthorizationStatus Status { get; set; }
 
-        [DisallowNull]
         public Order Order {
-            get => _order;
-            set => _order = value;
+            get => _order ?? throw new NotInitializedException();
+            internal set => _order = value;
         }
         
-        [DisallowNull]
-        public Identifier Identifier {
-            get => _identifier; 
-            set => _identifier = value; 
-        }
-
+        public Identifier Identifier { get; }
         public bool IsWildcard => Identifier.IsWildcard;
 
         public DateTimeOffset Expires { get; set; }
 
-        
         public List<Challenge> Challenges { get; private set; }
         
 
@@ -79,6 +66,42 @@ namespace TGIT.ACME.Protocol.Model
                 throw new InvalidOperationException($"Cannot do challenge status transition from '{Status}' to {nextStatus}.");
 
             Status = nextStatus;
+        }
+
+
+
+        // --- Serialization Methods --- //
+
+        protected Authorization(SerializationInfo info, StreamingContext streamingContext)
+        {
+            if (info is null)
+                throw new ArgumentNullException(nameof(info));
+
+            AuthorizationId = info.GetString(nameof(AuthorizationId));
+            Status = (AuthorizationStatus)info.GetInt32(nameof(Status));
+
+            Identifier = info.GetValue<Identifier>(nameof(Identifier));
+            Expires = info.GetValue<DateTimeOffset>(nameof(Expires));
+
+            Challenges = info.GetValue<List<Challenge>>(nameof(Challenge));
+            foreach (var challenge in Challenges)
+                challenge.Authorization = this;
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info is null)
+                throw new ArgumentNullException(nameof(info));
+
+            info.AddValue("SerializationVersion", 1);
+
+            info.AddValue(nameof(AuthorizationId), AuthorizationId);
+            info.AddValue(nameof(Status), Status);
+            
+            info.AddValue(nameof(Identifier), Identifier);
+            info.AddValue(nameof(Expires), Expires);
+            
+            info.AddValue(nameof(Challenges), Challenges);
         }
     }
 }

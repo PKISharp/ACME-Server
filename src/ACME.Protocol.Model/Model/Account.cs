@@ -31,7 +31,10 @@ namespace TGIT.ACME.Protocol.Model
         /// </summary>
         public long Version { get; set; }
 
-        
+
+
+        // --- Serialization Methods --- //
+
         protected Account(SerializationInfo info, StreamingContext streamingContext)
         {
             if (info is null)
@@ -42,7 +45,7 @@ namespace TGIT.ACME.Protocol.Model
             Jwk = info.GetValue<Jwk>(nameof(Jwk));
 
             Contacts = info.GetValue<List<string>>(nameof(Contacts));
-            TOSAccepted = info.GetValue<DateTimeOffset?>(nameof(TOSAccepted));
+            TOSAccepted = info.TryGetValue<DateTimeOffset?>(nameof(TOSAccepted));
 
             Version = info.GetInt64(nameof(Version));
         }
