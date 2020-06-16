@@ -6,4 +6,8 @@
     <RootNamespace>TGIT.ACME.CertProvider.ACDS</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Vanara.PInvoke.Cryptography" Version="3.2.10" />
+  </ItemGroup>
+
 </Project>
