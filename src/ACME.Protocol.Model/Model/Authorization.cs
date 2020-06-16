@@ -83,7 +83,7 @@ namespace TGIT.ACME.Protocol.Model
             Identifier = info.GetValue<Identifier>(nameof(Identifier));
             Expires = info.GetValue<DateTimeOffset>(nameof(Expires));
 
-            Challenges = info.GetValue<List<Challenge>>(nameof(Challenge));
+            Challenges = info.GetValue<List<Challenge>>(nameof(Challenges));
             foreach (var challenge in Challenges)
                 challenge.Authorization = this;
         }
