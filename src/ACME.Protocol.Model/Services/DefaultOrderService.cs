@@ -28,8 +28,7 @@ namespace TGIT.ACME.Protocol.Services
             DateTimeOffset? notBefore, DateTimeOffset? notAfter, 
             CancellationToken cancellationToken)
         {
-            if (account is null)
-                throw new ArgumentNullException(nameof(account));
+            ValidateAccount(account);
 
             var order = new Order(account, identifiers)
             {
@@ -46,38 +45,31 @@ namespace TGIT.ACME.Protocol.Services
 
         public async Task<byte[]> GetCertificate(Account account, string orderId, CancellationToken cancellationToken)
         {
-            if (account is null)
-                throw new ArgumentNullException(nameof(account));
-
-            var order = await _orderStore.LoadOrderAsync(orderId, cancellationToken);
-            if (order == null)
-                throw new NotFoundException();
-
-            ValidateOrderAccess(order, account);
-            if (order.Status != OrderStatus.Valid)
-                throw new ConflictRequestException(OrderStatus.Valid, order.Status);
-
+            ValidateAccount(account);
+            var order = await HandleLoadOrderAsync(account, orderId, OrderStatus.Valid, cancellationToken);
 
             throw new NotImplementedException();
         }
 
         public async Task<Order?> GetOrderAsync(Account account, string orderId, CancellationToken cancellationToken)
         {
-            var order = await _orderStore.LoadOrderAsync(orderId, cancellationToken);
+            ValidateAccount(account);
+            var order = await HandleLoadOrderAsync(account, orderId, OrderStatus.Valid, cancellationToken);
+
             return order;
         }
 
         public async Task<Challenge> ProcessChallengeAsync(Account account, string orderId, string authId, string challengeId, CancellationToken cancellationToken)
         {
-            var order = await _orderStore.LoadOrderAsync(orderId, cancellationToken);
-            var authZ = order?.GetAuthorization(authId);
+            ValidateAccount(account);
+            var order = await HandleLoadOrderAsync(account, orderId, OrderStatus.Valid, cancellationToken);
+
+            var authZ = order.GetAuthorization(authId);
             var challenge = authZ?.GetChallenge(challengeId);
             
-            if (order == null || authZ == null || challenge == null)
+            if (authZ == null || challenge == null)
                 throw new NotFoundException();
 
-            if (order.Status != OrderStatus.Pending)
-                throw new ConflictRequestException(OrderStatus.Pending, order.Status);
             if (authZ.Status != AuthorizationStatus.Pending)
                 throw new ConflictRequestException(AuthorizationStatus.Pending, authZ.Status);
             if (challenge.Status != ChallengeStatus.Pending)
@@ -93,11 +85,10 @@ namespace TGIT.ACME.Protocol.Services
 
         public async Task<Order> ProcessCsr(Account account, string orderId, string csr, CancellationToken cancellationToken)
         {
-            var order = await _orderStore.LoadOrderAsync(orderId, cancellationToken);
-            if (order == null)
-                throw new NotFoundException();
+            ValidateAccount(account);
+            var order = await HandleLoadOrderAsync(account, orderId, OrderStatus.Valid, cancellationToken);
 
-            _csrValidator.ValidateCsr(order, csr, cancellationToken);
+            await _csrValidator.ValidateCsrAsync(order, csr, cancellationToken);
 
             order.SetStatus(OrderStatus.Processing);
             await _orderStore.SaveOrderAsync(order, cancellationToken);
@@ -105,13 +96,28 @@ namespace TGIT.ACME.Protocol.Services
             return order;
         }
 
-        private void ValidateOrderAccess(Order order, Account account)
+        private static void ValidateAccount(Account? account)
         {
-            if (order.AccountId != account.AccountId)
+            if (account == null)
                 throw new NotAllowedException();
 
             if (account.Status != AccountStatus.Valid)
+                throw new ConflictRequestException(AccountStatus.Valid, account.Status);
+        }
+
+        private async Task<Order> HandleLoadOrderAsync(Account account, string orderId, OrderStatus expectedStatus, CancellationToken cancellationToken)
+        {
+            var order = await _orderStore.LoadOrderAsync(orderId, cancellationToken);
+            if (order == null)
+                throw new NotFoundException();
+
+            if (order.Status != expectedStatus)
+                throw new ConflictRequestException(expectedStatus, order.Status);
+
+            if (order.AccountId != account.AccountId)
                 throw new NotAllowedException();
+
+            return order;
         }
     }
 }
