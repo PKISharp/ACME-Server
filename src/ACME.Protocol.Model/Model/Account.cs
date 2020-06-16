@@ -1,47 +1,67 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TGIT.ACME.Protocol.Model.Exceptions;
+using System.Runtime.Serialization;
+using TGIT.ACME.Protocol.Model.Extensions;
 
 namespace TGIT.ACME.Protocol.Model
 {
-    public class Account : IVersioned
+    [Serializable]
+    public class Account : IVersioned, ISerializable
     {
-        private string? _accountId;
-        private Jwk? _jwk;
-
-        private Account() { }
-
-        public Account(Jwk jwk, IEnumerable<string>? contacts, bool tosAccepted)
+        public Account(Jwk jwk, IEnumerable<string>? contacts, DateTimeOffset? tosAccepted)
         {
             AccountId = GuidString.NewValue();
 
             Jwk = jwk;
             Contacts = contacts?.ToList();
-            if (tosAccepted)
-                TOSAccepted = DateTimeOffset.UtcNow;
+            TOSAccepted = tosAccepted;
         }
 
-        public string AccountId { 
-            get => _accountId ?? throw new NotInitializedException(); 
-            set => _accountId = value; 
-        }
+        public string AccountId { get; }
+        public AccountStatus Status { get; private set; }
 
-        public AccountStatus Status { get; set; }
-
-        public Jwk Jwk {
-            get => _jwk ?? throw new NotInitializedException();
-            private set => _jwk = value; 
-        }
+        public Jwk Jwk { get; }
 
         public List<string>? Contacts { get; private set; }
-
-        public DateTimeOffset? TOSAccepted { get; set; }
+        public DateTimeOffset? TOSAccepted { get; private set; }
 
         /// <summary>
         /// Concurrency Token
         /// </summary>
         public long Version { get; set; }
+
+        
+        protected Account(SerializationInfo info, StreamingContext streamingContext)
+        {
+            if (info is null)
+                throw new ArgumentNullException(nameof(info));
+
+            AccountId = info.GetString(nameof(AccountId));
+            Status = (AccountStatus)info.GetInt32(nameof(Status));
+            Jwk = info.GetValue<Jwk>(nameof(Jwk));
+
+            Contacts = info.GetValue<List<string>>(nameof(Contacts));
+            TOSAccepted = info.GetValue<DateTimeOffset?>(nameof(TOSAccepted));
+
+            Version = info.GetInt64(nameof(Version));
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info is null)
+                throw new ArgumentNullException(nameof(info));
+
+            info.AddValue("SerializationVersion", 1);
+
+            info.AddValue(nameof(AccountId), AccountId);
+            info.AddValue(nameof(Status), Status);
+            info.AddValue(nameof(Jwk), Jwk);
+
+            info.AddValue(nameof(Contacts), Contacts);
+            info.AddValue(nameof(TOSAccepted), TOSAccepted);
+
+            info.AddValue(nameof(Version), Version);
+        }
     }
 }

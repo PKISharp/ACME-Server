@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using TGIT.ACME.Protocol.Model.Exceptions;
 
 namespace TGIT.ACME.Protocol.Model
 {
-    public class Order : IVersioned
+    [Serializable]
+    public class Order : IVersioned, ISerializable
     {
         private static readonly Dictionary<OrderStatus, OrderStatus[]> _validStatusTransitions =
             new Dictionary<OrderStatus, OrderStatus[]>
@@ -17,12 +19,6 @@ namespace TGIT.ACME.Protocol.Model
 
         private string? _orderId;
         private string? _accountId;
-
-        internal Order()
-        {
-            Identifiers = new List<Identifier>();
-            Authorizations = new List<Authorization>();
-        }
 
         internal Order(Account account, IEnumerable<Identifier> identifiers)
         {
@@ -64,7 +60,6 @@ namespace TGIT.ACME.Protocol.Model
         public Authorization? GetAuthorization(string authId) 
             => Authorizations.FirstOrDefault(x => x.AuthorizationId == authId);
 
-
         internal void SetStatus(OrderStatus nextStatus)
         {
             if (!_validStatusTransitions.ContainsKey(Status))
@@ -83,6 +78,18 @@ namespace TGIT.ACME.Protocol.Model
 
             if (Authorizations.Any(a => a.Status.IsInvalid()))
                 SetStatus(OrderStatus.Invalid);
+        }
+
+
+
+        protected Order(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            throw new NotImplementedException();
         }
     }
 }
