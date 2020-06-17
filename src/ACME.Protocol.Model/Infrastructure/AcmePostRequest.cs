@@ -20,7 +20,7 @@ namespace TGIT.ACME.Protocol.Infrastructure
         }
 
         public DecodedHeader Header { get; private set; }
-        public DecodedPayload Payload { get; protected set; }
+        public DecodedPayload Payload { get; protected set; } = null!;
 
         public string Signature { get; private set; }
     }

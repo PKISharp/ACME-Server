@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using TGIT.ACME.Protocol.Model;
 
 namespace TGIT.ACME.Protocol.Services
@@ -9,7 +8,7 @@ namespace TGIT.ACME.Protocol.Services
         public void CreateAuthorizations(Order order)
         {
             if (order is null)
-                throw new System.ArgumentNullException(nameof(order));
+                throw new ArgumentNullException(nameof(order));
 
             foreach(var identifier in order.Identifiers)
             {
@@ -18,7 +17,7 @@ namespace TGIT.ACME.Protocol.Services
             }
         }
 
-        private void CreateChallenges(Authorization authorization)
+        private static void CreateChallenges(Authorization authorization)
         {
             _ = new Challenge(authorization, ChallengeTypes.Dns01, "abcdefg"); //TODO: Generate Token
             if (!authorization.IsWildcard)

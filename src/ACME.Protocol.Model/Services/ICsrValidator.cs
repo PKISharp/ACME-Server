@@ -11,6 +11,6 @@ namespace TGIT.ACME.Protocol.Services
 
     public interface ICertificateIssuer
     {
-        Task IssueCertificate(Order order, string csr);
+        Task<byte[]> IssueCertificate(string csr, CancellationToken cancellationToken);
     }
 }

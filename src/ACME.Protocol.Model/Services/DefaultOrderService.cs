@@ -48,7 +48,7 @@ namespace TGIT.ACME.Protocol.Services
             ValidateAccount(account);
             var order = await HandleLoadOrderAsync(account, orderId, OrderStatus.Valid, cancellationToken);
 
-            throw new NotImplementedException();
+            return order.Certificate!;
         }
 
         public async Task<Order?> GetOrderAsync(Account account, string orderId, CancellationToken cancellationToken)
@@ -83,13 +83,17 @@ namespace TGIT.ACME.Protocol.Services
             return challenge;
         }
 
-        public async Task<Order> ProcessCsr(Account account, string orderId, string csr, CancellationToken cancellationToken)
+        public async Task<Order> ProcessCsr(Account account, string orderId, string? csr, CancellationToken cancellationToken)
         {
             ValidateAccount(account);
             var order = await HandleLoadOrderAsync(account, orderId, OrderStatus.Valid, cancellationToken);
 
+            if (string.IsNullOrWhiteSpace(csr))
+                throw new MalformedRequestException("CSR may not be empty.");
+
             await _csrValidator.ValidateCsrAsync(order, csr, cancellationToken);
 
+            order.CertificateSigningRequest = csr;
             order.SetStatus(OrderStatus.Processing);
             await _orderStore.SaveOrderAsync(order, cancellationToken);
 

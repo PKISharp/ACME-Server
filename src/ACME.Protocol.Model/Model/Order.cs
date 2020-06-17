@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using TGIT.ACME.Protocol.Model.Exceptions;
@@ -42,6 +43,9 @@ namespace TGIT.ACME.Protocol.Model
         public DateTimeOffset? Expires { get; set; }
 
         public AcmeError? Error { get; set; }
+
+        public string? CertificateSigningRequest { get; internal set; }
+        public byte[]? Certificate { get; internal set; }
 
 
         /// <summary>
@@ -98,6 +102,9 @@ namespace TGIT.ACME.Protocol.Model
 
             Error = info.TryGetValue<AcmeError?>(nameof(Error));
             Version = info.GetInt64(nameof(Version));
+
+            CertificateSigningRequest = info.TryGetValue<string?>(nameof(CertificateSigningRequest));
+            Certificate = info.TryGetValue<byte[]?>(nameof(Certificate));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -121,6 +128,11 @@ namespace TGIT.ACME.Protocol.Model
 
             info.AddValue(nameof(Error), Error);
             info.AddValue(nameof(Version), Version);
+
+            if (CertificateSigningRequest != null)
+                info.AddValue(nameof(CertificateSigningRequest), CertificateSigningRequest);
+            if (Certificate != null)
+                info.AddValue(nameof(Certificate), Certificate);
         }
     }
 }

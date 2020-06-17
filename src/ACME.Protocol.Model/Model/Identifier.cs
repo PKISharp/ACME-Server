@@ -48,12 +48,12 @@ namespace TGIT.ACME.Protocol.Model
             return HashCode.Combine(Type, Value);
         }
 
-        public static bool operator ==(Identifier left, Identifier right)
+        public static bool operator ==(Identifier? left, Identifier? right)
         {
             return left?.Equals(right) ?? false;
         }
 
-        public static bool operator !=(Identifier left, Identifier right)
+        public static bool operator !=(Identifier? left, Identifier? right)
         {
             return !(left == right);
         }
