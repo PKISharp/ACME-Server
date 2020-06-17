@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TGIT.ACME.Protocol.Model;
+using TGIT.ACME.Protocol.Services;
+using TGIT.ACME.Protocol.Storage;
 
 namespace TGIT.ACME.Protocol.Workers
 {
@@ -13,9 +16,34 @@ namespace TGIT.ACME.Protocol.Workers
 
     public class IssuanceWorker : IIssuanceWorker
     {
-        public Task RunAsync(CancellationToken cancellationToken)
+        private readonly IOrderStore _orderStore;
+        private readonly ICertificateIssuer _issuer;
+
+        public IssuanceWorker(IOrderStore orderStore, ICertificateIssuer issuer)
         {
-            throw new NotImplementedException();
+            _orderStore = orderStore;
+            _issuer = issuer;
+        }
+
+        public async Task RunAsync(CancellationToken cancellationToken)
+        {
+            var orders = await _orderStore.GetFinalizableOrders(cancellationToken);
+
+            var tasks = new Task[orders.Count];
+            for (int i = 0; i < orders.Count; ++i)
+                tasks[i] = IssueCertificate(orders[i], cancellationToken);
+
+            Task.WaitAll(tasks, cancellationToken);
+        }
+
+        private async Task IssueCertificate(Order order, CancellationToken cancellationToken)
+        {
+            var certificate = await _issuer.IssueCertificate(order.CertificateSigningRequest!, cancellationToken);
+
+            order.CertificateSigningRequest = null;
+            order.Certificate = certificate;
+
+            await _orderStore.SaveOrderAsync(order, cancellationToken);
         }
     }
 }

@@ -30,17 +30,12 @@ namespace TGIT.ACME.Protocol.Workers
         public async Task RunAsync(CancellationToken cancellationToken)
         {
             var orders = await _orderStore.GetValidatableOrders(cancellationToken);
-            while(orders.Count != 0)
-            {
-                var tasks = new Task[orders.Count];
-                for(int i = 0; i < orders.Count; ++i)
-                    tasks[i] = ValidateOrder(orders[i], cancellationToken);
+            
+            var tasks = new Task[orders.Count];
+            for(int i = 0; i < orders.Count; ++i)
+                tasks[i] = ValidateOrder(orders[i], cancellationToken);
 
-                Task.WaitAll(tasks, cancellationToken);
-
-                if(!cancellationToken.IsCancellationRequested)
-                    orders = await _orderStore.GetValidatableOrders(cancellationToken);
-            }
+            Task.WaitAll(tasks, cancellationToken);
         }
 
         private async Task ValidateOrder(Order order, CancellationToken cancellationToken)
@@ -71,6 +66,7 @@ namespace TGIT.ACME.Protocol.Workers
                     pendingAuthZ.SetStatus(AuthorizationStatus.Valid);
                 } else
                 {
+                    challenge.Error = error!;
                     challenge.SetStatus(ChallengeStatus.Invalid);
                     pendingAuthZ.SetStatus(AuthorizationStatus.Invalid);
                 }

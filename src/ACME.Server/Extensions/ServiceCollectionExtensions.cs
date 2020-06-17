@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
+using TGIT.ACME.CertProvider.ACDS;
 using TGIT.ACME.Protocol.HttpModel.Converters;
 using TGIT.ACME.Protocol.Services;
 using TGIT.ACME.Protocol.Storage;
@@ -72,6 +73,14 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddOptions<FileStoreOptions>()
                 .Bind(configuration.GetSection("FileStore"))
                 .ValidateDataAnnotations();
+
+            return services;
+        }
+
+        public static IServiceCollection AddACDSIssuer(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScoped<ICsrValidator, CsrValidator>();
+            //services.AddScoped<ICertificateIssuer>
 
             return services;
         }
