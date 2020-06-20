@@ -36,7 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<AddNextNonceFilter>();
 
             services.AddHostedService<HostedValidationService>();
-            //services.AddHostedService<HostedIssuanceService>();
+            services.AddHostedService<HostedIssuanceService>();
 
             services.Configure<MvcOptions>(opt =>
             {
@@ -80,7 +80,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddACDSIssuer(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<ICsrValidator, CsrValidator>();
-            //services.AddScoped<ICertificateIssuer>
+            services.AddScoped<ICertificateIssuer, CertificateIssuer>();
 
             return services;
         }
