@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ACME.CertProvider.ACDS\ACME.CertProvider.ACDS.csproj" />
-    <ProjectReference Include="..\ACME.Protocol.Model\ACME.Protocol.csproj" />
+    <ProjectReference Include="..\ACME.Protocol\ACME.Protocol.csproj" />
     <ProjectReference Include="..\ACME.Storage.FileStore\ACME.Storage.FileStore.csproj" />
   </ItemGroup>
 

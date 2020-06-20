@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ACME.Protocol.Model\ACME.Protocol.csproj" />
+    <ProjectReference Include="..\ACME.Protocol\ACME.Protocol.csproj" />
   </ItemGroup>
 
 </Project>
