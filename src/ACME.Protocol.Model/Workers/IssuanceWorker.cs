@@ -38,10 +38,18 @@ namespace TGIT.ACME.Protocol.Workers
 
         private async Task IssueCertificate(Order order, CancellationToken cancellationToken)
         {
-            var certificate = await _issuer.IssueCertificate(order.CertificateSigningRequest!, cancellationToken);
+            var (certificate, error) = await _issuer.IssueCertificate(order.CertificateSigningRequest!, cancellationToken);
 
-            order.CertificateSigningRequest = null;
-            order.Certificate = certificate;
+            if (certificate == null)
+            {
+                order.SetStatus(OrderStatus.Invalid);
+                order.Error = error;
+            }
+            else if (certificate != null)
+            {
+                order.Certificate = certificate;
+                order.SetStatus(OrderStatus.Valid);
+            }
 
             await _orderStore.SaveOrderAsync(order, cancellationToken);
         }
