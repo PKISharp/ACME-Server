@@ -47,6 +47,9 @@ namespace TGIT.ACME.Protocol.Workers
             }
             else if (certificate != null)
             {
+                return;
+
+                //TODO: failed Certificate issuance should invalidate the order.
                 order.Certificate = certificate;
                 order.SetStatus(OrderStatus.Valid);
             }

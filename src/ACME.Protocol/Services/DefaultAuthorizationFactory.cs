@@ -12,16 +12,17 @@ namespace TGIT.ACME.Protocol.Services
 
             foreach(var identifier in order.Identifiers)
             {
-                var authorization = new Authorization(order, identifier, DateTimeOffset.UtcNow.AddDays(2)); //TODO : set useful expiry;
+                //TODO : set useful expiry;
+                var authorization = new Authorization(order, identifier, DateTimeOffset.UtcNow.AddDays(2));
                 CreateChallenges(authorization);
             }
         }
 
         private static void CreateChallenges(Authorization authorization)
         {
-            _ = new Challenge(authorization, ChallengeTypes.Dns01, "abcdefg"); //TODO: Generate Token
+            _ = new Challenge(authorization, ChallengeTypes.Dns01);
             if (!authorization.IsWildcard)
-                _ = new Challenge(authorization, ChallengeTypes.Http01, "acfsdfsd"); //TODO: Generate Token
+                _ = new Challenge(authorization, ChallengeTypes.Http01);
         }
     }
 }

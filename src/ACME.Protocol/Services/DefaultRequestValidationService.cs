@@ -96,7 +96,6 @@ namespace TGIT.ACME.Protocol.Services
             var securityKey = jwk.SecurityKey;
             
             using var signatureProvider = new AsymmetricSignatureProvider(securityKey, request.Header.Value.Alg);
-            //TODO: Payload was null for AcceptChallenge - might be empty object and wrongly assigned.
             var plainText = System.Text.Encoding.UTF8.GetBytes($"{request.Header.EncodedJson}.{request.Payload?.EncodedJson ?? ""}");
             var signature = Base64UrlEncoder.DecodeBytes(request.Signature);
 

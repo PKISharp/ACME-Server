@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,17 +29,23 @@ namespace TGIT.ACME.Protocol.Services
         {
             var challengeUrl = $"http://{challenge.Authorization.Identifier.Value}/.well-known/acme-challenge/{challenge.Token}";
 
-            //TODO: Add try / catch
-            var response = await _httpClient.GetAsync(challengeUrl, cancellationToken);
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            try
             {
-                //TODO: Add error message
-                var error = new AcmeError("TODO", "DETAILS", challenge.Authorization.Identifier);
+                var response = await _httpClient.GetAsync(challengeUrl, cancellationToken);
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    var error = new AcmeError("TODO", $"Challenge failed with StatusCode {response.StatusCode}", challenge.Authorization.Identifier);
+                    return (null, error);
+                }
+
+                var content = await response.Content.ReadAsStringAsync();
+                return (content, null);
+            } 
+            catch (HttpRequestException ex)
+            {
+                var error = new AcmeError("TODO", ex.Message, challenge.Authorization.Identifier);
                 return (null, error);
             }
-
-            var content = await response.Content.ReadAsStringAsync();
-            return (content, null);
         }
     }
 }

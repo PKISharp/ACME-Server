@@ -91,12 +91,19 @@ namespace TGIT.ACME.Protocol.Services
             if (string.IsNullOrWhiteSpace(csr))
                 throw new MalformedRequestException("CSR may not be empty.");
 
-            await _csrValidator.ValidateCsrAsync(order, csr, cancellationToken);
+            var (isValid, error) = await _csrValidator.ValidateCsrAsync(order, csr, cancellationToken);
 
-            order.CertificateSigningRequest = csr;
-            order.SetStatus(OrderStatus.Processing);
+            if (isValid)
+            {
+                order.CertificateSigningRequest = csr;
+                order.SetStatus(OrderStatus.Processing);
+            } else
+            {
+                order.Error = error;
+                order.SetStatus(OrderStatus.Invalid);
+            }
+
             await _orderStore.SaveOrderAsync(order, cancellationToken);
-
             return order;
         }
 

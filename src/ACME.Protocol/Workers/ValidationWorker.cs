@@ -41,8 +41,14 @@ namespace TGIT.ACME.Protocol.Workers
         private async Task ValidateOrder(Order order, CancellationToken cancellationToken)
         {
             var account = await _accountStore.LoadAccountAsync(order.AccountId, cancellationToken);
-            if (account == null) //TODO: doing nothing is kind of bad ...
+            if (account == null)
+            {
+                order.SetStatus(OrderStatus.Invalid);
+                order.Error = new AcmeError("TODO", "Account could not be located. Order will be marked invalid.");
+                await _orderStore.SaveOrderAsync(order, cancellationToken);
+
                 return;
+            }
 
             var pendingAuthZs = order.Authorizations.Where(a => a.Challenges.Any(c => c.Status == ChallengeStatus.Processing));
 

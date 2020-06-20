@@ -12,10 +12,6 @@ namespace TGIT.ACME.Protocol.Services
 
         public async Task<(bool IsValid, AcmeError? error)> ValidateChallengeAsync(Challenge challenge, Account account, CancellationToken cancellationToken)
         {
-            return (true, null);
-
-            // TODO : Enable code!
-
             if (challenge is null)
                 throw new ArgumentNullException(nameof(challenge));
             if (account is null)

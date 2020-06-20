@@ -20,7 +20,7 @@ namespace TGIT.ACME.Protocol.Model
 
         private Authorization? _authorization;
 
-        public Challenge(Authorization authorization, string type, string token)
+        public Challenge(Authorization authorization, string type)
         {
             if (!ChallengeTypes.AllTypes.Contains(type))
                 throw new InvalidOperationException($"Unknown ChallengeType {type}");
@@ -28,7 +28,7 @@ namespace TGIT.ACME.Protocol.Model
             ChallengeId = GuidString.NewValue();
 
             Type = type;
-            Token = token;
+            Token = GuidString.NewValue(); // TODO: Replace with crypto-guid?
 
             Authorization = authorization;
             Authorization.Challenges.Add(this);
