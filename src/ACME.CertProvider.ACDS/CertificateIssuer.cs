@@ -1,23 +1,26 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.Services;
 using CertEnroll = CERTENROLLLib;
+using CertCli = CERTCLILib;
+using TGIT.ACME.Protocol.Model;
 
 namespace TGIT.ACME.CertProvider.ACDS
 {
     public sealed class CertificateIssuer : ICertificateIssuer
     {
-        public Task<byte[]> IssueCertificate(string csr, CancellationToken cancellationToken)
+        public Task<(byte[]? certificate, AcmeError? error)> IssueCertificate(string csr, CancellationToken cancellationToken)
         {
-            var request = new CertEnroll.CX509CertificateRequestPkcs10Class();
-            request.InitializeDecode(csr, CertEnroll.EncodingType.XCN_CRYPT_STRING_BASE64_ANY);
+            try
+            {
+                
+            } catch (Exception ex)
+            {
 
-            var enrollment = new CertEnroll.CX509EnrollmentClass();
-            enrollment.InitializeFromRequest(request);
-            enrollment.Enroll();
-            var certificate = enrollment.Certificate[CertEnroll.EncodingType.XCN_CRYPT_STRING_BASE64_ANY];
+            }
 
-            return new byte[];
+            return Task.FromResult((new byte[0], (AcmeError)null));
         }
     }
 }
