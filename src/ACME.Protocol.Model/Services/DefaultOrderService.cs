@@ -54,7 +54,7 @@ namespace TGIT.ACME.Protocol.Services
         public async Task<Order?> GetOrderAsync(Account account, string orderId, CancellationToken cancellationToken)
         {
             ValidateAccount(account);
-            var order = await HandleLoadOrderAsync(account, orderId, OrderStatus.Valid, cancellationToken);
+            var order = await HandleLoadOrderAsync(account, orderId, null, cancellationToken);
 
             return order;
         }
@@ -62,7 +62,7 @@ namespace TGIT.ACME.Protocol.Services
         public async Task<Challenge> ProcessChallengeAsync(Account account, string orderId, string authId, string challengeId, CancellationToken cancellationToken)
         {
             ValidateAccount(account);
-            var order = await HandleLoadOrderAsync(account, orderId, OrderStatus.Valid, cancellationToken);
+            var order = await HandleLoadOrderAsync(account, orderId, OrderStatus.Pending, cancellationToken);
 
             var authZ = order.GetAuthorization(authId);
             var challenge = authZ?.GetChallenge(challengeId);
@@ -86,7 +86,7 @@ namespace TGIT.ACME.Protocol.Services
         public async Task<Order> ProcessCsr(Account account, string orderId, string? csr, CancellationToken cancellationToken)
         {
             ValidateAccount(account);
-            var order = await HandleLoadOrderAsync(account, orderId, OrderStatus.Valid, cancellationToken);
+            var order = await HandleLoadOrderAsync(account, orderId, OrderStatus.Ready, cancellationToken);
 
             if (string.IsNullOrWhiteSpace(csr))
                 throw new MalformedRequestException("CSR may not be empty.");
@@ -109,14 +109,14 @@ namespace TGIT.ACME.Protocol.Services
                 throw new ConflictRequestException(AccountStatus.Valid, account.Status);
         }
 
-        private async Task<Order> HandleLoadOrderAsync(Account account, string orderId, OrderStatus expectedStatus, CancellationToken cancellationToken)
+        private async Task<Order> HandleLoadOrderAsync(Account account, string orderId, OrderStatus? expectedStatus, CancellationToken cancellationToken)
         {
             var order = await _orderStore.LoadOrderAsync(orderId, cancellationToken);
             if (order == null)
                 throw new NotFoundException();
 
-            if (order.Status != expectedStatus)
-                throw new ConflictRequestException(expectedStatus, order.Status);
+            if (expectedStatus.HasValue && order.Status != expectedStatus)
+                throw new ConflictRequestException(expectedStatus.Value, order.Status);
 
             if (order.AccountId != account.AccountId)
                 throw new NotAllowedException();
