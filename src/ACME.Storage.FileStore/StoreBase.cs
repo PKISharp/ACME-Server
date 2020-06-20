@@ -50,13 +50,13 @@ namespace TGIT.ACME.Storage.FileStore
             return result;
         }
 
-        protected static async Task ReplaceFileStreamContent<T>(FileStream fileStream, T content)
+        protected static async Task ReplaceFileStreamContent<T>(FileStream fileStream, T content, CancellationToken cancellationToken)
         {
             if (fileStream.Length > 0)
                 fileStream.SetLength(0);
 
             var utf8Bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(content, JsonDefaults.Settings));
-            await fileStream.WriteAsync(utf8Bytes);
+            await fileStream.WriteAsync(utf8Bytes, cancellationToken);
         }
 
         protected static void HandleVersioning(IVersioned? existingContent, IVersioned newContent)

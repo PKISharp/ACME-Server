@@ -34,6 +34,8 @@ namespace TGIT.ACME.Storage.FileStore
 
         public async Task SaveAccountAsync(Account setAccount, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (setAccount is null)
                 throw new ArgumentNullException(nameof(setAccount));
 
@@ -45,7 +47,7 @@ namespace TGIT.ACME.Storage.FileStore
                 var existingAccount = await LoadFromStream<Account>(fileStream, cancellationToken);
                 HandleVersioning(existingAccount, setAccount);
 
-                await ReplaceFileStreamContent(fileStream, setAccount);
+                await ReplaceFileStreamContent(fileStream, setAccount, cancellationToken);
             }
         }
     }

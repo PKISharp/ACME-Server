@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,13 @@ namespace TGIT.ACME.Storage.FileStore
 {
     public class OrderStore : StoreBase, IOrderStore
     {
-        public OrderStore(IOptions<FileStoreOptions> options)
+        private readonly ILogger<OrderStore> _logger;
+
+        public OrderStore(IOptions<FileStoreOptions> options, ILogger<OrderStore> logger)
             : base(options)
-        { }
+        {
+            _logger = logger;
+        }
 
         private string GetOrderPath(string orderId)
             => Path.Combine(Options.Value.OrderPath, $"{orderId}.json");
@@ -37,6 +42,8 @@ namespace TGIT.ACME.Storage.FileStore
 
         public async Task SaveOrderAsync(Order setOrder, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (setOrder is null)
                 throw new ArgumentNullException(nameof(setOrder));
 
@@ -52,7 +59,7 @@ namespace TGIT.ACME.Storage.FileStore
                 var existingOrder = await LoadFromStream<Order>(fileStream, cancellationToken);
 
                 HandleVersioning(existingOrder, setOrder);
-                await ReplaceFileStreamContent(fileStream, setOrder);
+                await ReplaceFileStreamContent(fileStream, setOrder, cancellationToken);
             }
         }
 
@@ -125,8 +132,8 @@ namespace TGIT.ACME.Storage.FileStore
                     if(order != null)
                         result.Add(order);
                 }
-                catch {
-                    //TODO: Write log message
+                catch (Exception ex) {
+                    _logger.LogError(ex, "Could not load validatable orders.");
                 }
             }
 
@@ -152,8 +159,9 @@ namespace TGIT.ACME.Storage.FileStore
                     if (order != null)
                         result.Add(order);
                 }
-                catch {
-                    //TODO: Write log message
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Could not load finalizable orders.");
                 }
             }
 
