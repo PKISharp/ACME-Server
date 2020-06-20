@@ -21,9 +21,19 @@ namespace TGIT.ACME.Protocol.Services
             if (account is null)
                 throw new ArgumentNullException(nameof(account));
 
-            //TODO: Check account state;
-            //TODO: Check authorization expiry;
-            //TODO: Check order expiry
+            if (account.Status != AccountStatus.Valid)
+                return (false, new AcmeError("TODO", "Account invalid", challenge.Authorization.Identifier));
+
+            if (challenge.Authorization.Expires < DateTimeOffset.UtcNow)
+            {
+                challenge.Authorization.SetStatus(AuthorizationStatus.Expired);
+                return (false, new AcmeError("TODO", "Authorization expired", challenge.Authorization.Identifier));
+            }
+            if (challenge.Authorization.Order.Expires < DateTimeOffset.UtcNow)
+            {
+                challenge.Authorization.Order.SetStatus(OrderStatus.Invalid);
+                return (false, new AcmeError("TODO", "Order expired"));
+            }
 
             var (challengeContent, error) = await LoadChallengeResponseAsync(challenge, cancellationToken);
             if (error != null)
