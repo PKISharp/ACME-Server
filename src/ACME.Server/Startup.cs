@@ -21,6 +21,7 @@ namespace TGIT.ACME.Server
 
             services.AddACMEServer(_configuration);
             services.AddACMEFileStore(_configuration);
+            services.AddACDSIssuer(_configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
