@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.Model;
@@ -16,11 +14,11 @@ namespace TGIT.ACME.Protocol.Services
         private readonly IAuthorizationFactory _authorizationFactory;
         private readonly ICsrValidator _csrValidator;
 
-        public DefaultOrderService(IOrderStore orderStore, IAuthorizationFactory authorizationFactory)//, ICsrValidator csrValidator)
+        public DefaultOrderService(IOrderStore orderStore, IAuthorizationFactory authorizationFactory, ICsrValidator csrValidator)
         {
             _orderStore = orderStore;
             _authorizationFactory = authorizationFactory;
-            //_csrValidator = csrValidator;
+            _csrValidator = csrValidator;
         }
 
         public async Task<Order> CreateOrderAsync(Account account,

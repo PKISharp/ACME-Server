@@ -26,7 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IAuthorizationFactory, DefaultAuthorizationFactory>();
 
-            //services.AddScoped<IIssuanceWorker, IssuanceWorker>();
+            services.AddScoped<IIssuanceWorker, IssuanceWorker>();
             services.AddScoped<IValidationWorker, ValidationWorker>();
 
             services.AddHttpClient<Http01ChallangeValidator>();
@@ -36,7 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<AddNextNonceFilter>();
 
             services.AddHostedService<HostedValidationService>();
-            //services.AddHostedService<HostedIssuanceService>();
+            services.AddHostedService<HostedIssuanceService>();
 
             services.Configure<MvcOptions>(opt =>
             {

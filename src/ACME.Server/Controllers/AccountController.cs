@@ -46,8 +46,7 @@ namespace TGIT.ACME.Server.Controllers
             return new CreatedResult(accountUrl, accountResponse);
         }
 
-        private Task<ActionResult<Protocol.HttpModel.Account>> FindAccountAsync(
-            [ModelBinder] AcmePayload<CreateOrGetAccount> payload)
+        private Task<ActionResult<Protocol.HttpModel.Account>> FindAccountAsync(AcmePayload<CreateOrGetAccount> payload)
         {
             throw new NotImplementedException();
         }
@@ -61,8 +60,7 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/account/{accountId}/orders", Name = "OrderList")]
         [HttpPost]
-        public Task<ActionResult<Protocol.HttpModel.OrdersList>> GetOrdersList(string accountId,
-            [ModelBinder] AcmePayload<object> payload)
+        public Task<ActionResult<Protocol.HttpModel.OrdersList>> GetOrdersList(string accountId, AcmePayload<object> payload)
         {
             throw new NotImplementedException();
         }
