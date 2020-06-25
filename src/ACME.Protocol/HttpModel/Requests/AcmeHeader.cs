@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using TGIT.ACME.Protocol.HttpModel.Converters;
 using TGIT.ACME.Protocol.Model;
 
-namespace TGIT.ACME.Protocol.Infrastructure
+namespace TGIT.ACME.Protocol.HttpModel.Requests
 {
     public class AcmeHeader
     {

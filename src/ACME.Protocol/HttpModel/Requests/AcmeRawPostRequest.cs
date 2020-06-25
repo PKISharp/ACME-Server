@@ -16,8 +16,10 @@ namespace TGIT.ACME.Protocol.HttpModel.Requests
             set => _header = value;
         }
         
+        [JsonPropertyName("payload")]
         public string? Payload { get; set; } 
         
+        [JsonPropertyName("signature")]
         public string Signature { 
             get => _signature ?? throw new NotInitializedException();
             set => _signature = value;

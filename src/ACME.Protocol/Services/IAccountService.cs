@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using TGIT.ACME.Protocol.Infrastructure;
 using TGIT.ACME.Protocol.Model;
 
 namespace TGIT.ACME.Protocol.Services
@@ -15,6 +14,6 @@ namespace TGIT.ACME.Protocol.Services
 
         Task<Account?> LoadAcountAsync(string accountId, CancellationToken cancellationToken);
 
-        Task<Account> FromRequestAsync(AcmePostRequest request, CancellationToken cancellationToken);
+        Task<Account> FromRequestAsync(CancellationToken cancellationToken);
     }
 }

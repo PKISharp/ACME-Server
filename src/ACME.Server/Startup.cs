@@ -33,6 +33,8 @@ namespace TGIT.ACME.Server
 
             app.UseRouting();
 
+            app.UseAcmeServer();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
