@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
-using System.Linq;
-using TGIT.ACME.Protocol.HttpModel.Converters;
 using TGIT.ACME.Protocol.Services;
+using TGIT.ACME.Protocol.Services.RequestServices;
 using TGIT.ACME.Protocol.Workers;
 using TGIT.ACME.Server.BackgroundServices;
 using TGIT.ACME.Server.Configuration;
 using TGIT.ACME.Server.Filters;
+using TGIT.ACME.Server.Middleware;
+using TGIT.ACME.Server.ModelBinding;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -15,6 +15,10 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddACMEServer(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddTransient<AcmeRequestReader>();
+
+            services.AddScoped<IAcmeRequestProvider, DefaultRequestProvider>();
+
             services.AddScoped<IRequestValidationService, DefaultRequestValidationService>();
             services.AddScoped<INonceService, DefaultNonceService>();
             services.AddScoped<IAccountService, DefaultAccountService>();
@@ -37,18 +41,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<MvcOptions>(opt =>
             {
                 opt.Filters.Add(typeof(AcmeExceptionFilter));
-                opt.Filters.Add(typeof(ValidateAcmeHeaderFilter));
-                opt.Filters.Add(typeof(ValidateNonceFilter));
-                opt.Filters.Add(typeof(ValidateSignatureFilter));
+                opt.Filters.Add(typeof(ValidateAcmeRequestFilter));
                 opt.Filters.Add(typeof(AcmeIndexLinkFilter));
 
-                var jsonConverters = opt.InputFormatters
-                    .OfType<SystemTextJsonInputFormatter>()
-                    .First()
-                    .SerializerOptions
-                    .Converters;
-
-                jsonConverters.Add(new AcmeJsonConverterFactory());
+                opt.ModelBinderProviders.Insert(0, new AcmeModelBindingProvider());
             });
 
             var acmeServerConfig = configuration.GetSection("AcmeServer");

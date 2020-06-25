@@ -2,14 +2,12 @@
 using System;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.HttpModel.Requests;
-using TGIT.ACME.Protocol.Infrastructure;
 using TGIT.ACME.Protocol.Model.Exceptions;
 using TGIT.ACME.Protocol.Services;
 using TGIT.ACME.Server.Filters;
 
 namespace TGIT.ACME.Server.Controllers
 {
-    [ApiController]
     [AddNextNonce]
     public class AccountController : ControllerBase
     {
@@ -22,23 +20,23 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/new-account", Name = "NewAccount")]
         [HttpPost]
-        public async Task<ActionResult<Protocol.HttpModel.Account>> CreateOrGetAccount(AcmePostRequest<CreateOrGetAccount> request)
+        public async Task<ActionResult<Protocol.HttpModel.Account>> CreateOrGetAccount(AcmeHeader header, AcmePayload<CreateOrGetAccount> payload)
         {
-            if(request.Payload!.Value.OnlyReturnExisting)
-                return await FindAccountAsync(request);
+            if(payload.Value.OnlyReturnExisting)
+                return await FindAccountAsync(payload);
 
-            return await CreateAccountAsync(request);
+            return await CreateAccountAsync(header, payload);
         }
 
-        private async Task<ActionResult<Protocol.HttpModel.Account>> CreateAccountAsync(AcmePostRequest<CreateOrGetAccount> request)
+        private async Task<ActionResult<Protocol.HttpModel.Account>> CreateAccountAsync(AcmeHeader header, AcmePayload<CreateOrGetAccount> payload)
         {
-            if (request.Payload == null)
+            if (payload == null)
                 throw new MalformedRequestException("Payload was empty or could not be read.");
 
             var account = await _accountService.CreateAccountAsync(
-                request.Header.Value.Jwk!, //Post requests are validated, JWK exists.
-                request.Payload.Value.Contact,
-                request.Payload.Value.TermsOfServiceAgreed,
+                header.Jwk!, //Post requests are validated, JWK exists.
+                payload.Value.Contact,
+                payload.Value.TermsOfServiceAgreed,
                 HttpContext.RequestAborted);
 
             var ordersUrl = Url.RouteUrl("OrderList", new { accountId = account.AccountId }, "https");
@@ -48,7 +46,7 @@ namespace TGIT.ACME.Server.Controllers
             return new CreatedResult(accountUrl, accountResponse);
         }
 
-        private Task<ActionResult<Protocol.HttpModel.Account>> FindAccountAsync(AcmePostRequest<CreateOrGetAccount> request)
+        private Task<ActionResult<Protocol.HttpModel.Account>> FindAccountAsync(AcmePayload<CreateOrGetAccount> payload)
         {
             throw new NotImplementedException();
         }
@@ -62,7 +60,7 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/account/{accountId}/orders", Name = "OrderList")]
         [HttpPost]
-        public Task<ActionResult<Protocol.HttpModel.OrdersList>> GetOrdersList(string accountId, AcmePostRequest request)
+        public Task<ActionResult<Protocol.HttpModel.OrdersList>> GetOrdersList(string accountId, AcmePayload<object> payload)
         {
             throw new NotImplementedException();
         }

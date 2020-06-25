@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using TGIT.ACME.Protocol.HttpModel.Requests;
-using TGIT.ACME.Protocol.Infrastructure;
 using TGIT.ACME.Protocol.Model;
 using TGIT.ACME.Protocol.Model.Exceptions;
+using TGIT.ACME.Protocol.Services.RequestServices;
 using TGIT.ACME.Protocol.Storage;
 
 namespace TGIT.ACME.Protocol.Services
 {
     public class DefaultAccountService : IAccountService
     {
+        private readonly IAcmeRequestProvider _requestProvider;
         private readonly IAccountStore _accountStore;
 
-        public DefaultAccountService(IAccountStore accountStore)
+        public DefaultAccountService(IAcmeRequestProvider requestProvider, IAccountStore accountStore)
         {
+            _requestProvider = requestProvider;
             _accountStore = accountStore;
         }
 
@@ -33,13 +34,15 @@ namespace TGIT.ACME.Protocol.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Account> FromRequestAsync(AcmePostRequest request, CancellationToken cancellationToken)
+        public async Task<Account> FromRequestAsync(CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(request?.Header.Value.Kid))
+            var requestHeader = _requestProvider.GetHeader();
+
+            if (string.IsNullOrEmpty(requestHeader.Kid))
                 throw new MalformedRequestException("Kid header is missing");
 
             //TODO: Get accountId from Kid?
-            var accountId = request.Header.Value.GetAccountId();
+            var accountId = requestHeader.GetAccountId();
             var account = await LoadAcountAsync(accountId, cancellationToken);
             ValidateAccount(account);
 

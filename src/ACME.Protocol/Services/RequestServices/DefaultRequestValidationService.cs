@@ -5,12 +5,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.HttpModel.Requests;
-using TGIT.ACME.Protocol.Infrastructure;
 using TGIT.ACME.Protocol.Model;
 using TGIT.ACME.Protocol.Model.Exceptions;
 using TGIT.ACME.Protocol.Storage;
 
-namespace TGIT.ACME.Protocol.Services
+namespace TGIT.ACME.Protocol.Services.RequestServices
 {
     public class DefaultRequestValidationService : IRequestValidationService
     {
@@ -29,27 +28,37 @@ namespace TGIT.ACME.Protocol.Services
             _logger = logger;
         }
 
-        public Task ValidateRequestHeaderAsync(AcmePostRequest request, CancellationToken cancellationToken)
+        public async Task ValidateRequestAsync(AcmeRawPostRequest request, AcmeHeader header, CancellationToken cancellationToken)
         {
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
+            if (header is null)
+                throw new ArgumentNullException(nameof(header));
+
+            ValidateRequestHeader(header);
+            await ValidateNonceAsync(header.Nonce, cancellationToken);
+            await ValidateSignatureAsync(request, header, cancellationToken);
+        }
+
+        private void ValidateRequestHeader(AcmeHeader header)
+        {
+            if (header is null)
+                throw new ArgumentNullException(nameof(header));
 
             _logger.LogDebug("Attempting to validate AcmeHeader ...");
-            var header = request.Header;
 
-            if (!_supportedAlgs.Contains(header.Value.Alg))
+            if (!_supportedAlgs.Contains(header.Alg))
                 throw new BadSignatureAlgorithmException();
 
-            if (header.Value.Jwk != null && header.Value.Kid != null)
+            if (header.Jwk != null && header.Kid != null)
                 throw new MalformedRequestException("Do not provide both Jwk and Kid.");
-            if (header.Value.Jwk == null && header.Value.Kid == null)
+            if (header.Jwk == null && header.Kid == null)
                 throw new MalformedRequestException("Provide either Jwk or Kid.");
 
             _logger.LogDebug("successfully validated AcmeHeader.");
-            return Task.CompletedTask;
         }
 
-        public async Task ValidateNonceAsync(string? nonce, CancellationToken cancellationToken)
+        private async Task ValidateNonceAsync(string? nonce, CancellationToken cancellationToken)
         {
             _logger.LogDebug("Attempting to validate replay nonce ...");
             if (string.IsNullOrWhiteSpace(nonce))
@@ -67,24 +76,25 @@ namespace TGIT.ACME.Protocol.Services
             _logger.LogDebug("successfully validated replay nonce.");
         }
 
-        public async Task ValidateSignatureAsync(AcmePostRequest request, CancellationToken cancellationToken)
+        private async Task ValidateSignatureAsync(AcmeRawPostRequest request, AcmeHeader header, CancellationToken cancellationToken)
         {
-            _logger.LogDebug("Attempting to validate signature ...");
-            if (request == null)
+            if (request is null)
                 throw new ArgumentNullException(nameof(request));
+            if (header is null)
+                throw new ArgumentNullException(nameof(header));
 
-            if (request.Header.Value.Jwk == null && request.Header.Value.Kid == null)
-                throw new MalformedRequestException("Either provide JWK or KID");
+            _logger.LogDebug("Attempting to validate signature ...");
 
-            var jwk = request.Header.Value.Jwk;
+            var jwk = header.Jwk;
             if(jwk == null)
             {
                 try
                 {
-                    var accountId = request.Header.Value.GetAccountId();
+                    var accountId = header.GetAccountId();
                     var account = await _accountService.LoadAcountAsync(accountId, cancellationToken);
                     jwk = account?.Jwk;
-                } catch (InvalidOperationException)
+                } 
+                catch (InvalidOperationException)
                 {
                     throw new MalformedRequestException("KID could not be found.");
                 }
@@ -95,8 +105,8 @@ namespace TGIT.ACME.Protocol.Services
 
             var securityKey = jwk.SecurityKey;
             
-            using var signatureProvider = new AsymmetricSignatureProvider(securityKey, request.Header.Value.Alg);
-            var plainText = System.Text.Encoding.UTF8.GetBytes($"{request.Header.EncodedJson}.{request.Payload?.EncodedJson ?? ""}");
+            using var signatureProvider = new AsymmetricSignatureProvider(securityKey, header.Alg);
+            var plainText = System.Text.Encoding.UTF8.GetBytes($"{request.Header}.{request.Payload ?? ""}");
             var signature = Base64UrlEncoder.DecodeBytes(request.Signature);
 
             if (!signatureProvider.Verify(plainText, signature))
