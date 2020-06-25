@@ -80,7 +80,7 @@ namespace TGIT.ACME.Protocol.Services.RequestServices
             if (rawRequest is null)
                 throw new ArgumentNullException(nameof(rawRequest));
 
-            var payloadJson = Base64UrlEncoder.Decode(rawRequest.Header);
+            var payloadJson = Base64UrlEncoder.Decode(rawRequest.Payload);
             var payload = JsonSerializer.Deserialize<TPayload>(payloadJson, _jsonOptions);
 
             return payload;
