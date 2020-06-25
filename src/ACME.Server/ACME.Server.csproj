@@ -11,8 +11,4 @@
     <ProjectReference Include="..\ACME.Storage.FileStore\ACME.Storage.FileStore.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Security\" />
-  </ItemGroup>
-
 </Project>
