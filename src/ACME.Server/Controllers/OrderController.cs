@@ -136,7 +136,7 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/order/{orderId}/certificate", Name = "GetCertificate")]
         [HttpPost]
-        public async Task<IActionResult> GetCertficate(string orderId)
+        public async Task<IActionResult> GetCertificate(string orderId)
         {
             var account = await _accountService.FromRequestAsync(HttpContext.RequestAborted);
             var certificate = await _orderService.GetCertificate(account, orderId, HttpContext.RequestAborted);
