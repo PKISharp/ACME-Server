@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using TGIT.ACME.Protocol.IssuanceServices;
 using TGIT.ACME.Protocol.Model;
-using TGIT.ACME.Protocol.Services;
 using TGIT.ACME.Protocol.Storage;
 
 namespace TGIT.ACME.Protocol.Workers
