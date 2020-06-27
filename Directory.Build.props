@@ -1,5 +1,8 @@
 <Project>
   <PropertyGroup>
+    <PackageVersion>1.0.0</PackageVersion>
     <Nullable>Enable</Nullable>
+
+    <Authors>Thomas Glatzer; GitHub Contributors</Authors>
   </PropertyGroup>
 </Project>

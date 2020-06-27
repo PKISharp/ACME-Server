@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.Model;
 

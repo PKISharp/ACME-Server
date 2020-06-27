@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.HttpModel.Requests;
-using TGIT.ACME.Protocol.Services.RequestServices;
+using TGIT.ACME.Protocol.RequestServices;
 
 namespace TGIT.ACME.Server.ModelBinding
 {

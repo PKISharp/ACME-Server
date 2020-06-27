@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.Model;
 
-namespace TGIT.ACME.Protocol.Services
+namespace TGIT.ACME.Protocol.IssuanceServices
 {
     public interface ICertificateIssuer
     {

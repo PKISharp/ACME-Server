@@ -1,21 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>TGIT.ACME.Protocol</RootNamespace>
-    <AssemblyName>TGIT.ACME.Protocol.Model</AssemblyName>
+    <AssemblyName>TGIT.ACME.Protocol.Abstractions</AssemblyName>
     <OutputType>Library</OutputType>
 
-    <Title>ACME Protocol Model</Title>
+    <Title>ACME Protocol Service Abstractions</Title>
     <RepositoryUrl>https://github.com/PKISharp/ACME-Server/</RepositoryUrl>
-    <Description>Basic model and http-model classes for building ACME servers and clients.</Description>
+    <Description>Basic interface definitions for TGIT.ACME.Protocol.Core.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>ACME;RFC 8555</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.0" />
+    <ProjectReference Include="..\ACME.Protocol.Model\ACME.Protocol.Model.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@ using System.Text.Json;
 using TGIT.ACME.Protocol.HttpModel.Requests;
 using TGIT.ACME.Protocol.Model.Exceptions;
 
-namespace TGIT.ACME.Protocol.Services.RequestServices
+namespace TGIT.ACME.Protocol.RequestServices
 {
     public class DefaultRequestProvider : IAcmeRequestProvider
     {

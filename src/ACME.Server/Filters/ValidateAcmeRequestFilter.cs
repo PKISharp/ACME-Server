@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Threading.Tasks;
-using TGIT.ACME.Protocol.Services;
-using TGIT.ACME.Protocol.Services.RequestServices;
+using TGIT.ACME.Protocol.RequestServices;
 
 namespace TGIT.ACME.Server.Filters
 {

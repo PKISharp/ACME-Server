@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACME.Protocol", "src\ACME.P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACME.Protocol.Model", "src\ACME.Protocol.Model\ACME.Protocol.Model.csproj", "{026ACE0F-AAC7-4AB0-B2CF-0722044552F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACME.Protocol.Abstractions", "src\ACME.Protocol.Abstractions\ACME.Protocol.Abstractions.csproj", "{7483E442-7D3D-4C0F-96BB-5766BB466B2D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{026ACE0F-AAC7-4AB0-B2CF-0722044552F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{026ACE0F-AAC7-4AB0-B2CF-0722044552F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{026ACE0F-AAC7-4AB0-B2CF-0722044552F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7483E442-7D3D-4C0F-96BB-5766BB466B2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7483E442-7D3D-4C0F-96BB-5766BB466B2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7483E442-7D3D-4C0F-96BB-5766BB466B2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7483E442-7D3D-4C0F-96BB-5766BB466B2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +58,7 @@ Global
 		{50D889A9-0928-42E0-B726-8CE9CF3DBF41} = {3B1444E7-4308-45DA-86C7-81E09E9DEBD7}
 		{8F90EA50-F781-4ADA-94DD-C5D065316318} = {3B1444E7-4308-45DA-86C7-81E09E9DEBD7}
 		{026ACE0F-AAC7-4AB0-B2CF-0722044552F0} = {3B1444E7-4308-45DA-86C7-81E09E9DEBD7}
+		{7483E442-7D3D-4C0F-96BB-5766BB466B2D} = {3B1444E7-4308-45DA-86C7-81E09E9DEBD7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {330785C1-6C3F-413B-9FF2-3AEAB1B70379}

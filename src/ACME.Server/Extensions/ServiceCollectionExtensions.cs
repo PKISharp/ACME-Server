@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using TGIT.ACME.Protocol.Services;
-using TGIT.ACME.Protocol.Services.RequestServices;
+using TGIT.ACME.Protocol.RequestServices;
 using TGIT.ACME.Protocol.Workers;
 using TGIT.ACME.Server.BackgroundServices;
 using TGIT.ACME.Server.Configuration;
@@ -13,7 +13,8 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddACMEServer(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddACMEServer(this IServiceCollection services, IConfiguration configuration, 
+            string sectionName = "AcmeServer")
         {
             services.AddTransient<AcmeRequestReader>();
 
@@ -47,7 +48,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 opt.ModelBinderProviders.Insert(0, new AcmeModelBindingProvider());
             });
 
-            var acmeServerConfig = configuration.GetSection("AcmeServer");
+            var acmeServerConfig = configuration.GetSection(sectionName);
             var acmeServerOptions = new ACMEServerOptions();
             acmeServerConfig.Bind(acmeServerOptions);
 

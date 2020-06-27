@@ -1,6 +1,6 @@
 ﻿using TGIT.ACME.Protocol.HttpModel.Requests;
 
-namespace TGIT.ACME.Protocol.Services.RequestServices
+namespace TGIT.ACME.Protocol.RequestServices
 {
     public interface IAcmeRequestProvider
     {

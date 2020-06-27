@@ -8,10 +8,6 @@ using TGIT.ACME.Protocol.Storage;
 
 namespace TGIT.ACME.Protocol.Workers
 {
-    public interface IValidationWorker
-    {
-        Task RunAsync(CancellationToken cancellationToken);
-    }
 
     public class ValidationWorker : IValidationWorker
     {

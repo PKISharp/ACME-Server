@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.HttpModel.Requests;
-using TGIT.ACME.Protocol.Services.RequestServices;
+using TGIT.ACME.Protocol.RequestServices;
 
 namespace TGIT.ACME.Server.Middleware
 {

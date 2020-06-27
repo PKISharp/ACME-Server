@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
-using TGIT.ACME.Protocol.Model.Exceptions;
 using TGIT.ACME.Protocol.Model.Extensions;
 
 namespace TGIT.ACME.Protocol.Model
@@ -19,7 +17,7 @@ namespace TGIT.ACME.Protocol.Model
                 { OrderStatus.Processing, new [] { OrderStatus.Valid, OrderStatus.Invalid } },
             };
 
-        internal Order(Account account, IEnumerable<Identifier> identifiers)
+        public Order(Account account, IEnumerable<Identifier> identifiers)
         {
             OrderId = GuidString.NewValue();
             Status = OrderStatus.Pending;
@@ -44,8 +42,8 @@ namespace TGIT.ACME.Protocol.Model
 
         public AcmeError? Error { get; set; }
 
-        public string? CertificateSigningRequest { get; internal set; }
-        public byte[]? Certificate { get; internal set; }
+        public string? CertificateSigningRequest { get; set; }
+        public byte[]? Certificate { get; set; }
 
 
         /// <summary>
@@ -56,7 +54,7 @@ namespace TGIT.ACME.Protocol.Model
         public Authorization? GetAuthorization(string authId)
             => Authorizations.FirstOrDefault(x => x.AuthorizationId == authId);
 
-        internal void SetStatus(OrderStatus nextStatus)
+        public void SetStatus(OrderStatus nextStatus)
         {
             if (!_validStatusTransitions.ContainsKey(Status))
                 throw new InvalidOperationException($"Cannot do challenge status transition from '{Status}'.");
@@ -67,7 +65,7 @@ namespace TGIT.ACME.Protocol.Model
             Status = nextStatus;
         }
 
-        internal void SetStatusFromAuthorizations()
+        public void SetStatusFromAuthorizations()
         {
             if (Authorizations.All(a => a.Status == AuthorizationStatus.Valid))
                 SetStatus(OrderStatus.Ready);

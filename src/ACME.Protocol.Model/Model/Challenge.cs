@@ -51,7 +51,7 @@ namespace TGIT.ACME.Protocol.Model
         public AcmeError? Error { get; set; }
 
 
-        internal void SetStatus(ChallengeStatus nextStatus)
+        public void SetStatus(ChallengeStatus nextStatus)
         {
             if (!_validStatusTransitions.ContainsKey(Status))
                 throw new ConflictRequestException(nextStatus);

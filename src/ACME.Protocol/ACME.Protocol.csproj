@@ -1,9 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>TGIT.ACME.Protocol</RootNamespace>
-    <AssemblyName>TGIT.ACME.Protocol</AssemblyName>
+    <AssemblyName>TGIT.ACME.Protocol.Impl</AssemblyName>
+    <OutputType>Library</OutputType>
+
+    <PackageId>TGIT.ACME.Protocol</PackageId>
+    <Title>ACME Protocol Service Implementation</Title>
+    <RepositoryUrl>https://github.com/PKISharp/ACME-Server/</RepositoryUrl>
+    <Description>Default Implementation of TGIT.ACME.Protocol.Abstractions</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>ACME;RFC 8555</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,13 +20,16 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.4" />
 
-    <PackageReference Include="System.Text.Json" Version="4.7.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.3" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.0" />
     
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.5.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ACME.Protocol.Abstractions\ACME.Protocol.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

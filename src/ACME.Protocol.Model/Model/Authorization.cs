@@ -50,14 +50,14 @@ namespace TGIT.ACME.Protocol.Model
         public Challenge? GetChallenge(string challengeId)
             => Challenges.FirstOrDefault(x => x.ChallengeId == challengeId);
 
-        internal void SelectChallenge(Challenge challenge)
+        public void SelectChallenge(Challenge challenge)
             => Challenges.RemoveAll(c => c != challenge);
 
-        internal void ClearChallenges()
+        public void ClearChallenges()
             => Challenges.Clear();
 
 
-        internal void SetStatus(AuthorizationStatus nextStatus)
+        public void SetStatus(AuthorizationStatus nextStatus)
         {
             if (!_validStatusTransitions.ContainsKey(Status))
                 throw new InvalidOperationException($"Cannot do challenge status transition from '{Status}'.");

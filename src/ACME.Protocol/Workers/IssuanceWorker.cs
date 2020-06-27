@@ -9,10 +9,6 @@ using TGIT.ACME.Protocol.Storage;
 
 namespace TGIT.ACME.Protocol.Workers
 {
-    public interface IIssuanceWorker
-    {
-        Task RunAsync(CancellationToken cancellationToken);
-    }
 
     public class IssuanceWorker : IIssuanceWorker
     {

@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using TGIT.ACME.Protocol.HttpModel.Requests;
 using TGIT.ACME.Protocol.Model;
 using TGIT.ACME.Protocol.Model.Exceptions;
+using TGIT.ACME.Protocol.Services;
 using TGIT.ACME.Protocol.Storage;
 
-namespace TGIT.ACME.Protocol.Services.RequestServices
+namespace TGIT.ACME.Protocol.RequestServices
 {
     public class DefaultRequestValidationService : IRequestValidationService
     {
