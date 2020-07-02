@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace TGIT.ACME.Protocol.Services
             return expectedContent;
         }
 
-        protected override async Task<(string? Content, AcmeError? Error)> LoadChallengeResponseAsync(Challenge challenge, CancellationToken cancellationToken)
+        protected override async Task<(List<string>? Contents, AcmeError? Error)> LoadChallengeResponseAsync(Challenge challenge, CancellationToken cancellationToken)
         {
             var challengeUrl = $"http://{challenge.Authorization.Identifier.Value}/.well-known/acme-challenge/{challenge.Token}";
 
@@ -39,7 +40,7 @@ namespace TGIT.ACME.Protocol.Services
                 }
 
                 var content = await response.Content.ReadAsStringAsync();
-                return (content, null);
+                return (new List<string> { content }, null);
             } 
             catch (HttpRequestException ex)
             {

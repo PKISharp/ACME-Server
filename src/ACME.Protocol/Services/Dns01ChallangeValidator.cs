@@ -3,6 +3,7 @@ using DnsClient.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -35,7 +36,7 @@ namespace TGIT.ACME.Protocol.Services
             return digest;
         }
 
-        protected override async Task<(string? Content, AcmeError? Error)> LoadChallengeResponseAsync(Challenge challenge, CancellationToken cancellationToken)
+        protected override async Task<(List<string>? Contents, AcmeError? Error)> LoadChallengeResponseAsync(Challenge challenge, CancellationToken cancellationToken)
         {
             try
             {
@@ -44,12 +45,12 @@ namespace TGIT.ACME.Protocol.Services
                 var dnsRecordName = $"_acme-challenge.{dnsBaseUrl}";
 
                 var dnsResponse = await dnsClient.QueryAsync(dnsRecordName, QueryType.TXT);
-                var content = dnsResponse.Answers.TxtRecords()?.FirstOrDefault()?.Text.FirstOrDefault();
+                var contents = new List<string>(dnsResponse.Answers.TxtRecords().SelectMany(x => x.Text));
 
-                if (string.IsNullOrWhiteSpace(content))
+                if (!contents.Any())
                     return (null, new AcmeError("TODO", "Empty TXT Record"));
 
-                return (content, null);
+                return (contents, null);
             } 
             catch (Exception ex)
             {
