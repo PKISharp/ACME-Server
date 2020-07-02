@@ -32,7 +32,7 @@ namespace TGIT.ACME.Protocol.Services
 
             try
             {
-                var response = await _httpClient.GetAsync(challengeUrl, cancellationToken);
+                var response = await _httpClient.GetAsync(new Uri(challengeUrl), cancellationToken);
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     var error = new AcmeError("TODO", $"Challenge failed with StatusCode {response.StatusCode}", challenge.Authorization.Identifier);
