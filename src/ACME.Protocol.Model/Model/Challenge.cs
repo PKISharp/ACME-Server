@@ -28,7 +28,7 @@ namespace TGIT.ACME.Protocol.Model
             ChallengeId = GuidString.NewValue();
 
             Type = type;
-            Token = GuidString.NewValue(); // TODO: Replace with crypto-guid?
+            Token = CryptoString.NewValue();
 
             Authorization = authorization;
             Authorization.Challenges.Add(this);
