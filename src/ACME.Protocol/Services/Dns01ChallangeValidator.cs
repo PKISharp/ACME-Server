@@ -40,7 +40,8 @@ namespace TGIT.ACME.Protocol.Services
             try
             {
                 var dnsClient = new LookupClient();
-                var dnsRecordName = "_acme-challenge." + challenge.Authorization.Identifier.Value.Replace("*.", "");
+                var dnsBaseUrl = challenge.Authorization.Identifier.Value.Replace("*.", "", StringComparison.OrdinalIgnoreCase);
+                var dnsRecordName = $"_acme-challenge.{dnsBaseUrl}";
 
                 var dnsResponse = await dnsClient.QueryAsync(dnsRecordName, QueryType.TXT);
                 var content = dnsResponse.Answers.TxtRecords()?.FirstOrDefault()?.Text.FirstOrDefault();
