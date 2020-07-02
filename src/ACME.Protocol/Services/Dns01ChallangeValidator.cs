@@ -1,5 +1,9 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using DnsClient;
+using DnsClient.Internal;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -10,6 +14,13 @@ namespace TGIT.ACME.Protocol.Services
 {
     public sealed class Dns01ChallangeValidator : TokenChallengeValidator
     {
+        private readonly ILogger<Dns01ChallangeValidator> _logger;
+
+        public Dns01ChallangeValidator(ILogger<Dns01ChallangeValidator> logger)
+        {
+            _logger = logger;
+        }
+
         protected override string GetExpectedContent(Challenge challenge, Account account)
         {
             using var sha256 = SHA256.Create();
@@ -24,9 +35,26 @@ namespace TGIT.ACME.Protocol.Services
             return digest;
         }
 
-        protected override Task<(string? Content, AcmeError? Error)> LoadChallengeResponseAsync(Challenge challenge, CancellationToken cancellationToken)
+        protected override async Task<(string? Content, AcmeError? Error)> LoadChallengeResponseAsync(Challenge challenge, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var dnsClient = new LookupClient();
+                var dnsRecordName = "_acme-challenge." + challenge.Authorization.Identifier.Value.Replace("*.", "");
+
+                var dnsResponse = await dnsClient.QueryAsync(dnsRecordName, QueryType.TXT);
+                var content = dnsResponse.Answers.TxtRecords()?.FirstOrDefault()?.Text.FirstOrDefault();
+
+                if (string.IsNullOrWhiteSpace(content))
+                    return (null, new AcmeError("TODO", "Empty TXT Record"));
+
+                return (content, null);
+            } 
+            catch (Exception ex)
+            {
+                _logger.LogInformation("DNS-Lookup failed: " + ex.Message);
+                return (null, new AcmeError("TODO", "Generic Error"));
+            }
         }
     }
 }
