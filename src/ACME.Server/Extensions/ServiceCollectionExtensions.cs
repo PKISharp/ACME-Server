@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using TGIT.ACME.Protocol.Services;
 using TGIT.ACME.Protocol.RequestServices;
@@ -16,6 +16,8 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddACMEServer(this IServiceCollection services, IConfiguration configuration, 
             string sectionName = "AcmeServer")
         {
+            services.AddControllers();
+
             services.AddTransient<AcmeRequestReader>();
 
             services.AddScoped<IAcmeRequestProvider, DefaultRequestProvider>();
