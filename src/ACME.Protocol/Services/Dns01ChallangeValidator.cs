@@ -1,4 +1,4 @@
-﻿using DnsClient;
+using DnsClient;
 using DnsClient.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -47,15 +47,11 @@ namespace TGIT.ACME.Protocol.Services
                 var dnsResponse = await dnsClient.QueryAsync(dnsRecordName, QueryType.TXT);
                 var contents = new List<string>(dnsResponse.Answers.TxtRecords().SelectMany(x => x.Text));
 
-                if (!contents.Any())
-                    return (null, new AcmeError("TODO", "Empty TXT Record"));
-
                 return (contents, null);
             } 
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogInformation("DNS-Lookup failed: " + ex.Message);
-                return (null, new AcmeError("TODO", "Generic Error"));
+                return (null, new AcmeError("dns", "Could not read from DNS"));
             }
         }
     }
