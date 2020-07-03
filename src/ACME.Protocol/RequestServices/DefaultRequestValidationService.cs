@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using TGIT.ACME.Protocol.HttpModel.Requests;
 using TGIT.ACME.Protocol.Model;
 using TGIT.ACME.Protocol.Model.Exceptions;
@@ -29,24 +31,33 @@ namespace TGIT.ACME.Protocol.RequestServices
             _logger = logger;
         }
 
-        public async Task ValidateRequestAsync(AcmeRawPostRequest request, AcmeHeader header, CancellationToken cancellationToken)
+        public async Task ValidateRequestAsync(AcmeRawPostRequest request, AcmeHeader header,
+            HttpRequest httpRequest, CancellationToken cancellationToken)
         {
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
             if (header is null)
                 throw new ArgumentNullException(nameof(header));
+            if (httpRequest is null)
+                throw new ArgumentNullException(nameof(httpRequest));
 
-            ValidateRequestHeader(header);
+            ValidateRequestHeader(header, httpRequest);
             await ValidateNonceAsync(header.Nonce, cancellationToken);
             await ValidateSignatureAsync(request, header, cancellationToken);
         }
 
-        private void ValidateRequestHeader(AcmeHeader header)
+        private void ValidateRequestHeader(AcmeHeader header, HttpRequest httpRequest)
         {
             if (header is null)
                 throw new ArgumentNullException(nameof(header));
 
             _logger.LogDebug("Attempting to validate AcmeHeader ...");
+
+            if (!Uri.IsWellFormedUriString(header.Url, UriKind.RelativeOrAbsolute))
+                throw new MalformedRequestException("Header Url is not well-formed.");
+
+            if (header.Url != httpRequest.GetDisplayUrl())
+                throw new NotAuthorizedException();
 
             if (!_supportedAlgs.Contains(header.Alg))
                 throw new BadSignatureAlgorithmException();

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.RequestServices;
@@ -23,7 +23,8 @@ namespace TGIT.ACME.Server.Filters
             {
                 var acmeRequest = _requestProvider.GetRequest();
                 var acmeHeader = _requestProvider.GetHeader();
-                await _validationService.ValidateRequestAsync(acmeRequest, acmeHeader, context.HttpContext.RequestAborted);
+                await _validationService.ValidateRequestAsync(acmeRequest, acmeHeader,
+                    context.HttpContext.Request, context.HttpContext.RequestAborted);
             }
 
             await next();

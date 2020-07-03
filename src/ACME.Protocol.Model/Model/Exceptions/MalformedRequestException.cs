@@ -1,4 +1,4 @@
-﻿namespace TGIT.ACME.Protocol.Model.Exceptions
+namespace TGIT.ACME.Protocol.Model.Exceptions
 {
     public class MalformedRequestException : AcmeException
     {
@@ -9,17 +9,24 @@
         public override string ErrorType => "malformed";
     }
 
+    public class NotAuthorizedException : MalformedRequestException
+    {
+        public NotAuthorizedException()
+            :base("The request could not be authorized.")
+        { }
+    }
+
     public class NotFoundException : MalformedRequestException
     {
         public NotFoundException()
-            :base("The resource requested by the request could not be found.")
+            :base("The requested resource could not be found.")
         { }
     }
 
     public class NotAllowedException : MalformedRequestException
     {
         public NotAllowedException()
-            : base("The resoruce requested by the request may not be accessed by the requestor.")
+            : base("The requested resoruce may not be accessed.")
         { }
     }
 
