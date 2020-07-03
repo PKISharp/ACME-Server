@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,17 +19,17 @@ namespace TGIT.ACME.Protocol.Services
                 throw new ArgumentNullException(nameof(account));
 
             if (account.Status != AccountStatus.Valid)
-                return (false, new AcmeError("TODO", "Account invalid", challenge.Authorization.Identifier));
+                return (false, new AcmeError("unauthorized", "Account invalid", challenge.Authorization.Identifier));
 
             if (challenge.Authorization.Expires < DateTimeOffset.UtcNow)
             {
                 challenge.Authorization.SetStatus(AuthorizationStatus.Expired);
-                return (false, new AcmeError("TODO", "Authorization expired", challenge.Authorization.Identifier));
+                return (false, new AcmeError("custom:authExpired", "Authorization expired", challenge.Authorization.Identifier));
             }
             if (challenge.Authorization.Order.Expires < DateTimeOffset.UtcNow)
             {
                 challenge.Authorization.Order.SetStatus(OrderStatus.Invalid);
-                return (false, new AcmeError("TODO", "Order expired"));
+                return (false, new AcmeError("custom:orderExpired", "Order expired"));
             }
 
             var (challengeContent, error) = await LoadChallengeResponseAsync(challenge, cancellationToken);
@@ -38,7 +38,7 @@ namespace TGIT.ACME.Protocol.Services
 
             var expectedResponse = GetExpectedContent(challenge, account);
             if(challengeContent?.Contains(expectedResponse) != true)
-                return (false, new AcmeError("TODO", "TODO", challenge.Authorization.Identifier));
+                return (false, new AcmeError("incorrectResponse", "Challenge response dod not contain the expected content.", challenge.Authorization.Identifier));
 
             return (true, null);
         }
