@@ -32,21 +32,21 @@ namespace TGIT.ACME.Protocol.RequestServices
         }
 
         public async Task ValidateRequestAsync(AcmeRawPostRequest request, AcmeHeader header,
-            HttpRequest httpRequest, CancellationToken cancellationToken)
+            string requestUrl, CancellationToken cancellationToken)
         {
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
             if (header is null)
                 throw new ArgumentNullException(nameof(header));
-            if (httpRequest is null)
-                throw new ArgumentNullException(nameof(httpRequest));
+            if (string.IsNullOrWhiteSpace(requestUrl))
+                throw new ArgumentNullException(nameof(requestUrl));
 
-            ValidateRequestHeader(header, httpRequest);
+            ValidateRequestHeader(header, requestUrl);
             await ValidateNonceAsync(header.Nonce, cancellationToken);
             await ValidateSignatureAsync(request, header, cancellationToken);
         }
 
-        private void ValidateRequestHeader(AcmeHeader header, HttpRequest httpRequest)
+        private void ValidateRequestHeader(AcmeHeader header, string requestUrl)
         {
             if (header is null)
                 throw new ArgumentNullException(nameof(header));
@@ -56,7 +56,7 @@ namespace TGIT.ACME.Protocol.RequestServices
             if (!Uri.IsWellFormedUriString(header.Url, UriKind.RelativeOrAbsolute))
                 throw new MalformedRequestException("Header Url is not well-formed.");
 
-            if (header.Url != httpRequest.GetDisplayUrl())
+            if (header.Url != requestUrl)
                 throw new NotAuthorizedException();
 
             if (!_supportedAlgs.Contains(header.Alg))

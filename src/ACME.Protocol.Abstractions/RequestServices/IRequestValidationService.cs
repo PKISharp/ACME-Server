@@ -9,6 +9,6 @@ namespace TGIT.ACME.Protocol.RequestServices
     public interface IRequestValidationService
     {
         Task ValidateRequestAsync(AcmeRawPostRequest request, AcmeHeader header,
-            HttpRequest httpRequest, CancellationToken cancellationToken);
+            string requestUrl, CancellationToken cancellationToken);
     }
 }
