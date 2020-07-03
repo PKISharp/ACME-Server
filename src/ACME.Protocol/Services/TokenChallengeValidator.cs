@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TGIT.ACME.Protocol.Model;
@@ -7,7 +8,7 @@ namespace TGIT.ACME.Protocol.Services
 {
     public abstract class TokenChallengeValidator : IChallengeValidator
     {
-        protected abstract Task<(string? Content, AcmeError? Error)> LoadChallengeResponseAsync(Challenge challenge, CancellationToken cancellationToken);
+        protected abstract Task<(List<string>? Contents, AcmeError? Error)> LoadChallengeResponseAsync(Challenge challenge, CancellationToken cancellationToken);
         protected abstract string GetExpectedContent(Challenge challenge, Account account);
 
         public async Task<(bool IsValid, AcmeError? error)> ValidateChallengeAsync(Challenge challenge, Account account, CancellationToken cancellationToken)
@@ -36,7 +37,7 @@ namespace TGIT.ACME.Protocol.Services
                 return (false, error);
 
             var expectedResponse = GetExpectedContent(challenge, account);
-            if(expectedResponse != challengeContent)
+            if(challengeContent?.Contains(expectedResponse) != true)
                 return (false, new AcmeError("TODO", "TODO", challenge.Authorization.Identifier));
 
             return (true, null);
