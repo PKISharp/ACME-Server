@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TGIT.ACME.Protocol.Model.Exceptions;
@@ -15,6 +15,10 @@ namespace TGIT.ACME.Protocol.Model
         public AcmeError(string type, string detail, Identifier? identifier = null, IEnumerable<AcmeError>? subErrors = null)
         {
             Type = type;
+
+            if (!type.Contains(":"))
+                Type = "urn:ietf:params:acme:error:" + type;
+
             Detail = detail;
             Identifier = identifier;
             SubErrors = subErrors?.ToList();

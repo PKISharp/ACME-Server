@@ -1,4 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Net.Http;
 using System.Threading;
@@ -34,7 +34,7 @@ namespace TGIT.ACME.Protocol.Services
                 var response = await _httpClient.GetAsync(challengeUrl, cancellationToken);
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    var error = new AcmeError("TODO", $"Challenge failed with StatusCode {response.StatusCode}", challenge.Authorization.Identifier);
+                    var error = new AcmeError("incorrectResponse", $"Got non 200 status code: {response.StatusCode}", challenge.Authorization.Identifier);
                     return (null, error);
                 }
 
@@ -43,7 +43,7 @@ namespace TGIT.ACME.Protocol.Services
             } 
             catch (HttpRequestException ex)
             {
-                var error = new AcmeError("TODO", ex.Message, challenge.Authorization.Identifier);
+                var error = new AcmeError("connection", ex.Message, challenge.Authorization.Identifier);
                 return (null, error);
             }
         }
