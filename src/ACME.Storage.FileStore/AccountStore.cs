@@ -16,7 +16,9 @@ namespace TGIT.ACME.Storage.FileStore
     {
         public AccountStore(IOptions<FileStoreOptions> options)
             : base(options)
-        { }
+        {
+            Directory.CreateDirectory(Options.Value.AccountPath);
+        }
 
         private string GetPath(string accountId)
             => Path.Combine(Options.Value.AccountPath, accountId, "account.json");

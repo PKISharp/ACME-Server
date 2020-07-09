@@ -24,6 +24,7 @@ namespace TGIT.ACME.Storage.FileStore
             : base(options)
         {
             _logger = logger;
+            Directory.CreateDirectory(Options.Value.OrderPath);
         }
 
         private string GetOrderPath(string orderId)
