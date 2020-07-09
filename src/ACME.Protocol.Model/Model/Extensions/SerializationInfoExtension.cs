@@ -6,6 +6,19 @@ namespace TGIT.ACME.Protocol.Model.Extensions
 {
     public static class SerializationInfoExtension
     {
+        public static string GetRequiredString(this SerializationInfo info, string name)
+        {
+            if (info is null)
+                throw new ArgumentNullException(nameof(info));
+
+            var value = info.GetString(name);
+            if (string.IsNullOrWhiteSpace(value))
+                throw new InvalidOperationException($"Could not deserialize required value '{name}'");
+
+            return value;
+        }
+
+        [return: MaybeNull]
         public static T GetValue<T>(this SerializationInfo info, string name)
         {
             if (info is null)

@@ -44,12 +44,12 @@ namespace TGIT.ACME.Protocol.Services
                 var dnsBaseUrl = challenge.Authorization.Identifier.Value.Replace("*.", "", StringComparison.OrdinalIgnoreCase);
                 var dnsRecordName = $"_acme-challenge.{dnsBaseUrl}";
 
-                var dnsResponse = await dnsClient.QueryAsync(dnsRecordName, QueryType.TXT);
+                var dnsResponse = await dnsClient.QueryAsync(dnsRecordName, QueryType.TXT, cancellationToken: cancellationToken);
                 var contents = new List<string>(dnsResponse.Answers.TxtRecords().SelectMany(x => x.Text));
 
                 return (contents, null);
             } 
-            catch (Exception)
+            catch (DnsResponseException)
             {
                 return (null, new AcmeError("dns", "Could not read from DNS"));
             }

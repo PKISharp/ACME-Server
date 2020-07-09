@@ -70,11 +70,11 @@ namespace TGIT.ACME.Protocol.Model
             if (info is null)
                 throw new ArgumentNullException(nameof(info));
 
-            ChallengeId = info.GetString(nameof(ChallengeId));
+            ChallengeId = info.GetRequiredString(nameof(ChallengeId));
             Status = (ChallengeStatus)info.GetInt32(nameof(Status));
 
-            Type = info.GetString(nameof(Type));
-            Token = info.GetString(nameof(Token));
+            Type = info.GetRequiredString(nameof(Type));
+            Token = info.GetRequiredString(nameof(Token));
 
             Validated = info.TryGetValue<DateTimeOffset?>(nameof(Validated));
             Error = info.TryGetValue<AcmeError?>(nameof(Error));
