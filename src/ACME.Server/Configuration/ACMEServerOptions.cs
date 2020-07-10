@@ -2,7 +2,7 @@
 {
     public class ACMEServerOptions
     {
-        public BackgroundServiceOptions? HostedWorkers { get; set; }
+        public BackgroundServiceOptions HostedWorkers { get; set; } = new BackgroundServiceOptions();
 
         public string? WebsiteUrl { get; set; }
 
