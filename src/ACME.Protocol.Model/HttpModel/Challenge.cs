@@ -14,6 +14,8 @@ namespace TGIT.ACME.Protocol.HttpModel
                 throw new System.ArgumentNullException(nameof(challengeUrl));
 
             Type = model.Type;
+            Token = model.Token;
+
             Status = model.Status.ToString().ToLowerInvariant();
             Url = challengeUrl;
 
@@ -23,6 +25,7 @@ namespace TGIT.ACME.Protocol.HttpModel
 
 
         public string Type { get; }
+        public string Token { get; }
 
         public string Status { get; }
 
