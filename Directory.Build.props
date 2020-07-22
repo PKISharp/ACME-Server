@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <PackageVersion>1.0.0-alpha2</PackageVersion>
+    <PackageVersion>1.0.0-alpha3</PackageVersion>
     <Nullable>Enable</Nullable>
 
     <Authors>Thomas Glatzer; GitHub Contributors</Authors>
