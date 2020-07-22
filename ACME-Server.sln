@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
+		NuGet.Config = NuGet.Config
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -23,6 +24,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACME.Protocol.Model", "src\ACME.Protocol.Model\ACME.Protocol.Model.csproj", "{026ACE0F-AAC7-4AB0-B2CF-0722044552F0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACME.Protocol.Abstractions", "src\ACME.Protocol.Abstractions\ACME.Protocol.Abstractions.csproj", "{7483E442-7D3D-4C0F-96BB-5766BB466B2D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{5FEF1B53-A7EA-42F8-8FC3-AE07BEA5B8DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
