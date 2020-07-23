@@ -15,6 +15,7 @@ namespace TGIT.ACME.Protocol.Model
 
         public string Token {
             get => _token ?? throw new NotInitializedException();
-            private set => _token = value; }
+            private set => _token = value; 
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace TGIT.ACME.Protocol.Model.Tests.HttpModel_Initialization
     {
         private (Model.Challenge challenge, string challengeUrl) CreateTestModel()
         {
-            var account = new Model.Account(new Model.Jwk(Account.JwkJson), new List<string> { "some@example.com" }, null);
+            var account = new Model.Account(new Model.Jwk(StaticTestData.JwkJson), new List<string> { "some@example.com" }, null);
             var order = new Model.Order(account, new List<Model.Identifier> { new Model.Identifier("dns", "www.example.com") });
             var authorization = new Model.Authorization(order, order.Identifiers.First(), DateTimeOffset.UtcNow);
             var challenge = new Model.Challenge(authorization, "http-01");

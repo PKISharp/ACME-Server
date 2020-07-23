@@ -28,7 +28,7 @@ namespace TGIT.ACME.Protocol.Model
             set
             {
                 var normalizedType = value?.Trim().ToLowerInvariant();
-                if (!_supportedTypes.Contains(value))
+                if (!_supportedTypes.Contains(normalizedType))
                     throw new MalformedRequestException($"Unsupported identifier type: {normalizedType}");
 
                 _type = normalizedType;
