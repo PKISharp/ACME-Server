@@ -12,7 +12,7 @@ namespace TGIT.ACME.Protocol.Model
 
         private Jwk() { }
 
-        public Jwk(string? json)
+        public Jwk(string json)
         {
             if (string.IsNullOrWhiteSpace(json))
                 throw new System.ArgumentNullException(nameof(json));

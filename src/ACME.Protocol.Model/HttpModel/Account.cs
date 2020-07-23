@@ -9,7 +9,7 @@ namespace TGIT.ACME.Protocol.HttpModel
             if (model is null)
                 throw new System.ArgumentNullException(nameof(model));
 
-            Status = model.Status.ToString();
+            Status = model.Status.ToString().ToLowerInvariant();
 
             Contact = model.Contacts;
             TermsOfServiceAgreed = model.TOSAccepted.HasValue;
@@ -23,6 +23,7 @@ namespace TGIT.ACME.Protocol.HttpModel
 
         public List<string>? Contact { get; set; }
         public bool? TermsOfServiceAgreed { get; set; }
+
         public object? ExternalAccountBinding { get; set; }
     }
 }

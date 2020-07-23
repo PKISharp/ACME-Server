@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -8,7 +9,7 @@ using TGIT.ACME.Protocol.Model.Extensions;
 namespace TGIT.ACME.Protocol.Model
 {
     [Serializable]
-    public class Identifier : IEquatable<Identifier>, ISerializable
+    public class Identifier : ISerializable
     {
         private static readonly string[] _supportedTypes = new[] { "dns" };
 
@@ -43,31 +44,6 @@ namespace TGIT.ACME.Protocol.Model
         public bool IsWildcard
             => Value.StartsWith("*", StringComparison.InvariantCulture);
 
-        public override bool Equals(object? obj)
-        {
-            return obj is Identifier identifier && Equals(identifier);
-        }
-
-        public bool Equals([AllowNull] Identifier other)
-        {
-            return Type == other?.Type &&
-                Value == other?.Value;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Type, Value);
-        }
-
-        public static bool operator ==(Identifier? left, Identifier? right)
-        {
-            return left?.Equals(right) ?? false;
-        }
-
-        public static bool operator !=(Identifier? left, Identifier? right)
-        {
-            return !(left == right);
-        }
 
 
 
