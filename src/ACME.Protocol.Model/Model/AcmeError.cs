@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using TGIT.ACME.Protocol.Model.Exceptions;
+using TGIT.ACME.Protocol.Model.Extensions;
 
 namespace TGIT.ACME.Protocol.Model
 {
-    public class AcmeError
+    [Serializable]
+    public class AcmeError : ISerializable
     {
         private string? _type;
         private string? _detail;
@@ -34,12 +37,41 @@ namespace TGIT.ACME.Protocol.Model
             set => _detail = value; 
         }
 
-        public Identifier? Identifier { get; private set; }
+        public Identifier? Identifier { get; }
 
-        public List<AcmeError>? SubErrors
+        public List<AcmeError>? SubErrors { get; }
+
+
+
+        // --- Serialization Methods --- //
+
+        protected AcmeError(SerializationInfo info, StreamingContext streamingContext)
         {
-            get;
-            private set;
+            if (info is null)
+                throw new ArgumentNullException(nameof(info));
+
+            Type = info.GetRequiredString(nameof(Type));
+            Detail = info.GetRequiredString(nameof(Detail));
+
+            Identifier = info.TryGetValue<Identifier>(nameof(Identifier));
+            SubErrors = info.TryGetValue<List<AcmeError>>(nameof(SubErrors));
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info is null)
+                throw new ArgumentNullException(nameof(info));
+
+            info.AddValue("SerializationVersion", 1);
+
+            info.AddValue(nameof(Type), Type);
+            info.AddValue(nameof(Detail), Detail);
+
+            if(Identifier != null) 
+                info.AddValue(nameof(Identifier), Identifier);
+
+            if(SubErrors != null)
+                info.AddValue(nameof(SubErrors), SubErrors);
         }
     }
 }
