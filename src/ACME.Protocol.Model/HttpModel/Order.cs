@@ -30,8 +30,12 @@ namespace TGIT.ACME.Protocol.HttpModel
             Identifiers = model.Identifiers.Select(x => new Identifier(x)).ToList();
 
             Authorizations = new List<string>(authorizationUrls);
-            Finalize = finalizeUrl;
-            Certificate = certificateUrl;
+
+            if(model.Status == Model.OrderStatus.Ready)
+                Finalize = finalizeUrl;
+
+            if(model.Status == Model.OrderStatus.Valid)
+                Certificate = certificateUrl;
 
             if(model.Error != null)
                 Error = new AcmeError(model.Error);
@@ -48,7 +52,8 @@ namespace TGIT.ACME.Protocol.HttpModel
         public AcmeError? Error { get; }
 
         public IEnumerable<string> Authorizations { get; }
-        public string Finalize { get; }
+        
+        public string? Finalize { get; }
         public string? Certificate { get; }
     }
 }
