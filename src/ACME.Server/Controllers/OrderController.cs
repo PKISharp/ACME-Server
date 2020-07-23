@@ -31,7 +31,7 @@ namespace TGIT.ACME.Server.Controllers
             var orderRequest = payload.Value;
 
             var identifiers = orderRequest.Identifiers.Select(x =>
-                new Identifier { Type = x.Type, Value = x.Value }
+                new Identifier(x.Type, x.Value)
             );
 
             var order = await _orderService.CreateOrderAsync(
@@ -109,6 +109,7 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/order/{orderId}/auth/{authId}/chall/{challengeId}", Name = "AcceptChallenge")]
         [HttpPost]
+        [AcmeLocation("GetOrder")]
         public async Task<ActionResult<Protocol.HttpModel.Challenge>> AcceptChallenge(string orderId, string authId, string challengeId)
         {
             var account = await _accountService.FromRequestAsync(HttpContext.RequestAborted);
@@ -123,6 +124,7 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/order/{orderId}/finalize", Name = "FinalizeOrder")]
         [HttpPost]
+        [AcmeLocation("GetOrder")]
         public async Task<ActionResult<Protocol.HttpModel.Order>> FinalizeOrder(string orderId, AcmePayload<FinalizeOrderRequest> payload)
         {
             var account = await _accountService.FromRequestAsync(HttpContext.RequestAborted);
@@ -136,6 +138,7 @@ namespace TGIT.ACME.Server.Controllers
 
         [Route("/order/{orderId}/certificate", Name = "GetCertificate")]
         [HttpPost]
+        [AcmeLocation("GetOrder")]
         public async Task<IActionResult> GetCertificate(string orderId)
         {
             var account = await _accountService.FromRequestAsync(HttpContext.RequestAborted);
