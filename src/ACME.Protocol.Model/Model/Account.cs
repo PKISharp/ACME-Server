@@ -40,9 +40,9 @@ namespace TGIT.ACME.Protocol.Model
             if (info is null)
                 throw new ArgumentNullException(nameof(info));
 
-            AccountId = info.GetString(nameof(AccountId));
+            AccountId = info.GetRequiredString(nameof(AccountId));
             Status = (AccountStatus)info.GetInt32(nameof(Status));
-            Jwk = info.GetValue<Jwk>(nameof(Jwk));
+            Jwk = info.GetRequiredValue<Jwk>(nameof(Jwk));
 
             Contacts = info.GetValue<List<string>>(nameof(Contacts));
             TOSAccepted = info.TryGetValue<DateTimeOffset?>(nameof(TOSAccepted));

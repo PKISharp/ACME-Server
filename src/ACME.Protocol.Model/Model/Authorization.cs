@@ -77,13 +77,13 @@ namespace TGIT.ACME.Protocol.Model
             if (info is null)
                 throw new ArgumentNullException(nameof(info));
 
-            AuthorizationId = info.GetString(nameof(AuthorizationId));
+            AuthorizationId = info.GetRequiredString(nameof(AuthorizationId));
             Status = (AuthorizationStatus)info.GetInt32(nameof(Status));
 
-            Identifier = info.GetValue<Identifier>(nameof(Identifier));
+            Identifier = info.GetRequiredValue<Identifier>(nameof(Identifier));
             Expires = info.GetValue<DateTimeOffset>(nameof(Expires));
 
-            Challenges = info.GetValue<List<Challenge>>(nameof(Challenges));
+            Challenges = info.GetRequiredValue<List<Challenge>>(nameof(Challenges));
             foreach (var challenge in Challenges)
                 challenge.Authorization = this;
         }

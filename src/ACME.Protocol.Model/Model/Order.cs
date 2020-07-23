@@ -83,13 +83,13 @@ namespace TGIT.ACME.Protocol.Model
             if (info is null)
                 throw new ArgumentNullException(nameof(info));
 
-            OrderId = info.GetString(nameof(OrderId));
-            AccountId = info.GetString(nameof(AccountId));
+            OrderId = info.GetRequiredString(nameof(OrderId));
+            AccountId = info.GetRequiredString(nameof(AccountId));
 
             Status = (OrderStatus)info.GetInt32(nameof(Status));
 
-            Identifiers = info.GetValue<List<Identifier>>(nameof(Identifiers));
-            Authorizations = info.GetValue<List<Authorization>>(nameof(Authorizations));
+            Identifiers = info.GetRequiredValue<List<Identifier>>(nameof(Identifiers));
+            Authorizations = info.GetRequiredValue<List<Authorization>>(nameof(Authorizations));
 
             foreach (var auth in Authorizations)
                 auth.Order = this;
