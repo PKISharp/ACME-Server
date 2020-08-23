@@ -3,6 +3,10 @@ using System.Globalization;
 
 namespace TGIT.ACME.Protocol.HttpModel
 {
+    /// <summary>
+    /// Represents an ACME authorization object
+    /// https://tools.ietf.org/html/rfc8555#section-7.1.4
+    /// </summary>
     public class Authorization
     {
         public Authorization(Model.Authorization model, IEnumerable<Challenge> challenges)

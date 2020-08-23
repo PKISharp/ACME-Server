@@ -3,7 +3,8 @@
 namespace TGIT.ACME.Protocol.HttpModel
 {
     /// <summary>
-    /// 
+    /// Represents the data of an ACME account
+    /// https://tools.ietf.org/html/rfc8555#section-7.1.2
     /// </summary>
     public class Account
     {

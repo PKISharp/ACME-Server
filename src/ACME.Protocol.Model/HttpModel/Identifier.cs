@@ -4,6 +4,9 @@
 
 namespace TGIT.ACME.Protocol.HttpModel
 {
+    /// <summary>
+    /// Defines an identifier as used in orders or authorizations
+    /// </summary>
     public class Identifier
     {
         // This object can be used as part of a request, it needs an empty ctor.

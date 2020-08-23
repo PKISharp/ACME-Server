@@ -3,6 +3,10 @@ using System.Linq;
 
 namespace TGIT.ACME.Protocol.HttpModel
 {
+    /// <summary>
+    /// Represents an error object for ACME operations.
+    /// https://tools.ietf.org/html/rfc8555#section-6.7
+    /// </summary>
     public class AcmeError
     {
         public AcmeError(Model.AcmeError model)

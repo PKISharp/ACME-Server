@@ -3,6 +3,9 @@ using TGIT.ACME.Protocol.Model;
 
 namespace TGIT.ACME.Protocol.HttpModel
 {
+    /// <summary>
+    /// Defines response texts for enum fields.
+    /// </summary>
     public static class EnumMappings
     {
         public static string GetEnumString(AccountStatus status)

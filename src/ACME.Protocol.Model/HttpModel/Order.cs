@@ -4,6 +4,10 @@ using System.Linq;
 
 namespace TGIT.ACME.Protocol.HttpModel
 {
+    /// <summary>
+    /// Represents an ACME order
+    /// https://tools.ietf.org/html/rfc8555#section-7.1.3
+    /// </summary>
     public class Order
     {
         public Order(Model.Order model,
