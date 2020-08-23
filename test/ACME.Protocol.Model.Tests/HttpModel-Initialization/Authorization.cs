@@ -28,9 +28,9 @@ namespace TGIT.ACME.Protocol.Model.Tests.HttpModel_Initialization
             Assert.Single(sut.Challenges);
 
             Assert.Equal(authorization.Expires.ToString("o"), sut.Expires);
-            Assert.Equal(authorization.Identifier.Value, sut.Identifier.Value);
-            Assert.Equal(authorization.Status.ToString().ToLowerInvariant(), sut.Status);
-            Assert.Equal(authorization.IsWildcard, sut.Wildcard);
+            Assert.Equal("*.example.com", sut.Identifier.Value);
+            Assert.Equal("pending", sut.Status);
+            Assert.True(sut.Wildcard);
         }
     }
 }

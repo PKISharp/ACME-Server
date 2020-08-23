@@ -21,7 +21,7 @@ namespace TGIT.ACME.Protocol.HttpModel
             if (string.IsNullOrEmpty(certificateUrl))
                 throw new System.ArgumentNullException(nameof(certificateUrl));
 
-            Status = model.Status.ToString().ToLowerInvariant();
+            Status = EnumMappings.GetEnumString(model.Status);
             
             Expires = model.Expires?.ToString("o", CultureInfo.InvariantCulture);
             NotBefore = model.NotBefore?.ToString("o", CultureInfo.InvariantCulture);
@@ -51,7 +51,7 @@ namespace TGIT.ACME.Protocol.HttpModel
 
         public AcmeError? Error { get; }
 
-        public IEnumerable<string> Authorizations { get; }
+        public List<string> Authorizations { get; }
         
         public string? Finalize { get; }
         public string? Certificate { get; }

@@ -16,7 +16,7 @@ namespace TGIT.ACME.Protocol.HttpModel
             Type = model.Type;
             Token = model.Token;
 
-            Status = model.Status.ToString().ToLowerInvariant();
+            Status = EnumMappings.GetEnumString(model.Status);
             Url = challengeUrl;
 
             Validated = model.Validated?.ToString("o", CultureInfo.InvariantCulture);

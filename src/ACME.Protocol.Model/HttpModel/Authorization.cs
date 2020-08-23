@@ -13,7 +13,7 @@ namespace TGIT.ACME.Protocol.HttpModel
             if (challenges is null)
                 throw new System.ArgumentNullException(nameof(challenges));
 
-            Status = model.Status.ToString().ToLowerInvariant();
+            Status = EnumMappings.GetEnumString(model.Status);
 
             Expires = model.Expires.ToString("o", CultureInfo.InvariantCulture);
             Wildcard = model.IsWildcard;

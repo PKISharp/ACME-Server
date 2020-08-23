@@ -16,7 +16,7 @@ namespace TGIT.ACME.Protocol.Model.Tests.HttpModel_Initialization
 
             Assert.Equal(account.Contacts, sut.Contact);
             Assert.Equal(ordersUrl, sut.Orders);
-            Assert.Equal(account.Status.ToString().ToLowerInvariant(), sut.Status);
+            Assert.Equal("valid", sut.Status);
             Assert.True(sut.TermsOfServiceAgreed);
         }
 
