@@ -9,7 +9,7 @@
     <Title>ACME Protocol Server Core Implementation</Title>
     <RepositoryUrl>https://github.com/PKISharp/ACME-Server/</RepositoryUrl>
     <Description>
-      Basic implementation of an ACME (RFC 8555) Server.
+      Basic implementation of an ACME (RFC 8555) Server with ASP.Net Core.
       You'll need to implement Issuance and Storage services or pick an available implementation to use it.
     </Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
