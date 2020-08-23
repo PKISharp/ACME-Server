@@ -30,8 +30,15 @@ namespace TGIT.ACME.Server.Controllers
 
             var orderRequest = payload.Value;
 
+            if (orderRequest.Identifiers?.Any() != true)
+                throw new MalformedRequestException("No identifiers submitted");
+
+            foreach (var i in orderRequest.Identifiers)
+                if(string.IsNullOrWhiteSpace(i.Type) || string.IsNullOrWhiteSpace(i.Value))
+                    throw new MalformedRequestException($"Malformed identifier: (Type: {i.Type}, Value: {i.Value})");
+
             var identifiers = orderRequest.Identifiers.Select(x =>
-                new Identifier(x.Type, x.Value)
+                new Protocol.Model.Identifier(x.Type!, x.Value!)
             );
 
             var order = await _orderService.CreateOrderAsync(
