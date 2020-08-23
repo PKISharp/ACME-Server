@@ -1,17 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-#pragma warning disable CS8618 // Non-nullable field is uninitialized.
-
-namespace TGIT.ACME.Protocol.HttpModel
+﻿namespace TGIT.ACME.Protocol.HttpModel
 {
     /// <summary>
     /// Defines an identifier as used in orders or authorizations
     /// </summary>
     public class Identifier
     {
-        // This object can be used as part of a request, it needs an empty ctor.
-        private Identifier() { }
-
         public Identifier(Model.Identifier model)
         {
             if (model is null)
@@ -21,7 +14,7 @@ namespace TGIT.ACME.Protocol.HttpModel
             Value = model.Value;
         }
 
-        public string Type { get; set; }
-        public string Value { get; set; }
+        public string Type { get; }
+        public string Value { get; }
     }
 }

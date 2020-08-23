@@ -8,11 +8,6 @@ namespace TGIT.ACME.Protocol.HttpModel
     /// </summary>
     public class Account
     {
-        public Account()
-        {
-            Status = EnumMappings.GetEnumString(Model.AccountStatus.Valid);
-        }
-
         public Account(Model.Account model, string ordersUrl)
         {
             if (model is null)
